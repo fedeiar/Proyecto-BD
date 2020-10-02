@@ -55,7 +55,7 @@ CREATE TABLE tarjeta (
     CONSTRAINT fk_tarjeta_tipos_tarjeta
     FOREIGN KEY (tipo) REFERENCES tipos_tarjeta(tipo)
         ON DELETE RESTRICT ON UPDATE CASCADE 
-) Engine=InnoDB;
+)ENGINE=InnoDB;
 
 
 CREATE TABLE tipos_tarjeta (
@@ -66,7 +66,8 @@ CREATE TABLE tipos_tarjeta (
 
     CONSTRAINT pk_tipos_tarjeta
     PRIMARY KEY (tipo)
-) ENGINE=InnoDB;
+)ENGINE=InnoDB;
+
 
 CREATE TABLE inspectores(
     legajo INT UNSIGNED NOT NULL,
@@ -76,8 +77,33 @@ CREATE TABLE inspectores(
     password VARCHAR(32) NOT NULL,
 
     CONSTRAINT pk_inspectores
-    
-)
+    PRIMARY KEY (legajo)
+)ENGINE=InnoDB;
+
+
+CREATE TABLE ubicaciones(
+    calle VARCHAR(45) NOT NULL,
+    altura INT UNSIGNED NOT NULL,
+    tarifa FLOAT(5,2) NOT NULL,
+
+    CONSTRAINT pk_ubicaciones
+    PRIMARY KEY (calle,altura)
+)ENGINE=InnoDB;
+
+
+CREATE TABLE parquimetros(
+    id_parq INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    numero INT UNSIGNED NOT NULL,
+    calle VARCHAR(45) NOT NULL,
+    altura INT UNSIGNED NOT NULL,
+
+    CONSTRAINT pk_parquimetros
+    PRIMARY KEY (id_parq),
+
+    CONSTRAINT fk_parquimetros_ubicaciones
+    FOREIGN KEY (calle,altura) REFERENCES ubicaciones(calle,altura)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)ENGINE=InnoDB;
 
 
 # ----------------------------------------------------------------------------
@@ -107,6 +133,7 @@ CREATE TABLE asociado_con (
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
+
 # /* OJO! ver pluralidad (multa o multas?) */
 CREATE TABLE multas (
     numero INT UNSIGNED NOT NULL,
@@ -126,8 +153,48 @@ CREATE TABLE multas (
  
     CONSTRAINT fk_multas_asociado_con 
     FOREIGN KEY (id_asociado_con) REFERENCES asociado_con(id_asociado_con)
-        ON DELETE RESTRICT ON UPDATE RESTRICT
+        ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
+
+
+CREATE TABLE accede (
+    legajo INT UNSIGNED NOT NULL,
+    id_parq INT UNSIGNED NOT NULL,
+    fecha DATE NOT NULL,
+    hora TIME NOT NULL,
+
+    CONSTRAINT pk_accede
+    PRIMARY KEY (id_parq,fecha,hora)
+
+    CONSTRAINT fk_accede_inspectores
+    FOREIGN KEY legajo REFERENCES inspectores(dni),
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+
+    CONSTRAINT fk_accede_parquimetros
+    FOREIGN KEY id_parq REFERENCES parquimetros(id_parq)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)ENGINE=InnoDB;
+
+
+CREATE TABLE estacionamientos(
+    id_tarjeta INT UNSIGNED NOT NULL,
+    id_parq INT UNSIGNED NOT NULL,
+    fecha_ent DATE NOT NULL,
+    hora_ent TIME NOT NULL,
+    fecha_sal DATE,
+    hora_sal TIME,
+
+    CONSTRAINT pk_estacionamientos,
+    PRIMARY KEY (id_parq,fecha_ent,hora_ent),
+
+    CONSTRAINT fk_estacionamientos_tarjeta
+    FOREIGN KEY id_tarjeta REFERENCES tarjeta(id_tarjeta)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+
+    CONSTRAINT fk_estacionamientos_parquimetros
+    FOREIGN KEY id_parq REFERENCES parquimetros(id_parq)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+)ENGINE=InnoDB;
 
 
 # ----------------------------------------------------------------------------
@@ -135,9 +202,9 @@ CREATE TABLE multas (
 # Creación de Vistas
 
 CREATE VIEW estacionados AS 
-   SELECT L.calle, L.altura, P.patente
-   FROM (Pertenece P NATURAL JOIN Estacionamientos E) NATURAL JOIN Localizado_en L
-   WHERE Fecha_ent < Hora_ent AND Fecha_sal = NULL AND Hora_sal = NULL;
+   SELECT pq.calle, pq.altura, pe.patente
+   FROM (Pertenece pe NATURAL JOIN Estacionamientos e) NATURAL JOIN Parquimetros pq
+   WHERE e.Fecha_ent < e.Hora_ent AND e.Fecha_sal = NULL AND e.Hora_sal = NULL;
 
 # ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
