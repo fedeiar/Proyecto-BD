@@ -75,6 +75,7 @@ CREATE TABLE inspectores(
     apellido VARCHAR(20) UNSIGNED NOT NULL,
     password VARCHAR(32) NOT NULL,
 
+    CONSTRAINT pk_inspectores
     
 )
 
