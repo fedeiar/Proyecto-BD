@@ -20,7 +20,7 @@ CREATE TABLE conductores (
     CONSTRAINT pk_conductores 
     PRIMARY KEY (dni)
 
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE automoviles (
@@ -36,12 +36,12 @@ CREATE TABLE automoviles (
     CONSTRAINT fk_automoviles_conductores
     FOREIGN KEY (dni) REFERENCES conductores(dni)
         ON DELETE RESTRICT ON UPDATE CASCADE
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE tarjeta (
     id_tarjeta INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    saldo FLOAT (5,2) NOT NULL;
+    saldo FLOAT (5,2) NOT NULL,
     tipo VARCHAR (20) NOT NULL,
     patente VARCHAR(6) NOT NULL,
 
@@ -55,7 +55,7 @@ CREATE TABLE tarjeta (
     CONSTRAINT fk_tarjeta_tipos_tarjeta
     FOREIGN KEY (tipo) REFERENCES tipos_tarjeta(tipo)
         ON DELETE RESTRICT ON UPDATE CASCADE 
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE tipos_tarjeta (
@@ -66,7 +66,7 @@ CREATE TABLE tipos_tarjeta (
 
     CONSTRAINT pk_tipos_tarjeta
     PRIMARY KEY (tipo)
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE inspectores(
@@ -78,7 +78,7 @@ CREATE TABLE inspectores(
 
     CONSTRAINT pk_inspectores
     PRIMARY KEY (legajo)
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE ubicaciones(
@@ -88,7 +88,7 @@ CREATE TABLE ubicaciones(
 
     CONSTRAINT pk_ubicaciones
     PRIMARY KEY (calle,altura)
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE parquimetros(
@@ -103,7 +103,7 @@ CREATE TABLE parquimetros(
     CONSTRAINT fk_parquimetros_ubicaciones
     FOREIGN KEY (calle,altura) REFERENCES ubicaciones(calle,altura)
         ON DELETE RESTRICT ON UPDATE CASCADE
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 # ----------------------------------------------------------------------------
@@ -173,7 +173,7 @@ CREATE TABLE accede (
     CONSTRAINT fk_accede_parquimetros
     FOREIGN KEY id_parq REFERENCES parquimetros(id_parq)
         ON DELETE RESTRICT ON UPDATE CASCADE
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 CREATE TABLE estacionamientos(
@@ -194,7 +194,7 @@ CREATE TABLE estacionamientos(
     CONSTRAINT fk_estacionamientos_parquimetros
     FOREIGN KEY id_parq REFERENCES parquimetros(id_parq)
         ON DELETE RESTRICT ON UPDATE CASCADE
-)ENGINE=InnoDB;
+) ENGINE=InnoDB;
 
 
 # ----------------------------------------------------------------------------
@@ -212,31 +212,31 @@ CREATE VIEW estacionados AS
 # Creación de usuarios y otorgamiento de privilegios
 
 
-CREATE USER 'admin'@'localhost'  IDENTIFIED BY 'admin';
+    CREATE USER 'admin'@'localhost'  IDENTIFIED BY 'admin';
 
 # El usuario admin solamente podrá conectarse desde la computadora que corre el servidor (localhost).
 
-GRANT ALL PRIVILEGES ON parquimetros.* TO 'admin'@'localhost' WITH GRANT OPTION;
+    GRANT ALL PRIVILEGES ON parquimetros.* TO 'admin'@'localhost' WITH GRANT OPTION;
 
 # El usuario 'admin' tiene acceso total a todas las tablas de 
 # la B.D. parquimetros y puede crear nuevos usuarios y otorgar privilegios.
 
-#--
+#-------
 
-CREATE USER 'venta'@% IDENTIFIED by 'venta';
+    CREATE USER 'venta'@'%' IDENTIFIED by 'venta';
 
 # El usuario venta podrá conectarse desde cualquiera computadora.
 
-GRANT SELECT,INSERT ON parquimetros.tarjeta TO 'venta'@%;
+    GRANT SELECT,INSERT ON parquimetros.tarjeta TO 'venta'@'%';
 
 # El usuario venta solamente puede acceder a la tabla tarjeta con permiso para seleccionar e insertar
 
-#-- 
+#-------
 
-CREATE USER 'inspector'@% IDENTIFIED BY 'inspector';
+    CREATE USER 'inspector'@'%' IDENTIFIED BY 'inspector';
 
 # El usuario inspector podrá conectarse desde cualquier computadora.
 
-GRANT SELECT ON parquimetros.estacionados, parquimetros.Parquimetros TO 'inspector'@%;
-GRANT INSERT ON Multas TO 'inspector'@%; 
+    GRANT SELECT ON parquimetros.estacionados, parquimetros.Parquimetros TO 'inspector'@'%';
+    GRANT INSERT ON Multas TO 'inspector'@'%'; 
 # /* COMPLETAR */
