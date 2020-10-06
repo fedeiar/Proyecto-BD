@@ -14,8 +14,8 @@ CREATE TABLE conductores (
     nombre VARCHAR(45) NOT NULL, 
     apellido VARCHAR(45) NOT NULL,
     direccion VARCHAR(45) NOT NULL,
-    telefono VARCHAR(45) NOT NULL,
-    registro VARCHAR(45) NOT NULL,
+    telefono VARCHAR(45),
+    registro INT UNSIGNED NOT NULL,
  
     CONSTRAINT pk_conductores 
     PRIMARY KEY (dni)
@@ -40,8 +40,8 @@ CREATE TABLE automoviles (
 
 
 CREATE TABLE tipos_tarjeta (
-    tipo VARCHAR (25) NOT NULL,
-    descuento FLOAT(3,2) NOT NULL,
+    tipo VARCHAR(25) NOT NULL,
+    descuento DECIMAL(3,2) UNSIGNED NOT NULL,
 
     CONSTRAINT chk_descuento CHECK (descuento >= 0 AND descuento <= 1),
 
@@ -50,20 +50,20 @@ CREATE TABLE tipos_tarjeta (
 ) ENGINE=InnoDB;
 
 
-CREATE TABLE tarjeta (
+CREATE TABLE tarjetas (
     id_tarjeta INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    saldo FLOAT (5,2) NOT NULL,
-    tipo VARCHAR (20) NOT NULL,
+    saldo DECIMAL(5,2) NOT NULL,
+    tipo VARCHAR(20) NOT NULL,
     patente VARCHAR(6) NOT NULL,
 
-    CONSTRAINT pk_tarjeta
+    CONSTRAINT pk_tarjetas
     PRIMARY KEY (id_tarjeta),
 
     CONSTRAINT fk_tarjeta_Automoviles
     FOREIGN KEY (patente) REFERENCES automoviles(patente)
         ON DELETE RESTRICT ON UPDATE CASCADE,
 
-    CONSTRAINT fk_tarjeta_tipos_tarjeta
+    CONSTRAINT fk_tarjetas_tipos_tarjeta
     FOREIGN KEY (tipo) REFERENCES tipos_tarjeta(tipo)
         ON DELETE RESTRICT ON UPDATE CASCADE 
 ) ENGINE=InnoDB;
@@ -74,7 +74,7 @@ CREATE TABLE inspectores(
     dni INT UNSIGNED NOT NULL,
     nombre VARCHAR(20) NOT NULL,
     apellido VARCHAR(20) NOT NULL,
-    password VARCHAR(32) NOT NULL,
+    password CHAR(32) NOT NULL,
 
     CONSTRAINT pk_inspectores
     PRIMARY KEY (legajo)
@@ -84,7 +84,7 @@ CREATE TABLE inspectores(
 CREATE TABLE ubicaciones(
     calle VARCHAR(45) NOT NULL,
     altura INT UNSIGNED NOT NULL,
-    tarifa FLOAT(5,2) NOT NULL,
+    tarifa DECIMAL(5,2) UNSIGNED NOT NULL,
 
     CONSTRAINT pk_ubicaciones
     PRIMARY KEY (calle,altura)
@@ -115,11 +115,8 @@ CREATE TABLE asociado_con (
     legajo INT UNSIGNED NOT NULL,
     calle  VARCHAR(45) NOT NULL,
     altura INT UNSIGNED NOT NULL,
-    # dia ENUM ('do','lu','ma','mi','ju','vi','sa')
-    dia VARCHAR(2) NOT NULL,
-    turno VARCHAR(1) NOT NULL,
-
-    # CONSTRAINT chk_turno CHECK (turno = 'M' OR turno = 'T'),
+    dia ENUM ('do','lu','ma','mi','ju','vi','sa') NOT NULL,
+    turno ENUM ('m','t') NOT NULL,
 
     CONSTRAINT pk_asociado_con
     PRIMARY KEY (id_asociado_con),
@@ -135,22 +132,22 @@ CREATE TABLE asociado_con (
 
 
 # /* OJO! ver pluralidad (multa o multas?) */
-CREATE TABLE multas (
-    numero INT UNSIGNED NOT NULL,
+CREATE TABLE multa (
+    numero INT UNSIGNED NOT NULL AUTO_INCREMENT,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     patente VARCHAR(6) NOT NULL,
     # /* id_asociado_con, VA SIN AUTOINCREMENT */
     id_asociado_con INT(20) UNSIGNED NOT NULL, 
 
-    CONSTRAINT pk_multas
+    CONSTRAINT pk_multa
     PRIMARY KEY (numero),
 
-    CONSTRAINT fk_multas_automoviles 
+    CONSTRAINT fk_multa_automoviles 
     FOREIGN KEY (patente) REFERENCES automoviles(patente) 
         ON DELETE RESTRICT ON UPDATE CASCADE,
   
-    CONSTRAINT fk_multas_asociado_con 
+    CONSTRAINT fk_multa_asociado_con 
     FOREIGN KEY (id_asociado_con) REFERENCES asociado_con(id_asociado_con)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
@@ -187,7 +184,7 @@ CREATE TABLE estacionamientos(
     PRIMARY KEY (id_parq, fecha_ent, hora_ent),
 
     CONSTRAINT fk_estacionamientos_tarjeta
-    FOREIGN KEY (id_tarjeta) REFERENCES tarjeta(id_tarjeta)
+    FOREIGN KEY (id_tarjeta) REFERENCES tarjetas(id_tarjeta)
         ON DELETE RESTRICT ON UPDATE CASCADE,
 
     CONSTRAINT fk_estacionamientos_parquimetros
@@ -202,7 +199,7 @@ CREATE TABLE estacionamientos(
 
 CREATE VIEW estacionados AS 
    SELECT pq.calle, pq.altura, t.patente
-   FROM (Tarjeta t NATURAL JOIN Estacionamientos e) NATURAL JOIN Parquimetros pq
+   FROM (Tarjetas t NATURAL JOIN Estacionamientos e) NATURAL JOIN Parquimetros pq
    WHERE e.Fecha_ent < e.Hora_ent AND e.Fecha_sal = NULL AND e.Hora_sal = NULL;
 
 # ----------------------------------------------------------------------------
@@ -226,7 +223,7 @@ CREATE VIEW estacionados AS
 
 # El usuario venta podrá conectarse desde cualquiera computadora.
 
-    GRANT SELECT,INSERT ON parquimetros.tarjeta TO 'venta'@'%';
+    GRANT SELECT,INSERT ON parquimetros.Tarjetas TO 'venta'@'%';
 
 # El usuario venta solamente puede acceder a la tabla tarjeta con permiso para seleccionar e insertar
 
@@ -236,9 +233,9 @@ CREATE VIEW estacionados AS
 
 # El usuario inspector podrá conectarse desde cualquier computadora.
 
-    GRANT SELECT ON parquimetros.inspector TO 'inspector'@'%';
-    GRANT SELECT, INSERT ON parquimetros.Multas TO 'inspector'@'%';
-    GRANT SELECT ON parquimetros.estacionados TO 'inspector'@'%';
-    GRANT SELECT, INSERT ON parquimetros.accede to 'inspector'@'%';
+    GRANT SELECT ON parquimetros.Inspectores TO 'inspector'@'%';
+    GRANT SELECT, INSERT ON parquimetros.Multa TO 'inspector'@'%';
+    GRANT SELECT ON parquimetros.Estacionados TO 'inspector'@'%';
+    GRANT SELECT, INSERT ON parquimetros.Accede to 'inspector'@'%';
 
 # /* COMPLETAR */

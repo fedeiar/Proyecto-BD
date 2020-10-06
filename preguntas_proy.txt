@@ -1,5 +1,3 @@
-- Inspector: cómo otorgamos privilegios mínimos para validar legajo y password?
 - multas: habría que dar acceso a algo más además de las multas? (es decir, debería poder seleccionar los atributos de asociado_con?)
 
-
-- En la tabla de inspectores, password hay que ponerle algo mas? o solo se encripta cuando se inserta?
+- password del inspector: CHAR o VARCHAR?
