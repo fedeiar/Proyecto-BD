@@ -236,6 +236,9 @@ CREATE VIEW estacionados AS
 
 # El usuario inspector podrá conectarse desde cualquier computadora.
 
-    GRANT SELECT ON parquimetros.estacionados, parquimetros.Parquimetros TO 'inspector'@'%';
-    GRANT INSERT ON Multas TO 'inspector'@'%'; 
+    GRANT SELECT ON parquimetros.inspector TO 'inspector'@'%';
+    GRANT SELECT, INSERT ON parquimetros.Multas TO 'inspector'@'%';
+    GRANT SELECT ON parquimetros.estacionados TO 'inspector'@'%';
+    GRANT SELECT, INSERT ON parquimetros.accede to 'inspector'@'%';
+
 # /* COMPLETAR */
