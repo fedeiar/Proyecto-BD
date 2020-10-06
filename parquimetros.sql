@@ -39,6 +39,17 @@ CREATE TABLE automoviles (
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE tipos_tarjeta (
+    tipo VARCHAR (25) NOT NULL,
+    descuento FLOAT(3,2) NOT NULL,
+
+    CONSTRAINT chk_descuento CHECK (descuento >= 0 AND descuento <= 1),
+
+    CONSTRAINT pk_tipos_tarjeta
+    PRIMARY KEY (tipo)
+) ENGINE=InnoDB;
+
+
 CREATE TABLE tarjeta (
     id_tarjeta INT UNSIGNED NOT NULL AUTO_INCREMENT,
     saldo FLOAT (5,2) NOT NULL,
@@ -58,22 +69,11 @@ CREATE TABLE tarjeta (
 ) ENGINE=InnoDB;
 
 
-CREATE TABLE tipos_tarjeta (
-    tipo VARCHAR (25) NOT NULL,
-    descuento FLOAT(3,2) NOT NULL,
-
-    CONSTRAINT chk_descuento CHECK (descuento >= 0 AND descuento <= 1),
-
-    CONSTRAINT pk_tipos_tarjeta
-    PRIMARY KEY (tipo)
-) ENGINE=InnoDB;
-
-
 CREATE TABLE inspectores(
     legajo INT UNSIGNED NOT NULL,
     dni INT UNSIGNED NOT NULL,
-    nombre VARCHAR(20) UNSIGNED NOT NULL,
-    apellido VARCHAR(20) UNSIGNED NOT NULL,
+    nombre VARCHAR(20) NOT NULL,
+    apellido VARCHAR(20) NOT NULL,
     password VARCHAR(32) NOT NULL,
 
     CONSTRAINT pk_inspectores
@@ -119,7 +119,7 @@ CREATE TABLE asociado_con (
     dia VARCHAR(2) NOT NULL,
     turno VARCHAR(1) NOT NULL,
 
-    CONSTRAINT chk_turno CHECK (turno = 'M' OR turno = 'T'),
+    # CONSTRAINT chk_turno CHECK (turno = 'M' OR turno = 'T'),
 
     CONSTRAINT pk_asociado_con
     PRIMARY KEY (id_asociado_con),
@@ -150,7 +150,6 @@ CREATE TABLE multas (
     FOREIGN KEY (patente) REFERENCES automoviles(patente) 
         ON DELETE RESTRICT ON UPDATE CASCADE,
   
- 
     CONSTRAINT fk_multas_asociado_con 
     FOREIGN KEY (id_asociado_con) REFERENCES asociado_con(id_asociado_con)
         ON DELETE RESTRICT ON UPDATE CASCADE
@@ -164,14 +163,14 @@ CREATE TABLE accede (
     hora TIME NOT NULL,
 
     CONSTRAINT pk_accede
-    PRIMARY KEY (id_parq,fecha,hora)
+    PRIMARY KEY (id_parq, fecha, hora),
 
     CONSTRAINT fk_accede_inspectores
-    FOREIGN KEY legajo REFERENCES inspectores(dni),
+    FOREIGN KEY (legajo) REFERENCES inspectores(legajo)
         ON DELETE RESTRICT ON UPDATE CASCADE,
 
     CONSTRAINT fk_accede_parquimetros
-    FOREIGN KEY id_parq REFERENCES parquimetros(id_parq)
+    FOREIGN KEY (id_parq) REFERENCES parquimetros(id_parq)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
@@ -184,15 +183,15 @@ CREATE TABLE estacionamientos(
     fecha_sal DATE,
     hora_sal TIME,
 
-    CONSTRAINT pk_estacionamientos,
-    PRIMARY KEY (id_parq,fecha_ent,hora_ent),
+    CONSTRAINT pk_estacionamientos
+    PRIMARY KEY (id_parq, fecha_ent, hora_ent),
 
     CONSTRAINT fk_estacionamientos_tarjeta
-    FOREIGN KEY id_tarjeta REFERENCES tarjeta(id_tarjeta)
+    FOREIGN KEY (id_tarjeta) REFERENCES tarjeta(id_tarjeta)
         ON DELETE RESTRICT ON UPDATE CASCADE,
 
     CONSTRAINT fk_estacionamientos_parquimetros
-    FOREIGN KEY id_parq REFERENCES parquimetros(id_parq)
+    FOREIGN KEY (id_parq) REFERENCES parquimetros(id_parq)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
@@ -202,8 +201,8 @@ CREATE TABLE estacionamientos(
 # Creación de Vistas
 
 CREATE VIEW estacionados AS 
-   SELECT pq.calle, pq.altura, pe.patente
-   FROM (Pertenece pe NATURAL JOIN Estacionamientos e) NATURAL JOIN Parquimetros pq
+   SELECT pq.calle, pq.altura, t.patente
+   FROM (Tarjeta t NATURAL JOIN Estacionamientos e) NATURAL JOIN Parquimetros pq
    WHERE e.Fecha_ent < e.Hora_ent AND e.Fecha_sal = NULL AND e.Hora_sal = NULL;
 
 # ----------------------------------------------------------------------------
