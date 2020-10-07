@@ -1,3 +1,3 @@
 - multas: habría que dar acceso a algo más además de las multas? (es decir, debería poder seleccionar los atributos de asociado_con?)
 
-- password del inspector: CHAR o VARCHAR?
+- quien controla que el asociado_con 323 sea un miercoles en ambas fechas?

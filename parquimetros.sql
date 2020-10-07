@@ -111,7 +111,7 @@ CREATE TABLE parquimetros(
 # Creación de tablas para las relaciones
 
 CREATE TABLE asociado_con (
-    id_asociado_con INT(20) UNSIGNED NOT NULL AUTO_INCREMENT,
+    id_asociado_con INT UNSIGNED NOT NULL AUTO_INCREMENT,
     legajo INT UNSIGNED NOT NULL,
     calle  VARCHAR(45) NOT NULL,
     altura INT UNSIGNED NOT NULL,
@@ -131,14 +131,12 @@ CREATE TABLE asociado_con (
 ) ENGINE=InnoDB;
 
 
-# /* OJO! ver pluralidad (multa o multas?) */
 CREATE TABLE multa (
     numero INT UNSIGNED NOT NULL AUTO_INCREMENT,
     fecha DATE NOT NULL,
     hora TIME NOT NULL,
     patente VARCHAR(6) NOT NULL,
-    # /* id_asociado_con, VA SIN AUTOINCREMENT */
-    id_asociado_con INT(20) UNSIGNED NOT NULL, 
+    id_asociado_con INT UNSIGNED NOT NULL, 
 
     CONSTRAINT pk_multa
     PRIMARY KEY (numero),
