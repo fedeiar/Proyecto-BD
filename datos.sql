@@ -11,6 +11,7 @@ INSERT INTO conductores VALUES (32171214, "Alejo", "Ferreras", "Terrada 1200" ,"
 INSERT INTO conductores VALUES (31171215, "Belen", "Gauto", "Trelew 140" ,"2123694562",42007);
 
 
+
 INSERT INTO automoviles VALUES ("ABC123","Chevrolet","Onix Premier","Rojo",39171207);
 INSERT INTO automoviles VALUES ("DEF456","Citroen","C5 Aircross","Blanco perla",38171208);
 INSERT INTO automoviles VALUES ("GHI789","Citroen","DS3 Crossback E-Tense","",37171209);
@@ -103,7 +104,7 @@ INSERT INTO asociado_con VALUES (4,126,"Alem",123,"Sa","M");
 INSERT INTO asociado_con VALUES (5,127,"Alem",124,"Do","T");
 
 
-# quien controla que el asociado_con 126 sea un miercoles en ambas fechas?
+# quien controla que el asociado_con 323 sea un miercoles en ambas fechas?
 INSERT INTO multa VALUES (10,"2020/03/1","14:44","ABC123",1);
 INSERT INTO multa VALUES (11,"2020/03/29","13:54","DEF456",2);
 INSERT INTO multa VALUES (12,"2020/04/22","14:35","GHI789",3);

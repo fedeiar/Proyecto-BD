@@ -198,11 +198,10 @@ CREATE TABLE estacionamientos(
 CREATE VIEW estacionados AS 
    SELECT pq.calle, pq.altura, t.patente
    FROM (Tarjetas t NATURAL JOIN Estacionamientos e) NATURAL JOIN Parquimetros pq
-   WHERE e.Fecha_ent < e.Hora_ent AND e.Fecha_sal = NULL AND e.Hora_sal = NULL;
+   WHERE e.fecha_sal IS NULL AND e.hora_sal IS NULL;
 
 # ----------------------------------------------------------------------------
 # ----------------------------------------------------------------------------
-
 # Creación de usuarios y otorgamiento de privilegios
 
 
@@ -222,7 +221,7 @@ CREATE VIEW estacionados AS
 # El usuario venta podrá conectarse desde cualquiera computadora.
 
     GRANT SELECT,INSERT ON parquimetros.Tarjetas TO 'venta'@'%';
-
+    GRANT SELECT,INSERT ON parquimetros.tipos_tarjeta TO 'venta'@'%';
 # El usuario venta solamente puede acceder a la tabla tarjeta con permiso para seleccionar e insertar
 
 #-------
