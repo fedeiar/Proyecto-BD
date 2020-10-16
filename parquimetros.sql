@@ -236,4 +236,4 @@ CREATE VIEW estacionados AS
     GRANT SELECT, INSERT ON parquimetros.Accede to 'inspector'@'%';
     GRANT SELECT ON parquimetros.asociado_con to 'inspector'@'%';
     GRANT SELECT ON parquimetros.parquimetros to 'inspector'@'%';
-# /* COMPLETAR */
+
