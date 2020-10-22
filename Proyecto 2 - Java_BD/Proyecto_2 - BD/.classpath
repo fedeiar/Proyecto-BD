@@ -6,12 +6,12 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/fede/Desktop/Uni/3.Tercer Año/Bases de Datos/Proyectos/Proyecto 2/Proyecto-BD/Proyecto 2 - Java_BD/mysql-connector-java-8.0.21.jar">
+	<classpathentry kind="lib" path="mysql-connector-java-8.0.21.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/fede/Desktop/Uni/3.Tercer Año/Bases de Datos/Proyectos/Proyecto 2/Proyecto-BD/Proyecto 2 - Java_BD/quicktable-3.0.jar">
+	<classpathentry kind="lib" path="quicktable-3.0.jar">
 		<attributes>
 			<attribute name="module" value="true"/>
 		</attributes>
