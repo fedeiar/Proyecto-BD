@@ -62,6 +62,7 @@ public class VentanaConsultas extends javax.swing.JInternalFrame {
 	        pnlConsulta = new JPanel();
 	        getContentPane().add(pnlConsulta, BorderLayout.NORTH);
 	        
+	        
 	        scrConsulta = new JScrollPane();
 	        pnlConsulta.add(scrConsulta);
 	       
