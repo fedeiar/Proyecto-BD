@@ -48,9 +48,7 @@ public class VentanaPrincipal extends javax.swing.JFrame
    private JMenuItem mniAbmBatallas;
    private JMenu mnuEjemplos;
 
-   /**
-   * Auto-generated main method to display this JFrame
-   */
+   
    public static void main(String[] args) 
    {
       SwingUtilities.invokeLater(new Runnable() {
