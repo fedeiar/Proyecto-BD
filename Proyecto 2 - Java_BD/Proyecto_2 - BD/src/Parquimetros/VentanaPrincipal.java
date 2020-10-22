@@ -248,13 +248,7 @@ public class VentanaPrincipal extends javax.swing.JFrame
    }
    
    private void mniBarcosActionPerformed(ActionEvent evt) 
-   {
-      try
-      {
-         //this.ventanaBarcos.setMaximum(true);
-      }
-      catch (PropertyVetoException e) {}
-      //this.ventanaBarcos.setVisible(true);      
+   {   
    }
    
    private void mniConsultasActionPerformed(ActionEvent evt) 
@@ -268,13 +262,7 @@ public class VentanaPrincipal extends javax.swing.JFrame
    }
    
    private void mniAbmBatallasActionPerformed(ActionEvent evt) 
-   {
-      try
-      {
-         //this.ventanaAbmBatallas.setMaximum(true);
-      }
-      catch (PropertyVetoException e) {}
-      //this.ventanaAbmBatallas.setVisible(true);      
+   { 
    }
    
    private void mnuAcercaDeMouseClicked(MouseEvent evt) 
