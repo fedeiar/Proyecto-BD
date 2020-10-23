@@ -2,11 +2,7 @@ package parquimetros;
 
 import java.awt.Dimension;
 import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import java.awt.Rectangle;
-import java.awt.FlowLayout;
 
-import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -16,6 +12,8 @@ import javax.swing.WindowConstants;
 
 import quick.dbtable.DBTable;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
@@ -29,8 +27,9 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     
     private JPanel jPanelLogin;
     private JTextField jTFUser;
-    private JPasswordField jPWPassword;
+    private JPasswordField jPPassword;
     private JLabel jLuser, jLpassword;
+    private JButton jBingresar;
     //constructor
     public VentanaAdministrador(){
         super();
@@ -46,7 +45,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             this.getContentPane().setLayout(new BorderLayout());
             this.setClosable(true);
             this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-            //this.setMaximizable(true);
+            this.setMaximizable(true);
 
             armarPanelLogin();
            
@@ -90,16 +89,26 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jLpassword.setBounds(272, 297, 55, 14);
         jPanelLogin.add(jLpassword);
 
-        jPWPassword = new JPasswordField();
-        jPWPassword.setBounds(352, 291, 186, 20);
-        jPWPassword.setColumns(20);
-        jPanelLogin.add(jPWPassword);
+        jPPassword = new JPasswordField();
+        jPPassword.setBounds(352, 291, 186, 20);
+        jPPassword.setColumns(20);
+        jPanelLogin.add(jPPassword);
         
-        JButton btnNewButton = new JButton("Ingresar");
-        btnNewButton.setBounds(449, 322, 89, 23);
-        jPanelLogin.add(btnNewButton);
-        btnNewButton.setAction(a)
+        jBingresar = new JButton("Ingresar");
+        jBingresar.setBounds(449, 322, 89, 23);
+        jPanelLogin.add(jBingresar);
+        jBingresar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ev) {
+                jBingresarEjecutarActionPerformed(ev);
+            }
+        });
+    }
 
+    private void jBingresarEjecutarActionPerformed(ActionEvent ev){
+        String user = jTFUser.getText();
+        char[] array_clave = jPPassword.getPassword();
+        String clave = new String(array_clave);
+        this.conectarBD(user,clave);
     }
 
     private void thisComponentHidden(ComponentEvent evt){
@@ -121,20 +130,15 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         // this.conectarBD();
     }
 
-    private void conectarBD(){
+    private void conectarBD(String usuario, String password){
         try{
-            //Agrega la tabla al frame
-            this.getContentPane().add(tabla, BorderLayout.CENTER);
-            tabla.setEditable(false);
-
+            
             String driver ="com.mysql.cj.jdbc.Driver";
         	String servidor = "localhost:3306";
         	String baseDatos = "parquimetros"; 
-        	String usuario = "admin";
-
             String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
                                  
-            tabla.connectDatabase(driver, uriConexion, usuario, clave);
+            tabla.connectDatabase(driver, uriConexion, usuario, password);
 
         }
         catch(SQLException ex){
@@ -143,5 +147,14 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }
+        catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+
+        //Agrega la tabla al frame
+        this.getContentPane().add(tabla, BorderLayout.CENTER);
+        tabla.setEditable(false);
+
     }
+    
 }
