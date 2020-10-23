@@ -2,8 +2,15 @@ package parquimetros;
 
 import java.awt.Dimension;
 import java.awt.BorderLayout;
+import java.awt.GridBagLayout;
+import java.awt.Rectangle;
+import java.awt.FlowLayout;
 
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.WindowConstants;
 
@@ -13,16 +20,16 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
 
-
 @SuppressWarnings("serial")
 public class VentanaAdministrador extends javax.swing.JInternalFrame{
 
     //atributos
     private DBTable tabla;
     
-    private JTextField jUser;
-    private JTextField jPassword;
-    
+    private JPanel jPanelLogin;
+    private JTextField jTFUser;
+    private JPasswordField jPWPassword;
+    private JLabel jLuser, jLpassword;
     //constructor
     public VentanaAdministrador(){
         super();
@@ -41,11 +48,30 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
             this.setMaximizable(true);
 
-            //crea la tabla y la agrega al frame con Jscrollpane y todo
-            tabla = new DBTable();
-            this.getContentPane().add(tabla, BorderLayout.CENTER);
-            tabla.setEditable(false);
+            jPanelLogin = new JPanel();
+            this.getContentPane().add(jPanelLogin, BorderLayout.CENTER);
 
+            jLuser = new JLabel("Usuario: ");
+            //jLuser.setBounds(new Rectangle(100,200,jLuser.getWidth(),jLuser.getHeight()));
+            jPanelLogin.add(jLuser);
+
+
+            jTFUser = new JTextField();
+            jTFUser.setColumns(20);
+            jPanelLogin.add(jTFUser);
+
+            jLpassword = new JLabel("Password: ");
+            jPanelLogin.add(jLpassword);
+
+            jPWPassword = new JPasswordField();
+            jPWPassword.setColumns(20);
+            jPanelLogin.add(jPWPassword);
+
+           
+
+            //crea la tabla
+            tabla = new DBTable();
+            
             this.addComponentListener(new ComponentAdapter() {
                 public void componentHidden(ComponentEvent evt) {
                    thisComponentHidden(evt);
@@ -83,7 +109,14 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     }
 
     private void conectarBD(){
+
         //try{
+
+        
+            //Agrega la tabla al frame
+            this.getContentPane().add(tabla, BorderLayout.CENTER);
+            tabla.setEditable(false);
+
             String driver ="com.mysql.cj.jdbc.Driver";
         	String servidor = "localhost:3306";
         	String baseDatos = "parquimetros"; 
@@ -101,5 +134,6 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }*/
-    }
+    
+}
 }
