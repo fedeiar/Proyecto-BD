@@ -132,8 +132,4 @@ public class VentanaConsultas extends javax.swing.JInternalFrame {
 		
 		
 	}
-<<<<<<< Updated upstream
 }
-=======
-}
->>>>>>> Stashed changes

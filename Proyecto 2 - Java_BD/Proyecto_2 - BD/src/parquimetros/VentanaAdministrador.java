@@ -31,8 +31,8 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 
     private void initGUI(){
         try{
-            this.setPreferredSize(new Dimension(VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH));
-            this.setBounds(0, 0, VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH);
+            this.setPreferredSize(new Dimension(VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGHT));
+            this.setBounds(0, 0, VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGHT);
             this.setVisible(true);
             BorderLayout thisLayout = new BorderLayout();
             this.setTitle("Consultas Admin");
