@@ -2,11 +2,11 @@ package parquimetros;
 
 import java.awt.EventQueue;
 
-import javax.swing.JButton;
+
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
-import java.awt.BorderLayout;
+
 import java.awt.Panel;
 import java.awt.TextField;
 import java.awt.event.ActionEvent;
@@ -17,8 +17,7 @@ import java.awt.Label;
 import java.awt.Button;
 import java.awt.Font;
 import javax.swing.JPasswordField;
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeEvent;
+
 
 public class Prueba {
 
@@ -50,14 +49,6 @@ public class Prueba {
 	public Prueba() {
 		initialize();
 		
-		 
-
-	      
-
-	      
-	      
-	     
-
 	}
 
 	/**
@@ -66,8 +57,6 @@ public class Prueba {
 	private void initialize() {
 		
 		
-			 
-			
 		frame = new JFrame();
 		frame.setBounds(100, 100, 641, 531);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
