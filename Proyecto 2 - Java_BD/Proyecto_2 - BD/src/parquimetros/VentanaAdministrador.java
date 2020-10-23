@@ -99,16 +99,12 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jPanelLogin.add(jBingresar);
         jBingresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
-                jBingresarEjecutarActionPerformed(ev);
+                String user = jTFUser.getText();
+                char[] array_clave = jPPassword.getPassword();
+                String clave = new String(array_clave);
+                conectarBD(user,clave);
             }
         });
-    }
-
-    private void jBingresarEjecutarActionPerformed(ActionEvent ev){
-        String user = jTFUser.getText();
-        char[] array_clave = jPPassword.getPassword();
-        String clave = new String(array_clave);
-        this.conectarBD(user,clave);
     }
 
     private void thisComponentHidden(ComponentEvent evt){
