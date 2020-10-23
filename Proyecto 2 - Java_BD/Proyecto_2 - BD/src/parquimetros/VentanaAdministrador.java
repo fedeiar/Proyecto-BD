@@ -19,6 +19,7 @@ import quick.dbtable.DBTable;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
+import javax.swing.JButton;
 
 @SuppressWarnings("serial")
 public class VentanaAdministrador extends javax.swing.JInternalFrame{
@@ -74,20 +75,30 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         
         jPanelLogin = new JPanel();
         this.getContentPane().add(jPanelLogin, BorderLayout.CENTER);
+        jPanelLogin.setLayout(null);
        
         jLuser = new JLabel("Usuario: ");
+        jLuser.setBounds(282, 267, 45, 14);
         jPanelLogin.add(jLuser);
 
         jTFUser = new JTextField();
+        jTFUser.setBounds(352, 261, 186, 20);
         jTFUser.setColumns(20);
         jPanelLogin.add(jTFUser);
 
         jLpassword = new JLabel("Password: ");
+        jLpassword.setBounds(272, 297, 55, 14);
         jPanelLogin.add(jLpassword);
 
         jPWPassword = new JPasswordField();
+        jPWPassword.setBounds(352, 291, 186, 20);
         jPWPassword.setColumns(20);
         jPanelLogin.add(jPWPassword);
+        
+        JButton btnNewButton = new JButton("Ingresar");
+        btnNewButton.setBounds(449, 322, 89, 23);
+        jPanelLogin.add(btnNewButton);
+        btnNewButton.setAction(a)
 
     }
 
@@ -133,5 +144,4 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             System.out.println("VendorError: " + ex.getErrorCode());
         }
     }
-    
 }
