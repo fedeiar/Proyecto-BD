@@ -80,8 +80,6 @@ public class Prueba {
 		label_1.setAlignment(Label.CENTER);
 		
 		
-		
-		
 		TextField user = new TextField();
 		user.setBounds(282, 136, 306, 23);
 		frame.getContentPane().add(user);
