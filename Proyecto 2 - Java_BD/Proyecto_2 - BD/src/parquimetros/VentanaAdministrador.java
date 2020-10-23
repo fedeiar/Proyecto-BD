@@ -140,6 +140,11 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
                                  
             tabla.connectDatabase(driver, uriConexion, usuario, password);
 
+            //Agrega la tabla al frame
+            this.getContentPane().add(tabla, BorderLayout.CENTER);
+            tabla.setEditable(false);
+            jPanelLogin.setVisible(false);
+
         }
         catch(SQLException ex){
             JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -151,9 +156,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             ex.printStackTrace();
         }
 
-        //Agrega la tabla al frame
-        this.getContentPane().add(tabla, BorderLayout.CENTER);
-        tabla.setEditable(false);
+        
 
     }
     
