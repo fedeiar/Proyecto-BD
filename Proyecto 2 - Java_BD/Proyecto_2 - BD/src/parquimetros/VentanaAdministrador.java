@@ -83,22 +83,23 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     }
 
     private void conectarBD(){
-        try{
+        //try{
             String driver ="com.mysql.cj.jdbc.Driver";
         	String servidor = "localhost:3306";
         	String baseDatos = "parquimetros"; 
         	String usuario = "admin";
         	
+        	
             String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
                                  
-            tabla.connectDatabase(driver, uriConexion, usuario, clave);
+            //tabla.connectDatabase(driver, uriConexion, usuario, clave);
 
-        }
+        /*}
         catch(SQLException ex){
             JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
-        }
+        }*/
     }
 }
