@@ -100,6 +100,7 @@ public class Prueba {
 		frame.getContentPane().add(passwordField);
 		
 		button.addActionListener(new ActionListener() {
+		
 			
             public void actionPerformed(ActionEvent evt) {
             	
