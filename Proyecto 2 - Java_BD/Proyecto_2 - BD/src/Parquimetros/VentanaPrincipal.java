@@ -25,36 +25,31 @@ import javax.swing.WindowConstants;
 
 @SuppressWarnings("serial")
 public class VentanaPrincipal extends javax.swing.JFrame {
-    // atributos
+    
+    //constantes
+    
+    public static final int WIDTH = 800;
+    public static final int HEIGTH = 600;
 
-    private VentanaConsultas ventanaConsultas;
-    private JButton btnCerrar;
-    private JLabel lblAcercaDe4;
-    private JLabel lblAcercaDe3;
-    private JLabel lblAcercaDe2;
-    private JLabel lblAcercaDe1;
-
-    private JMenu mnuAcercaDe;
-    private JDialog dlgAcercaDe;
+    //atributos
+    private VentanaAdministrador ventAdmin;
 
     private JDesktopPane jDesktopPane1;
+
     private JMenuBar jMenuBar1;
-    private JMenuItem mniSalir;
+    private JMenuItem jMenuSalir;
     private JSeparator jSeparator1;
-    private JMenuItem mniBarcos;
-    private JMenuItem mniConsultas;
-    private JMenuItem mniAbmBatallas;
-    private JMenu mnuEjemplos;
+    private JMenuItem jMenuItemAdmin;
+    private JMenu jMenuUsuarios;
 
     // constructor
     public VentanaPrincipal() {
         super();
         initGUI();
 
-        this.ventanaConsultas = new VentanaConsultas();
-        this.ventanaConsultas.setVisible(false);
-        this.jDesktopPane1.add(this.ventanaConsultas);
-
+        this.ventAdmin = new VentanaAdministrador();
+        this.ventAdmin.setVisible(false);
+        this.jDesktopPane1.add(this.ventAdmin);
     }
 
     // metodos
@@ -62,117 +57,68 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initGUI() {
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception e) {
+        } 
+        catch (Exception e) {
             e.printStackTrace();
         }
 
         try {
 
-            this.setTitle("Panel");
+            this.setTitle("Parquimetros");
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
             jDesktopPane1 = new JDesktopPane();
-            getContentPane().add(jDesktopPane1, BorderLayout.CENTER);
-            jDesktopPane1.setPreferredSize(new java.awt.Dimension(800, 600));
-
-            btnCerrar = new JButton();
-            btnCerrar.setText("Cerrar");
-            btnCerrar.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                    btnCerrarActionPerformed(evt);
-                }
-            });
+            this.getContentPane().add(jDesktopPane1, BorderLayout.CENTER);
+            jDesktopPane1.setPreferredSize(new java.awt.Dimension(WIDTH, HEIGTH));
 
             jMenuBar1 = new JMenuBar();
             setJMenuBar(jMenuBar1);
 
-            mnuEjemplos = new JMenu();
-            jMenuBar1.add(mnuEjemplos);
-            mnuEjemplos.setText("Ejemplos");
+            jMenuUsuarios = new JMenu();
+            jMenuBar1.add(jMenuUsuarios);
+            jMenuUsuarios.setText("Usuarios");
 
-            mniBarcos = new JMenuItem();
-            mnuEjemplos.add(mniBarcos);
-            mniBarcos.setText("B�squeda de Barcos (Utilizando JTable)");
-            mniBarcos.addActionListener(new ActionListener() {
+            jMenuItemAdmin = new JMenuItem();
+            jMenuUsuarios.add(jMenuItemAdmin);
+            jMenuItemAdmin.setText("Ingresar como Administrador");
+            jMenuItemAdmin.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                // mniBarcosActionPerformed(evt);
-                }
-            });
-
-            mniConsultas = new JMenuItem();
-            mnuEjemplos.add(mniConsultas);
-            mniConsultas.setText("Consultas (Utilizando DBTable)");
-            mniConsultas.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                mniConsultasActionPerformed(evt);
-                }
-            });
-
-            mniAbmBatallas = new JMenuItem();
-            mnuEjemplos.add(mniAbmBatallas);
-            mniAbmBatallas.setText("ABM de Batallas (Utilizando DBTable)");
-            mniAbmBatallas.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent evt) {
-                // mniAbmBatallasActionPerformed(evt);
+                    menuItemAdminActionPerformed(evt);
                 }
             });
 
             jSeparator1 = new JSeparator();
-            mnuEjemplos.add(jSeparator1);
+            jMenuUsuarios.add(jSeparator1);
 
-            mniSalir = new JMenuItem();
-            mnuEjemplos.add(mniSalir);
-            mniSalir.setText("Salir");
-            mniSalir.addActionListener(new ActionListener() {
+            jMenuSalir = new JMenuItem();
+            jMenuUsuarios.add(jMenuSalir);
+            jMenuSalir.setText("Salir");
+            jMenuSalir.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent evt) {
-                // mniSalirActionPerformed(evt);
+                    menuItemSalirActionPerformed(evt);
                 }
             });
 
-            this.setSize(800, 600);
+            this.setSize(WIDTH, HEIGTH);
             pack();
-        } catch (Exception e) {
-        e.printStackTrace();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
+    private void menuItemAdminActionPerformed(ActionEvent evt) {
+        try {
+            this.ventAdmin.setMaximum(true);
+        } 
+        catch (PropertyVetoException e) {
+            e.printStackTrace();
+        }
+        this.ventAdmin.setVisible(true);
     }
 
-  private void mniSalirActionPerformed(ActionEvent evt) {
-    this.dispose();
-  }
-
-  private void mniBarcosActionPerformed(ActionEvent evt) {
-  }
-
-  private void mniConsultasActionPerformed(ActionEvent evt) {
-    try {
-      this.ventanaConsultas.setMaximum(true);
-    } catch (PropertyVetoException e) {
-
+    private void menuItemSalirActionPerformed(ActionEvent evt) {
+        this.dispose();
     }
-    this.ventanaConsultas.setVisible(true);
-  }
-
-  private void mniAbmBatallasActionPerformed(ActionEvent evt) {
-  }
-
-  private void mnuAcercaDeMouseClicked(MouseEvent evt) {
-    dlgAcercaDe.setMinimumSize(new java.awt.Dimension(400, 280));
-    centrarDialogo(dlgAcercaDe);
-    dlgAcercaDe.setVisible(true);
-  }
-
-  private void btnCerrarActionPerformed(ActionEvent evt) {
-    dlgAcercaDe.setVisible(false);
-  }
-
-  private void centrarDialogo(javax.swing.JDialog p_dialogo) {
-    p_dialogo.setLocationRelativeTo(this);
-    p_dialogo.setLocationByPlatform(false);
-    int desplzX = (int) ((this.getSize().getWidth() / 2.0) - (p_dialogo.getSize().getWidth() / 2.0));
-    int desplzY = (int) ((this.getSize().getHeight() / 2.0) - (p_dialogo.getSize().getHeight() / 2.0));
-    p_dialogo.setLocation(new Point((int) this.getLocationOnScreen().getX() + desplzX,
-        (int) this.getLocationOnScreen().getY() + desplzY));
-
-  }
 
 }
