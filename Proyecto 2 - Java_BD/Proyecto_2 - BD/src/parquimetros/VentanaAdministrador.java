@@ -2,7 +2,7 @@ package parquimetros;
 
 import java.awt.Dimension;
 import java.awt.BorderLayout;
-import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.awt.FlowLayout;
 
@@ -41,32 +41,13 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             this.setPreferredSize(new Dimension(VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH));
             this.setBounds(0, 0, VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH);
             this.setVisible(true);
-            BorderLayout thisLayout = new BorderLayout();
             this.setTitle("Consultas Admin");
-            this.getContentPane().setLayout(thisLayout);
+            this.getContentPane().setLayout(new BorderLayout());
             this.setClosable(true);
             this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-            this.setMaximizable(true);
+            //this.setMaximizable(true);
 
-            jPanelLogin = new JPanel();
-            this.getContentPane().add(jPanelLogin, BorderLayout.CENTER);
-
-            jLuser = new JLabel("Usuario: ");
-            //jLuser.setBounds(new Rectangle(100,200,jLuser.getWidth(),jLuser.getHeight()));
-            jPanelLogin.add(jLuser);
-
-
-            jTFUser = new JTextField();
-            jTFUser.setColumns(20);
-            jPanelLogin.add(jTFUser);
-
-            jLpassword = new JLabel("Password: ");
-            jPanelLogin.add(jLpassword);
-
-            jPWPassword = new JPasswordField();
-            jPWPassword.setColumns(20);
-            jPanelLogin.add(jPWPassword);
-
+            armarPanelLogin();
            
 
             //crea la tabla
@@ -89,6 +70,27 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         
     }
 
+    private void armarPanelLogin(){
+        
+        jPanelLogin = new JPanel();
+        this.getContentPane().add(jPanelLogin, BorderLayout.CENTER);
+       
+        jLuser = new JLabel("Usuario: ");
+        jPanelLogin.add(jLuser);
+
+        jTFUser = new JTextField();
+        jTFUser.setColumns(20);
+        jPanelLogin.add(jTFUser);
+
+        jLpassword = new JLabel("Password: ");
+        jPanelLogin.add(jLpassword);
+
+        jPWPassword = new JPasswordField();
+        jPWPassword.setColumns(20);
+        jPanelLogin.add(jPWPassword);
+
+    }
+
     private void thisComponentHidden(ComponentEvent evt){
         this.desconectarBD();
     }
@@ -105,7 +107,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     }
 
     private void thisComponentShown(ComponentEvent evt){
-        this.conectarBD();
+        // this.conectarBD();
     }
 
     private void conectarBD(){
@@ -118,7 +120,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         	String servidor = "localhost:3306";
         	String baseDatos = "parquimetros"; 
         	String usuario = "admin";
-        	
+
             String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
                                  
             tabla.connectDatabase(driver, uriConexion, usuario, clave);
@@ -131,4 +133,5 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             System.out.println("VendorError: " + ex.getErrorCode());
         }
     }
+    
 }
