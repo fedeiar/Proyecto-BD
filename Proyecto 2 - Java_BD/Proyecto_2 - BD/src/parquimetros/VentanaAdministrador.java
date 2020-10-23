@@ -83,6 +83,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     }
 
     private void conectarBD(){
+
         try{
             String driver ="com.mysql.cj.jdbc.Driver";
         	String servidor = "localhost:3306";
@@ -99,6 +100,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+
         }
     }
 }
