@@ -86,7 +86,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         getContentPane().setLayout(null);
         
         jPanelLogin = new JPanel();
-        jPanelLogin.setBounds(0, 101, 790, 549);
+        jPanelLogin.setBounds(0, 111, 790, 539);
         this.getContentPane().add(jPanelLogin);
         
         jPanelLogin.setLayout(null);
@@ -114,7 +114,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jPanelLogin.add(jBingresar);
         
         jPanelConsulta = new JPanel();
-        jPanelConsulta.setBounds(0, 0, 790, 268);
+        jPanelConsulta.setBounds(0, 0, 790, 560);
         getContentPane().add(jPanelConsulta);
         jPanelConsulta.setLayout(null);
         jPanelConsulta.setVisible(false);
@@ -140,6 +140,11 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         JButton jBborrar = new JButton("Borrar");
         jBborrar.setBounds(105, 215, 89, 23);
         jPanelConsulta.add(jBborrar);
+        
+        DBTable tabla_1 = new DBTable();
+        tabla_1.setEditable(false);
+        tabla_1.setBounds(0, 249, 790, 368);
+        jPanelConsulta.add(tabla_1);
         jBingresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 jBingresarEjecutarActionPerformed(ev);
