@@ -8,6 +8,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import quick.dbtable.DBTable;
@@ -17,6 +18,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
+import java.sql.Types;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
@@ -29,6 +32,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
+
 import java.awt.Font;
 
 @SuppressWarnings("serial")
@@ -37,12 +41,14 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     //atributos
     private DBTable tabla;
     
-    private JPanel jPanelLogin;
-    private JPanel jPanelConsulta;
+    private JPanel jPanelLogin, jPanelConsulta;
     private JTextField jTFUser;
+    private JTextArea jTAconsulta;
     private JPasswordField jPPassword;
     private JLabel jLuser, jLpassword;
-    private JButton jBingresar;
+    private JButton jBingresar, jBejecutar, jBborrar;
+    private JScrollPane scrConsulta;
+
     //constructor
     public VentanaAdministrador(){
         super();
@@ -128,32 +134,70 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jPanelConsulta.setLayout(null);
         jPanelConsulta.setVisible(false);
 
-        JScrollPane scrConsulta = new JScrollPane();
+        scrConsulta = new JScrollPane();
         scrConsulta.setBounds(10, 11, 566, 193);
         jPanelConsulta.add(scrConsulta);
 
-        JButton jBejecutar = new JButton("Ejecutar");
+        jBejecutar = new JButton("Ejecutar");
         jBejecutar.setBounds(10, 215, 89, 23);
         jPanelConsulta.add(jBejecutar);
+        jBejecutar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                refrescarTabla();
+            }
+        });
         
-        JButton jBborrar = new JButton("Borrar");
+        jBborrar = new JButton("Borrar");
         jBborrar.setBounds(105, 215, 89, 23);
         jPanelConsulta.add(jBborrar);
+        jBborrar.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e){
+                jTAconsulta.setText("");
+            }
+        });
 
-        JTextArea txtConsulta = new JTextArea();
-        txtConsulta.setText("SELECT t.fecha, t.nombre_batalla, b.nombre_barco, b.id, b.capitan, r.resultado \nFROM batallas t, resultados r, barcos b \nWHERE t.nombre_batalla = r.nombre_batalla \nAND r.nombre_barco = b.nombre_barco \nORDER BY t.fecha, t.nombre_batalla, b.nombre_barco");
-        txtConsulta.setTabSize(3);
-        txtConsulta.setRows(10);
-        txtConsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        txtConsulta.setColumns(80);
-        txtConsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
-        scrConsulta.setViewportView(txtConsulta);
+        jTAconsulta = new JTextArea();
+        jTAconsulta.setText("SELECT * FROM Inspectores");
+        jTAconsulta.setTabSize(3);
+        jTAconsulta.setRows(10);
+        jTAconsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        jTAconsulta.setColumns(80);
+        jTAconsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+        scrConsulta.setViewportView(jTAconsulta);
 
         //crea la tabla y la agrega al panel de consultas
         tabla = new DBTable();
         tabla.setEditable(false);
         tabla.setBounds(0, 249, 790, 368);
         jPanelConsulta.add(tabla);
+    }
+
+    private void refrescarTabla(){
+        try {
+
+    	    tabla.setSelectSql(this.jTAconsulta.getText().trim());
+            tabla.createColumnModelFromQuery();
+
+    	    for (int i = 0; i < tabla.getColumnCount(); i++){
+
+                if (tabla.getColumn(i).getType()==Types.TIME){
+                    tabla.getColumn(i).setType(Types.CHAR);  
+                }
+
+                if (tabla.getColumn(i).getType()==Types.DATE) {
+                    tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
+                }
+            }  
+    	    // actualizamos el contenido de la tabla.
+            tabla.refresh();
+        }
+        catch (SQLException ex) {
+            // en caso de error, se muestra la causa en la consola
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage() + "\n", "Error al ejecutar la consulta.", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void thisComponentHidden(ComponentEvent evt){
