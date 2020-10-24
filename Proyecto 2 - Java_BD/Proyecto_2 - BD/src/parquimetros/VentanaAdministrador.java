@@ -200,7 +200,5 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             ex.printStackTrace();
         }
 
-        
-
     }
 }
