@@ -64,7 +64,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         armarPanelLogin();
 
-        this.ventAdmin = new VentanaAdministrador();
+        this.ventAdmin = new VentanaAdministrador(this, tabla);
         this.ventAdmin.setVisible(false);
         this.jDesktopPane1.add(this.ventAdmin);
     }
@@ -143,11 +143,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jBingresar = new JButton("Ingresar");
         jBingresar.setBounds(390, 82, 89, 23);
         jPanelLogin.add(jBingresar);
-            
-        //crea la tabla pero aún no la agrega a ningún frame
-        tabla = new DBTable();
-        tabla.setEditable(false);
-
         jBingresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 String user = jTFUser.getText();
@@ -156,11 +151,16 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 conectarBD(user,clave);
             }
         });
+
+        //crea la tabla pero aún no la agrega a ningún frame
+        tabla = new DBTable();
+        tabla.setEditable(false);
+
+        
     }
 
     private void conectarBD(String usuario, String password){
         try{
-            
             String driver = "com.mysql.cj.jdbc.Driver";
         	String servidor = "localhost:3306";
         	String baseDatos = "parquimetros"; 
@@ -168,7 +168,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                                  
             tabla.connectDatabase(driver, uriConexion, usuario, password);
             
-            //TO-DO
+            cambiarVentana(usuario);
             
         }
         catch(SQLException ex){
@@ -181,6 +181,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             ex.printStackTrace();
         }
 
+    }
+
+    private void cambiarVentana(String usuario){
+        jDesktopPane1.setVisible(false);
+        try{
+            if(usuario.equals("admin")){
+                ventAdmin.setMaximum(true);
+                ventAdmin.setVisible(true);
+            }
+        }
+        catch(PropertyVetoException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void restaurarVentanaPrincipal(){
+        jDesktopPane1.setVisible(true);
     }
 
     private void menuItemSalirActionPerformed(ActionEvent evt) {

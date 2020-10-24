@@ -40,18 +40,18 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 
     //atributos
     private DBTable tabla;
-    
-    private JPanel jPanelLogin, jPanelConsulta;
-    private JTextField jTFUser;
+    private VentanaPrincipal ventPrincipal;
+
+    private JPanel jPanelConsulta;
     private JTextArea jTAconsulta;
-    private JPasswordField jPPassword;
-    private JLabel jLuser, jLpassword;
-    private JButton jBingresar, jBejecutar, jBborrar;
+    private JButton jBejecutar, jBborrar;
     private JScrollPane scrConsulta;
 
     //constructor
-    public VentanaAdministrador(){
+    public VentanaAdministrador(VentanaPrincipal vp, DBTable t){
         super();
+        ventPrincipal = vp;
+        tabla = t;
         initGUI();
     }
 
@@ -67,7 +67,6 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             this.getContentPane().setLayout(null);
 
             //arma los paneles
-            armarPanelLogin();
             ArmaPanelConsulta();
 
             this.addComponentListener(new ComponentAdapter() {
@@ -80,50 +79,11 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
                 }
                 
             });
-        } 
+        }
         catch(Exception e){
             e.printStackTrace();
         }
         
-    }
-
-    private void armarPanelLogin(){
-
-        jPanelLogin = new JPanel();
-        jPanelLogin.setBounds(0, 105, 790, 545);
-        this.getContentPane().add(jPanelLogin);
-        jPanelLogin.setLayout(null);
-       
-        jLuser = new JLabel("Usuario: ");
-        jLuser.setBounds(235, 23, 45, 14);
-        jPanelLogin.add(jLuser);
-
-        jTFUser = new JTextField();
-        jTFUser.setBounds(290, 20, 186, 20);
-        jTFUser.setColumns(20);
-        jPanelLogin.add(jTFUser);
-
-        jLpassword = new JLabel("Password: ");
-        jLpassword.setBounds(225, 54, 55, 14);
-        jPanelLogin.add(jLpassword);
-
-        jPPassword = new JPasswordField();
-        jPPassword.setBounds(290, 51, 186, 20);
-        jPPassword.setColumns(20);
-        jPanelLogin.add(jPPassword);
-        
-        jBingresar = new JButton("Ingresar");
-        jBingresar.setBounds(390, 82, 89, 23);
-        jPanelLogin.add(jBingresar);
-            
-        jBingresar.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent ev) {
-                String user = jTFUser.getText();
-                char[] array_clave = jPPassword.getPassword();
-                String clave = new String(array_clave);
-                conectarBD(user,clave);
-            }
-        });
     }
 
     private void ArmaPanelConsulta(){
@@ -132,7 +92,6 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jPanelConsulta.setBounds(0, 0, 790, 560);
         getContentPane().add(jPanelConsulta);
         jPanelConsulta.setLayout(null);
-        jPanelConsulta.setVisible(false);
 
         scrConsulta = new JScrollPane();
         scrConsulta.setBounds(10, 11, 566, 193);
@@ -165,10 +124,6 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jTAconsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
         scrConsulta.setViewportView(jTAconsulta);
 
-        //crea la tabla y la agrega al panel de consultas
-        tabla = new DBTable();
-        tabla.setEditable(false);
-        tabla.setBounds(0, 249, 790, 368);
         jPanelConsulta.add(tabla);
     }
 
@@ -205,14 +160,15 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     }
 
     private void thisComponentShown(ComponentEvent evt){
-        //setea visibilidad de los paneles
-        jPanelLogin.setVisible(true);
-        jPanelConsulta.setVisible(false);
+        System.out.println("entre a component show?");
+        tabla.setBounds(0, 249, 790, 368);
     }
 
     private void desconectarBD(){
         try{
+            this.setVisible(false);
             tabla.close();
+            ventPrincipal.restaurarVentanaPrincipal();
         }
         catch(SQLException ex){
             System.out.println("SQLException: " + ex.getMessage());
@@ -221,28 +177,4 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         }
     }
 
-    private void conectarBD(String usuario, String password){
-        try{
-            
-            String driver = "com.mysql.cj.jdbc.Driver";
-        	String servidor = "localhost:3306";
-        	String baseDatos = "parquimetros"; 
-            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
-                                 
-            tabla.connectDatabase(driver, uriConexion, usuario, password);
-            
-            jPanelLogin.setVisible(false);
-			jPanelConsulta.setVisible(true);
-        }
-        catch(SQLException ex){
-            JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
-        catch(ClassNotFoundException ex){
-            ex.printStackTrace();
-        }
-
-    }
 }
