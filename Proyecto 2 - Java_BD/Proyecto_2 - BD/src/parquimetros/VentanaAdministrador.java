@@ -89,6 +89,11 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             tabla_tablasPresentes = new DBTable();
             jPanelConsulta.add(tabla_tablasPresentes);
             tabla_tablasPresentes.setEditable(false);
+            
+            DBTable tabla_tablasPresentes_1 = new DBTable();
+            tabla_tablasPresentes_1.setEditable(false);
+            tabla_tablasPresentes_1.setBounds(472, 11, 308, 193);
+            jPanelConsulta.add(tabla_tablasPresentes_1);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -104,8 +109,17 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jPanelConsulta.setLayout(null);
 
         scrConsulta = new JScrollPane();
-        scrConsulta.setBounds(10, 11, 566, 193);
+        scrConsulta.setBounds(10, 11, 461, 193);
         jPanelConsulta.add(scrConsulta);
+        
+                jTAconsulta = new JTextArea();
+                scrConsulta.setViewportView(jTAconsulta);
+                jTAconsulta.setText("SELECT * FROM Inspectores");
+                jTAconsulta.setTabSize(3);
+                jTAconsulta.setRows(10);
+                jTAconsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
+                jTAconsulta.setColumns(80);
+                jTAconsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 
         jBejecutar = new JButton("Ejecutar");
         jBejecutar.setBounds(10, 215, 89, 23);
@@ -124,15 +138,6 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
                 jTAconsulta.setText("");
             }
         });
-
-        jTAconsulta = new JTextArea();
-        jTAconsulta.setText("SELECT * FROM Inspectores");
-        jTAconsulta.setTabSize(3);
-        jTAconsulta.setRows(10);
-        jTAconsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        jTAconsulta.setColumns(80);
-        jTAconsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
-        scrConsulta.setViewportView(jTAconsulta);
 
         
     }
@@ -212,5 +217,4 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             System.out.println("VendorError: " + ex.getErrorCode());
         }
     }
-
 }
