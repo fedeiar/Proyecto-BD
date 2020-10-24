@@ -90,7 +90,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     private void armarPanelLogin(){
 
         jPanelLogin = new JPanel();
-        jPanelLogin.setBounds(0, 111, 790, 539);
+        jPanelLogin.setBounds(0, 105, 790, 545);
         this.getContentPane().add(jPanelLogin);
         jPanelLogin.setLayout(null);
        

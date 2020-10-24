@@ -118,7 +118,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void armarPanelLogin(){
 
         jPanelLogin = new JPanel();
-        jPanelLogin.setBounds(0, 111, 790, 539);
+        jPanelLogin.setBounds(0, 0, 790, 650);
         jDesktopPane1.add(jPanelLogin);
         jPanelLogin.setLayout(null);
        
