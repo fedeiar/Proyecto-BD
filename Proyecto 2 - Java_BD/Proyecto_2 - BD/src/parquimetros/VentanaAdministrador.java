@@ -14,6 +14,8 @@ import javax.swing.WindowConstants;
 
 import quick.dbtable.DBTable;
 
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
@@ -36,6 +38,8 @@ import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
 
 import com.mysql.cj.xdevapi.Statement;
+
+
 
 import java.awt.Font;
 
@@ -89,11 +93,8 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             tabla_tablasPresentes = new DBTable();
             jPanelConsulta.add(tabla_tablasPresentes);
             tabla_tablasPresentes.setEditable(false);
-            
-            DBTable tabla_tablasPresentes_1 = new DBTable();
-            tabla_tablasPresentes_1.setEditable(false);
-            tabla_tablasPresentes_1.setBounds(472, 11, 308, 193);
-            jPanelConsulta.add(tabla_tablasPresentes_1);
+            tabla_tablasPresentes.setBounds(472, 11, 308, 193);
+
         }
         catch(Exception e){
             e.printStackTrace();
@@ -112,14 +113,14 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         scrConsulta.setBounds(10, 11, 461, 193);
         jPanelConsulta.add(scrConsulta);
         
-                jTAconsulta = new JTextArea();
-                scrConsulta.setViewportView(jTAconsulta);
-                jTAconsulta.setText("SELECT * FROM Inspectores");
-                jTAconsulta.setTabSize(3);
-                jTAconsulta.setRows(10);
-                jTAconsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-                jTAconsulta.setColumns(80);
-                jTAconsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+        jTAconsulta = new JTextArea();
+        scrConsulta.setViewportView(jTAconsulta);
+        jTAconsulta.setText("SELECT * FROM Inspectores");
+        jTAconsulta.setTabSize(3);
+        jTAconsulta.setRows(10);
+        jTAconsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        jTAconsulta.setColumns(80);
+        jTAconsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
 
         jBejecutar = new JButton("Ejecutar");
         jBejecutar.setBounds(10, 215, 89, 23);
@@ -138,8 +139,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
                 jTAconsulta.setText("");
             }
         });
-
-        
+    
     }
 
     private void refrescarTabla(){
@@ -186,11 +186,17 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             
             tabla_tablasPresentes.connectDatabase(tabla.getDatabaseDriver(), tabla.getJdbcUrl(), tabla.getUser(), tabla.getPassword());
            
-            tabla_tablasPresentes.setSelectSql("show tables");
+            tabla_tablasPresentes.setSelectSql("SHOW TABLES");
+
             tabla_tablasPresentes.createColumnModelFromQuery();
-            System.out.println("llegue");
         
             tabla_tablasPresentes.refresh();
+
+            tabla_tablasPresentes.addMouseListener(new MouseAdapter(){
+                public void mouseClicked(MouseEvent ev){
+                    describe_table(ev);
+                }
+            });
 
         }
         catch(SQLException ex){
@@ -201,6 +207,35 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         }
         catch(ClassNotFoundException ex){
             ex.printStackTrace();
+        }
+    }
+
+    private void describe_table(MouseEvent ev){
+        String nombre_tabla = this.tabla_tablasPresentes.getValueAt(tabla_tablasPresentes.getSelectedRow(), 0).toString();
+
+        try {
+            tabla.setSelectSql("SELECT * FROM " + nombre_tabla);
+            tabla.createColumnModelFromQuery();
+
+    	    for (int i = 0; i < tabla.getColumnCount(); i++){
+
+                if (tabla.getColumn(i).getType()==Types.TIME){
+                    tabla.getColumn(i).setType(Types.CHAR);  
+                }
+
+                if (tabla.getColumn(i).getType()==Types.DATE) {
+                    tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
+                }
+            }
+    	    // actualizamos el contenido de la tabla.
+            tabla.refresh();
+        }
+        catch (SQLException ex) {
+            // en caso de error, se muestra la causa en la consola
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage() + "\n", "Error al ejecutar la consulta.", JOptionPane.ERROR_MESSAGE);
         }
     }
 
