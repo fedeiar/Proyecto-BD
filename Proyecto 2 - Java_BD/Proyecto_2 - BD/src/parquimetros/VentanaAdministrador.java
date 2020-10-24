@@ -58,23 +58,20 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             this.setClosable(true);
             this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
             this.setMaximizable(true);
+            this.getContentPane().setLayout(null);
 
+            //arma los paneles
             armarPanelLogin();
-           
+            ArmaPanelConsulta();
+            jPanelLogin.setVisible(true);
+            jPanelConsulta.setVisible(false);
 
-            //crea la tabla
-            tabla = new DBTable();
-            
             this.addComponentListener(new ComponentAdapter() {
                 public void componentHidden(ComponentEvent evt) {
                    thisComponentHidden(evt);
                 }
-                public void componentShown(ComponentEvent evt) {
-                   thisComponentShown(evt);
-                }
+                
             });
-
-
         } 
         catch(Exception e){
             e.printStackTrace();
@@ -83,12 +80,10 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     }
 
     private void armarPanelLogin(){
-        getContentPane().setLayout(null);
-        
+
         jPanelLogin = new JPanel();
         jPanelLogin.setBounds(0, 111, 790, 539);
         this.getContentPane().add(jPanelLogin);
-        
         jPanelLogin.setLayout(null);
        
         jLuser = new JLabel("Usuario: ");
@@ -112,39 +107,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jBingresar = new JButton("Ingresar");
         jBingresar.setBounds(390, 82, 89, 23);
         jPanelLogin.add(jBingresar);
-        
-        jPanelConsulta = new JPanel();
-        jPanelConsulta.setBounds(0, 0, 790, 560);
-        getContentPane().add(jPanelConsulta);
-        jPanelConsulta.setLayout(null);
-        jPanelConsulta.setVisible(false);
-        
-        JScrollPane scrConsulta = new JScrollPane();
-        scrConsulta.setBounds(10, 11, 566, 193);
-        jPanelConsulta.add(scrConsulta);
-        
-        
-        JTextArea txtConsulta = new JTextArea();
-        txtConsulta.setText("SELECT t.fecha, t.nombre_batalla, b.nombre_barco, b.id, b.capitan, r.resultado \nFROM batallas t, resultados r, barcos b \nWHERE t.nombre_batalla = r.nombre_batalla \nAND r.nombre_barco = b.nombre_barco \nORDER BY t.fecha, t.nombre_batalla, b.nombre_barco");
-        txtConsulta.setTabSize(3);
-        txtConsulta.setRows(10);
-        txtConsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        txtConsulta.setColumns(80);
-        txtConsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
-        scrConsulta.setViewportView(txtConsulta);
-        
-        JButton jBejecutar = new JButton("Ejecutar");
-        jBejecutar.setBounds(10, 215, 89, 23);
-        jPanelConsulta.add(jBejecutar);
-        
-        JButton jBborrar = new JButton("Borrar");
-        jBborrar.setBounds(105, 215, 89, 23);
-        jPanelConsulta.add(jBborrar);
-        
-        DBTable tabla_1 = new DBTable();
-        tabla_1.setEditable(false);
-        tabla_1.setBounds(0, 249, 790, 368);
-        jPanelConsulta.add(tabla_1);
+            
         jBingresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 String user = jTFUser.getText();
@@ -153,6 +116,42 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
                 conectarBD(user,clave);
             }
         });
+    }
+
+    private void ArmaPanelConsulta(){
+        
+        jPanelConsulta = new JPanel();
+        jPanelConsulta.setBounds(0, 0, 790, 560);
+        getContentPane().add(jPanelConsulta);
+        jPanelConsulta.setLayout(null);
+        jPanelConsulta.setVisible(false);
+
+        JScrollPane scrConsulta = new JScrollPane();
+        scrConsulta.setBounds(10, 11, 566, 193);
+        jPanelConsulta.add(scrConsulta);
+
+        JButton jBejecutar = new JButton("Ejecutar");
+        jBejecutar.setBounds(10, 215, 89, 23);
+        jPanelConsulta.add(jBejecutar);
+        
+        JButton jBborrar = new JButton("Borrar");
+        jBborrar.setBounds(105, 215, 89, 23);
+        jPanelConsulta.add(jBborrar);
+
+        JTextArea txtConsulta = new JTextArea();
+        txtConsulta.setText("SELECT t.fecha, t.nombre_batalla, b.nombre_barco, b.id, b.capitan, r.resultado \nFROM batallas t, resultados r, barcos b \nWHERE t.nombre_batalla = r.nombre_batalla \nAND r.nombre_barco = b.nombre_barco \nORDER BY t.fecha, t.nombre_batalla, b.nombre_barco");
+        txtConsulta.setTabSize(3);
+        txtConsulta.setRows(10);
+        txtConsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        txtConsulta.setColumns(80);
+        txtConsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+        scrConsulta.setViewportView(txtConsulta);
+
+        //crea la tabla y la agrega al panel de consultas
+        tabla = new DBTable();
+        tabla.setEditable(false);
+        tabla.setBounds(0, 249, 790, 368);
+        jPanelConsulta.add(tabla);
     }
 
     private void thisComponentHidden(ComponentEvent evt){
@@ -170,23 +169,16 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         }
     }
 
-    private void thisComponentShown(ComponentEvent evt){
-        // this.conectarBD();
-    }
-
     private void conectarBD(String usuario, String password){
         try{
             
-            String driver ="com.mysql.cj.jdbc.Driver";
+            String driver = "com.mysql.cj.jdbc.Driver";
         	String servidor = "localhost:3306";
         	String baseDatos = "parquimetros"; 
             String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
                                  
             tabla.connectDatabase(driver, uriConexion, usuario, password);
             
-            //Agrega la tabla al frame
-            this.getContentPane().add(tabla, BorderLayout.CENTER);
-            tabla.setEditable(false);
             jPanelLogin.setVisible(false);
 			jPanelConsulta.setVisible(true);
         }
