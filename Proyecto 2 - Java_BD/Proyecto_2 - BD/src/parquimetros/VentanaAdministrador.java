@@ -63,12 +63,14 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             //arma los paneles
             armarPanelLogin();
             ArmaPanelConsulta();
-            jPanelLogin.setVisible(true);
-            jPanelConsulta.setVisible(false);
 
             this.addComponentListener(new ComponentAdapter() {
                 public void componentHidden(ComponentEvent evt) {
                    thisComponentHidden(evt);
+                }
+
+                public void componentShown(ComponentEvent evt){
+                    thisComponentShown(evt);
                 }
                 
             });
@@ -156,6 +158,12 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 
     private void thisComponentHidden(ComponentEvent evt){
         this.desconectarBD();
+    }
+
+    private void thisComponentShown(ComponentEvent evt){
+        //setea visibilidad de los paneles
+        jPanelLogin.setVisible(true);
+        jPanelConsulta.setVisible(false);
     }
 
     private void desconectarBD(){
