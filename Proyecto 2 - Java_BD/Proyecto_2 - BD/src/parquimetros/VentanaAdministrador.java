@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -17,6 +18,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
@@ -33,6 +35,8 @@ import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
 
+import com.mysql.cj.xdevapi.Statement;
+
 import java.awt.Font;
 
 @SuppressWarnings("serial")
@@ -40,6 +44,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 
     //atributos
     private DBTable tabla;
+    private DBTable tabla_tablasPresentes;
     private VentanaPrincipal ventPrincipal;
 
     private JPanel jPanelConsulta;
@@ -79,6 +84,11 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
                 }
                 
             });
+
+            //crea la tabla que contendrá los nombres de todas las tablas.
+            tabla_tablasPresentes = new DBTable();
+            jPanelConsulta.add(tabla_tablasPresentes);
+            tabla_tablasPresentes.setEditable(false);
         }
         catch(Exception e){
             e.printStackTrace();
@@ -124,7 +134,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         jTAconsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
         scrConsulta.setViewportView(jTAconsulta);
 
-        jPanelConsulta.add(tabla);
+        
     }
 
     private void refrescarTabla(){
@@ -160,13 +170,39 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     }
 
     private void thisComponentShown(ComponentEvent evt){
-        System.out.println("entre a component show?");
+        jPanelConsulta.add(tabla);
         tabla.setBounds(0, 249, 790, 368);
+
+        this.conectarTablaPresentes();
+    }
+
+    private void conectarTablaPresentes(){
+        try{
+            
+            tabla_tablasPresentes.connectDatabase(tabla.getDatabaseDriver(), tabla.getJdbcUrl(), tabla.getUser(), tabla.getPassword());
+           
+            tabla_tablasPresentes.setSelectSql("show tables");
+            tabla_tablasPresentes.createColumnModelFromQuery();
+            System.out.println("llegue");
+        
+            tabla_tablasPresentes.refresh();
+
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+        catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
     }
 
     private void desconectarBD(){
         try{
             this.setVisible(false);
+            jPanelConsulta.remove(tabla);
             tabla.close();
             ventPrincipal.restaurarVentanaPrincipal();
         }
