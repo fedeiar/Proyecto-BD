@@ -184,7 +184,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     private void cambiarVentana(String usuario){
-        jDesktopPane1.setVisible(false);
+        jPanelLogin.setVisible(false);
+        jTFUser.setText("");
+        jPPassword.setText("");
         try{
             if(usuario.equals("admin")){
                 ventAdmin.setMaximum(true);
@@ -197,7 +199,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     public void restaurarVentanaPrincipal(){
-        jDesktopPane1.setVisible(true);
+        jPanelLogin.setVisible(true);
     }
 
     private void menuItemSalirActionPerformed(ActionEvent evt) {
