@@ -1,3 +1,1 @@
-- multas: habría que dar acceso a algo más además de las multas? (es decir, debería poder seleccionar los atributos de asociado_con?)
-
-- quien controla que el asociado_con 323 sea un miercoles en ambas fechas?
+- Ventana administrador, problemas ocn SetSelectSql() de SHOW TABLES y de DESCRIBE
