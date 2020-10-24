@@ -18,6 +18,18 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.sql.SQLException;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JTextArea;
+import java.awt.TextField;
+import java.awt.Button;
+import java.awt.GridLayout;
+import java.awt.CardLayout;
+import java.awt.FlowLayout;
+import javax.swing.BoxLayout;
+import javax.swing.JScrollPane;
+import javax.swing.BorderFactory;
+import javax.swing.border.BevelBorder;
+import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class VentanaAdministrador extends javax.swing.JInternalFrame{
@@ -26,6 +38,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     private DBTable tabla;
     
     private JPanel jPanelLogin;
+    private JPanel jPanelConsulta;
     private JTextField jTFUser;
     private JPasswordField jPPassword;
     private JLabel jLuser, jLpassword;
@@ -42,7 +55,6 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             this.setBounds(0, 0, VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH);
             this.setVisible(true);
             this.setTitle("Consultas Admin");
-            this.getContentPane().setLayout(new BorderLayout());
             this.setClosable(true);
             this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
             this.setMaximizable(true);
@@ -71,32 +83,63 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     }
 
     private void armarPanelLogin(){
+        getContentPane().setLayout(null);
         
         jPanelLogin = new JPanel();
-        this.getContentPane().add(jPanelLogin, BorderLayout.CENTER);
+        jPanelLogin.setBounds(0, 101, 790, 549);
+        this.getContentPane().add(jPanelLogin);
+        
         jPanelLogin.setLayout(null);
        
         jLuser = new JLabel("Usuario: ");
-        jLuser.setBounds(282, 267, 45, 14);
+        jLuser.setBounds(235, 23, 45, 14);
         jPanelLogin.add(jLuser);
 
         jTFUser = new JTextField();
-        jTFUser.setBounds(352, 261, 186, 20);
+        jTFUser.setBounds(290, 20, 186, 20);
         jTFUser.setColumns(20);
         jPanelLogin.add(jTFUser);
 
         jLpassword = new JLabel("Password: ");
-        jLpassword.setBounds(272, 297, 55, 14);
+        jLpassword.setBounds(225, 54, 55, 14);
         jPanelLogin.add(jLpassword);
 
         jPPassword = new JPasswordField();
-        jPPassword.setBounds(352, 291, 186, 20);
+        jPPassword.setBounds(290, 51, 186, 20);
         jPPassword.setColumns(20);
         jPanelLogin.add(jPPassword);
         
         jBingresar = new JButton("Ingresar");
-        jBingresar.setBounds(449, 322, 89, 23);
+        jBingresar.setBounds(390, 82, 89, 23);
         jPanelLogin.add(jBingresar);
+        
+        jPanelConsulta = new JPanel();
+        jPanelConsulta.setBounds(0, 0, 790, 268);
+        getContentPane().add(jPanelConsulta);
+        jPanelConsulta.setLayout(null);
+        jPanelConsulta.setVisible(false);
+        
+        JScrollPane scrConsulta = new JScrollPane();
+        scrConsulta.setBounds(10, 11, 566, 193);
+        jPanelConsulta.add(scrConsulta);
+        
+        
+        JTextArea txtConsulta = new JTextArea();
+        txtConsulta.setText("SELECT t.fecha, t.nombre_batalla, b.nombre_barco, b.id, b.capitan, r.resultado \nFROM batallas t, resultados r, barcos b \nWHERE t.nombre_batalla = r.nombre_batalla \nAND r.nombre_barco = b.nombre_barco \nORDER BY t.fecha, t.nombre_batalla, b.nombre_barco");
+        txtConsulta.setTabSize(3);
+        txtConsulta.setRows(10);
+        txtConsulta.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        txtConsulta.setColumns(80);
+        txtConsulta.setBorder(BorderFactory.createEtchedBorder(BevelBorder.LOWERED));
+        scrConsulta.setViewportView(txtConsulta);
+        
+        JButton jBejecutar = new JButton("Ejecutar");
+        jBejecutar.setBounds(10, 215, 89, 23);
+        jPanelConsulta.add(jBejecutar);
+        
+        JButton jBborrar = new JButton("Borrar");
+        jBborrar.setBounds(105, 215, 89, 23);
+        jPanelConsulta.add(jBborrar);
         jBingresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 jBingresarEjecutarActionPerformed(ev);
@@ -139,12 +182,12 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
                                  
             tabla.connectDatabase(driver, uriConexion, usuario, password);
-
+            
             //Agrega la tabla al frame
             this.getContentPane().add(tabla, BorderLayout.CENTER);
             tabla.setEditable(false);
             jPanelLogin.setVisible(false);
-
+			jPanelConsulta.setVisible(true);
         }
         catch(SQLException ex){
             JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -159,5 +202,4 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         
 
     }
-    
 }
