@@ -42,6 +42,7 @@ import com.mysql.cj.xdevapi.Statement;
 
 
 import java.awt.Font;
+import javax.swing.ScrollPaneConstants;
 
 @SuppressWarnings("serial")
 public class VentanaAdministrador extends javax.swing.JInternalFrame{
@@ -54,7 +55,8 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     private JPanel jPanelConsulta;
     private JTextArea jTAconsulta;
     private JButton jBejecutar, jBborrar;
-    private JScrollPane scrConsulta;
+    private JScrollPane scrConsulta,scrTabla_parq;
+    
 
     //constructor
     public VentanaAdministrador(VentanaPrincipal vp, DBTable t){
@@ -88,12 +90,30 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
                 }
                 
             });
-
-            //crea la tabla que contendrá los nombres de todas las tablas.
-            tabla_tablasPresentes = new DBTable();
-            jPanelConsulta.add(tabla_tablasPresentes);
-            tabla_tablasPresentes.setEditable(false);
-            tabla_tablasPresentes.setBounds(472, 11, 308, 193);
+        
+			scrTabla_parq = new JScrollPane();
+			scrTabla_parq.setBounds(472, 11, 308, 193);
+			jPanelConsulta.add(scrTabla_parq);
+			
+			//crea la tabla que contendrá los nombres de todas las tablas.
+			tabla_tablasPresentes = new DBTable();
+			tabla_tablasPresentes.getTable().setCellSelectionEnabled(true);
+			tabla_tablasPresentes.getTable().setColumnSelectionAllowed(true);
+			scrTabla_parq.setViewportView(tabla_tablasPresentes);
+			
+			tabla_tablasPresentes.setSortEnabled(true);
+			tabla_tablasPresentes.setControlPanelVisible(false);
+			tabla_tablasPresentes.setEditable(false);
+			
+			
+			
+			tabla.setBounds(10, 252, 770, 287);
+			jPanelConsulta.add(tabla);
+			
+			
+			
+			
+			
 
         }
         catch(Exception e){
@@ -105,7 +125,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     private void ArmaPanelConsulta(){
         
         jPanelConsulta = new JPanel();
-        jPanelConsulta.setBounds(0, 0, 790, 560);
+        jPanelConsulta.setBounds(0, 11, 790, 560);
         getContentPane().add(jPanelConsulta);
         jPanelConsulta.setLayout(null);
 
@@ -176,7 +196,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 
     private void thisComponentShown(ComponentEvent evt){
         jPanelConsulta.add(tabla);
-        tabla.setBounds(0, 249, 790, 368);
+        tabla.setBounds(10, 252, 770, 287);
 
         this.conectarTablaPresentes();
     }

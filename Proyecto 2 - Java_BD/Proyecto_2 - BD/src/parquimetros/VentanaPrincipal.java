@@ -21,6 +21,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -155,7 +156,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         //crea la tabla pero aún no la agrega a ningún frame
         tabla = new DBTable();
         tabla.setEditable(false);
-
+        
+        
+        
+       
         
     }
 
