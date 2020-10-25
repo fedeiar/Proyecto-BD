@@ -97,8 +97,6 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 			
 			//crea la tabla que contendrá los nombres de todas las tablas.
 			tabla_tablasPresentes = new DBTable();
-			tabla_tablasPresentes.getTable().setCellSelectionEnabled(true);
-			tabla_tablasPresentes.getTable().setColumnSelectionAllowed(true);
 			scrTabla_parq.setViewportView(tabla_tablasPresentes);
 			
 			tabla_tablasPresentes.setSortEnabled(true);
@@ -108,6 +106,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 			
 			
 			tabla.setBounds(10, 252, 770, 287);
+			
 			jPanelConsulta.add(tabla);
 			
 			
@@ -169,9 +168,12 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             tabla.createColumnModelFromQuery();
 
     	    for (int i = 0; i < tabla.getColumnCount(); i++){
-
+    	    	
+    	    	
                 if (tabla.getColumn(i).getType()==Types.TIME){
                     tabla.getColumn(i).setType(Types.CHAR);  
+        	    	
+
                 }
 
                 if (tabla.getColumn(i).getType()==Types.DATE) {
@@ -238,7 +240,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             tabla.createColumnModelFromQuery();
 
     	    for (int i = 0; i < tabla.getColumnCount(); i++){
-
+    	    	tabla.getColumn(i).setMinWidth(100);
                 if (tabla.getColumn(i).getType()==Types.TIME){
                     tabla.getColumn(i).setType(Types.CHAR);  
                 }
