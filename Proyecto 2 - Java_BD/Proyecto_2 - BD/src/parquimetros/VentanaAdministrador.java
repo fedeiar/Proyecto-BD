@@ -43,6 +43,8 @@ import com.mysql.cj.xdevapi.Statement;
 
 import java.awt.Font;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.JTextPane;
+import java.awt.Color;
 
 @SuppressWarnings("serial")
 public class VentanaAdministrador extends javax.swing.JInternalFrame{
@@ -51,11 +53,11 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     private DBTable tabla;
     private DBTable tabla_tablasPresentes;
     private VentanaPrincipal ventPrincipal;
-
+    private JTextPane jLSeleccion;
     private JPanel jPanelConsulta;
     private JTextArea jTAconsulta;
     private JButton jBejecutar, jBborrar;
-    private JScrollPane scrConsulta,scrTabla_parq;
+    private JScrollPane scrConsulta;
     
 
     //constructor
@@ -90,18 +92,6 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
                 }
                 
             });
-        
-			scrTabla_parq = new JScrollPane();
-			scrTabla_parq.setBounds(472, 11, 308, 193);
-			jPanelConsulta.add(scrTabla_parq);
-			
-			//crea la tabla que contendrá los nombres de todas las tablas.
-			tabla_tablasPresentes = new DBTable();
-			scrTabla_parq.setViewportView(tabla_tablasPresentes);
-			
-			tabla_tablasPresentes.setSortEnabled(true);
-			tabla_tablasPresentes.setControlPanelVisible(false);
-			tabla_tablasPresentes.setEditable(false);
 			
 			
 			
@@ -109,10 +99,22 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 			
 			jPanelConsulta.add(tabla);
 			
+			//crea la tabla que contendrá los nombres de todas las tablas.
+			tabla_tablasPresentes = new DBTable();
+			tabla_tablasPresentes.setBounds(532, 22, 221, 182);
+			jPanelConsulta.add(tabla_tablasPresentes);
 			
+			tabla_tablasPresentes.setSortEnabled(true);
+			tabla_tablasPresentes.setControlPanelVisible(false);
+			tabla_tablasPresentes.setEditable(false);
 			
-			
-			
+			jLSeleccion = new JTextPane();
+			jLSeleccion.setFont(new Font("Tahoma", Font.PLAIN, 13));
+			jLSeleccion.setBackground(Color.LIGHT_GRAY);
+			jLSeleccion.setEditable(false);
+			jLSeleccion.setText("Seleccione una clase");
+			jLSeleccion.setBounds(532, 0, 237, 34);
+			jPanelConsulta.add(jLSeleccion);
 
         }
         catch(Exception e){
@@ -124,6 +126,7 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
     private void ArmaPanelConsulta(){
         
         jPanelConsulta = new JPanel();
+        jPanelConsulta.setBackground(Color.LIGHT_GRAY);
         jPanelConsulta.setBounds(0, 11, 790, 560);
         getContentPane().add(jPanelConsulta);
         jPanelConsulta.setLayout(null);
@@ -273,5 +276,18 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }
+    }
+    
+    public void darkMode(){
+    	jPanelConsulta.setBackground(getBackground().black);
+    	jLSeleccion.setBackground(getBackground().black);
+    	jLSeleccion.setForeground(getForeground().white);
+    	
+    	
+    }
+    public void notDarkMode(){
+    	jPanelConsulta.setBackground(getBackground().LIGHT_GRAY);
+    	jLSeleccion.setForeground(getForeground().black);
+    	jLSeleccion.setBackground(getBackground().LIGHT_GRAY);
     }
 }

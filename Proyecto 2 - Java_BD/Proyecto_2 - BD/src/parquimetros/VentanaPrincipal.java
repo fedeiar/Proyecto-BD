@@ -31,6 +31,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import quick.dbtable.DBTable;
+import java.awt.Color;
 
 @SuppressWarnings("serial")
 public class VentanaPrincipal extends javax.swing.JFrame {
@@ -42,7 +43,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     //atributos
     private VentanaAdministrador ventAdmin;
-
+    private VentanaInspector ventInspector;
     private JDesktopPane jDesktopPane1;
     private JPanel jPanelLogin;
 
@@ -57,6 +58,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private JPasswordField jPPassword;
     private JLabel jLuser, jLpassword;
     private JButton jBingresar;
+    private JButton jbtnNewButton;
     
     // constructor
     public VentanaPrincipal() {
@@ -68,6 +70,11 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.ventAdmin = new VentanaAdministrador(this, tabla);
         this.ventAdmin.setVisible(false);
         this.jDesktopPane1.add(this.ventAdmin);
+        
+        this.ventInspector = new VentanaInspector(this, tabla);
+        this.ventInspector.setVisible(false);
+        this.jDesktopPane1.add(this.ventInspector);
+        
     }
 
     // metodos
@@ -75,12 +82,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initGUI() {
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-        } 
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        try {
+        
 
             this.setTitle("Parquimetros");
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -119,7 +121,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void armarPanelLogin(){
 
         jPanelLogin = new JPanel();
-        jPanelLogin.setBounds(0, 0, 790, 650);
+        jPanelLogin.setBackground(Color.LIGHT_GRAY);
+        jPanelLogin.setBounds(0, -11, 800, 611);
         jDesktopPane1.add(jPanelLogin);
         jPanelLogin.setLayout(null);
        
@@ -142,8 +145,22 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanelLogin.add(jPPassword);
         
         jBingresar = new JButton("Ingresar");
-        jBingresar.setBounds(390, 82, 89, 23);
+        jBingresar.setBounds(387, 81, 89, 23);
         jPanelLogin.add(jBingresar);
+
+        jbtnNewButton = new JButton("Dark Mode");
+        jbtnNewButton.setBounds(10, 11, 89, 23);
+        jbtnNewButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent arg0) {
+        		if (jPanelLogin.getBackground().equals(getBackground().black))
+        			notDarkMode();
+        		else
+            		darkMode();
+        	}
+        });
+        
+        
+        jPanelLogin.add(jbtnNewButton);
         jBingresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 String user = jTFUser.getText();
@@ -155,12 +172,25 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         //crea la tabla pero aún no la agrega a ningún frame
         tabla = new DBTable();
-        tabla.setEditable(false);
-        
-        
-        
-       
-        
+        tabla.setEditable(false);    
+    }
+    
+    
+    private void darkMode(){
+    	jPanelLogin.setBackground(getBackground().black);
+    	jLuser.setForeground(getForeground().white);
+    	jLpassword.setForeground(getForeground().white);
+    	ventAdmin.darkMode();
+    	ventInspector.darkMode();
+    }
+    
+    
+    private void notDarkMode(){
+    	jPanelLogin.setBackground(getBackground().LIGHT_GRAY);
+    	jLuser.setForeground(getForeground().black);
+    	jLpassword.setForeground(getForeground().black);
+    	ventAdmin.notDarkMode();	
+    	ventInspector.notDarkMode();
     }
 
     private void conectarBD(String usuario, String password){
@@ -188,18 +218,24 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
 
     private void cambiarVentana(String usuario){
-        jPanelLogin.setVisible(false);
-        jTFUser.setText("");
-        jPPassword.setText("");
-        try{
-            if(usuario.equals("admin")){
-                ventAdmin.setMaximum(true);
-                ventAdmin.setVisible(true);
-            }
-        }
-        catch(PropertyVetoException e){
-            e.printStackTrace();
-        }
+    	
+    	
+    		
+	        jPanelLogin.setVisible(false);
+	        jTFUser.setText("");
+	        jPPassword.setText("");
+	        try{
+	            if(usuario.equals("admin")) {
+	            	ventAdmin.setMaximum(true);
+	                ventAdmin.setVisible(true);
+	            } else {
+	            	ventInspector.setVisible(true);
+	            }
+	        }
+	        catch(PropertyVetoException e){
+	            e.printStackTrace();
+	        }
+    	
     }
 
     public void restaurarVentanaPrincipal(){
