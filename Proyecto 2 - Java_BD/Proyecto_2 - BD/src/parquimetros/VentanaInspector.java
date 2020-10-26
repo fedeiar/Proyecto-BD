@@ -42,29 +42,24 @@ import java.awt.Dimension;
 @SuppressWarnings("serial")
 public class VentanaInspector extends VentanaUsuario {
 	
- 	
-
     //atributos
 
-	public static final int WIDTH = 800;
-    public static final int HEIGTH = 600;
-    private JMenuBar jMenuBar1;
-    private JMenuItem jMenuSalir;
-    private JSeparator jSeparator1;
-    private JMenu jMenuGeneral;
+	public static final int WIDTH = VentanaPrincipal.WIDTH;
+    public static final int HEIGTH = VentanaPrincipal.HEIGTH;
+
     private JPanel jPanelInspector;
-    private JTextField jTxPantente;
+    private JTextField jTxPatente;
     private JTextField textField;
     private JLabel jLPatente, jLUbicacion;
-	    
+    
+    private String legajo;
 
-	
+    //constructor
 	public VentanaInspector(VentanaPrincipal vp, DBTable t) {
 		super(vp,t);
 	}
-    
-    
-    // metodos
+        
+    //metodos
 
 	protected void initGUI(){
         try{
@@ -79,6 +74,10 @@ public class VentanaInspector extends VentanaUsuario {
         }
         
     }
+
+    public void setLegajo(String l){
+        legajo = l;
+    }
     
     private void ArmarPanelInspector() {
 
@@ -88,10 +87,10 @@ public class VentanaInspector extends VentanaUsuario {
         getContentPane().add(jPanelInspector);
         jPanelInspector.setLayout(null);
         
-		jTxPantente = new JTextField();
-		jTxPantente.setBounds(107, 13, 96, 20);
-		jPanelInspector.add(jTxPantente);
-		jTxPantente.setColumns(10);
+		jTxPatente = new JTextField();
+		jTxPatente.setBounds(107, 13, 96, 20);
+		jPanelInspector.add(jTxPatente);
+		jTxPatente.setColumns(10);
 		
 		jLPatente = new JLabel("PATENTE");
 		jLPatente.setFont(new Font("Tahoma", Font.PLAIN, 13));
@@ -165,7 +164,7 @@ public class VentanaInspector extends VentanaUsuario {
     protected void thisComponentShown(ComponentEvent evt){
 
     }
-    
+
     public void darkMode(){
     	jPanelInspector.setBackground(getBackground().black);
     	jLPatente.setForeground(getForeground().white);

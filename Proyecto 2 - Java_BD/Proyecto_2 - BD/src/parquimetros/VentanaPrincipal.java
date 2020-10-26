@@ -33,6 +33,7 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import java.sql.ResultSetMetaData;
 import com.mysql.cj.xdevapi.Result;
 
 import java.sql.Statement;
@@ -162,7 +163,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         	}
         });
         
-        
         jPanelLogin.add(jbtnNewButton);
         jBingresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
@@ -177,7 +177,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         tabla = new DBTable();
         tabla.setEditable(false);    
     }
-    
     
     private void darkMode(){
     	jPanelLogin.setBackground(getBackground().black);
@@ -197,24 +196,27 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void conectarBD(String usuario, String password){
         try{
-
-            //Connection conexionDB;
-            
-        	String servidor = "localhost:3306";
-        	String baseDatos = "parquimetros"; 
-            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
-            /*
-            conexionDB = DriverManager.getConnection(uriConexion, "admin", "admin");
-            Statement stmt = conexionDB.createStatement();
-            String consulta = "SELECT legajo, password FROM Inspectores";
-            ResultSet rs = stmt.executeQuery(consulta);
-            validar(usuario, password, rs);
-            */
-            String driver = "com.mysql.cj.jdbc.Driver";
-            tabla.connectDatabase(driver, uriConexion, usuario, password);
+            if(!usuario.equals("admin")){ // debería ser un inspector
+        	    String servidor = "localhost:3306";
+        	    String baseDatos = "parquimetros"; 
+                String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
+                Connection conexionDB = DriverManager.getConnection(uriConexion, "admin", "admin");
+                Statement stmt = conexionDB.createStatement();
+                String consulta = "SELECT legajo, password FROM Inspectores WHERE legajo = '" + usuario + "' AND password = md5('" + password + "') ";
+                ResultSet rs = stmt.executeQuery(consulta);
+                if (rs.next()){ // ya que es una sola fila, si hubo match es un sólo inspector valido, sino rs esta vacío y da false.
+                    System.out.println("ENTREEEE?");
+                    ventInspector.setLegajo(usuario);
+                    usuario = "inspector";
+                    password = "inspector";
+                }
+                rs.close();
+                stmt.close();
+                conexionDB.close();
+                conexionDB = null;
+            }
             
             cambiarVentana(usuario, password);
-            
         }
         catch(SQLException ex){
             JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -225,29 +227,34 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         catch(ClassNotFoundException ex){
             ex.printStackTrace();
         }
-
     }
 
-    private void cambiarVentana(String usuario, String password){
 
-	        jPanelLogin.setVisible(false);
-	        jTFUser.setText("");
-	        jPPassword.setText("");
-	        try{
-	            if(usuario.equals("admin")) {
-	            	ventAdmin.setMaximum(true);
-                    ventAdmin.setVisible(true);
-                    //ventInspector.setVisible(true);
-                    //ventInspector.setMaximum(true);
-	            } else {
-                    ventInspector.setVisible(true);
-                    ventInspector.setMaximum(true);
-	            }
-	        }
-	        catch(PropertyVetoException e){
-	            e.printStackTrace();
-	        }
-    	
+    private void cambiarVentana(String usuario, String password) throws SQLException, ClassNotFoundException{
+
+        
+        try{
+            if(usuario.equals("admin")) {
+                ventAdmin.setMaximum(true);
+                ventAdmin.setVisible(true);
+            } 
+            if(usuario.equals("inspector")){
+                ventInspector.setVisible(true);
+                ventInspector.setMaximum(true);
+            }
+            String servidor = "localhost:3306";
+        	String baseDatos = "parquimetros"; 
+            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
+            String driver = "com.mysql.cj.jdbc.Driver";
+            tabla.connectDatabase(driver, uriConexion, usuario, password);
+
+            jPanelLogin.setVisible(false);
+            jTFUser.setText("");
+            jPPassword.setText("");
+        }
+        catch(PropertyVetoException e){
+            e.printStackTrace();
+        }
     }
 
     public void restaurarVentanaPrincipal(){
