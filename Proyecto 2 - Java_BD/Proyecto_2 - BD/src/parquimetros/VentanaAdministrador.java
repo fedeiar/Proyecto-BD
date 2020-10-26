@@ -47,12 +47,10 @@ import javax.swing.JTextPane;
 import java.awt.Color;
 
 @SuppressWarnings("serial")
-public class VentanaAdministrador extends javax.swing.JInternalFrame{
+public class VentanaAdministrador extends VentanaUsuario{
 
     //atributos
-    private DBTable tabla;
     private DBTable tabla_tablasPresentes;
-    private VentanaPrincipal ventPrincipal;
     private JTextPane jLSeleccion;
     private JPanel jPanelConsulta;
     private JTextArea jTAconsulta;
@@ -62,60 +60,17 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
 
     //constructor
     public VentanaAdministrador(VentanaPrincipal vp, DBTable t){
-        super();
-        ventPrincipal = vp;
-        tabla = t;
-        initGUI();
+        super(vp,t);
     }
 
-    private void initGUI(){
+    protected void initGUI(){
         try{
-            this.setPreferredSize(new Dimension(VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH));
-            this.setBounds(0, 0, VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH);
-            this.setVisible(true);
+            super.initGUI();
             this.setTitle("Consultas Admin");
-            this.setClosable(true);
-            this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-            this.setMaximizable(true);
-            this.getContentPane().setLayout(null);
 
             //arma los paneles
             ArmaPanelConsulta();
-
-            this.addComponentListener(new ComponentAdapter() {
-                public void componentHidden(ComponentEvent evt) {
-                   thisComponentHidden(evt);
-                }
-
-                public void componentShown(ComponentEvent evt){
-                    thisComponentShown(evt);
-                }
-                
-            });
-			
-			
-			
-			tabla.setBounds(10, 252, 770, 287);
-			
-			jPanelConsulta.add(tabla);
-			
-			//crea la tabla que contendrá los nombres de todas las tablas.
-			tabla_tablasPresentes = new DBTable();
-			tabla_tablasPresentes.setBounds(532, 22, 221, 182);
-			jPanelConsulta.add(tabla_tablasPresentes);
-			
-			tabla_tablasPresentes.setSortEnabled(true);
-			tabla_tablasPresentes.setControlPanelVisible(false);
-			tabla_tablasPresentes.setEditable(false);
-			
-			jLSeleccion = new JTextPane();
-			jLSeleccion.setFont(new Font("Tahoma", Font.PLAIN, 13));
-			jLSeleccion.setBackground(Color.LIGHT_GRAY);
-			jLSeleccion.setEditable(false);
-			jLSeleccion.setText("Seleccione una clase");
-			jLSeleccion.setBounds(532, 0, 237, 34);
-			jPanelConsulta.add(jLSeleccion);
-
+						
         }
         catch(Exception e){
             e.printStackTrace();
@@ -162,6 +117,26 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             }
         });
     
+        tabla.setBounds(10, 252, 770, 287);
+			
+        jPanelConsulta.add(tabla);
+        
+        //crea la tabla que contendrá los nombres de todas las tablas.
+        tabla_tablasPresentes = new DBTable();
+        tabla_tablasPresentes.setBounds(532, 22, 221, 182);
+        jPanelConsulta.add(tabla_tablasPresentes);
+        
+        tabla_tablasPresentes.setSortEnabled(true);
+        tabla_tablasPresentes.setControlPanelVisible(false);
+        tabla_tablasPresentes.setEditable(false);
+        
+        jLSeleccion = new JTextPane();
+        jLSeleccion.setFont(new Font("Tahoma", Font.PLAIN, 13));
+        jLSeleccion.setBackground(Color.LIGHT_GRAY);
+        jLSeleccion.setEditable(false);
+        jLSeleccion.setText("Seleccione una clase");
+        jLSeleccion.setBounds(532, 0, 237, 34);
+        jPanelConsulta.add(jLSeleccion);
     }
 
     private void refrescarTabla(){
@@ -195,28 +170,23 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
         }
     }
 
-    private void thisComponentHidden(ComponentEvent evt){
-        this.desconectarBD();
+    protected void thisComponentHidden(ComponentEvent evt){
+        super.thisComponentHidden(evt);
+        jPanelConsulta.remove(tabla);
     }
 
-    private void thisComponentShown(ComponentEvent evt){
+    protected void thisComponentShown(ComponentEvent evt){
         jPanelConsulta.add(tabla);
         tabla.setBounds(10, 252, 770, 287);
-
         this.conectarTablaPresentes();
     }
 
     private void conectarTablaPresentes(){
         try{
-            
             tabla_tablasPresentes.connectDatabase(tabla.getDatabaseDriver(), tabla.getJdbcUrl(), tabla.getUser(), tabla.getPassword());
-           
             tabla_tablasPresentes.setSelectSql("SHOW TABLES");
-
             tabla_tablasPresentes.createColumnModelFromQuery();
-        
             tabla_tablasPresentes.refresh();
-
             tabla_tablasPresentes.addMouseListener(new MouseAdapter(){
                 public void mouseClicked(MouseEvent ev){
                     describe_table(ev);
@@ -256,38 +226,24 @@ public class VentanaAdministrador extends javax.swing.JInternalFrame{
             tabla.refresh();
         }
         catch (SQLException ex) {
-            // en caso de error, se muestra la causa en la consola
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
             JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage() + "\n", "Error al ejecutar la consulta.", JOptionPane.ERROR_MESSAGE);
         }
     }
-
-    private void desconectarBD(){
-        try{
-            this.setVisible(false);
-            jPanelConsulta.remove(tabla);
-            tabla.close();
-            ventPrincipal.restaurarVentanaPrincipal();
-        }
-        catch(SQLException ex){
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
-    }
     
     public void darkMode(){
-    	jPanelConsulta.setBackground(getBackground().black);
-    	jLSeleccion.setBackground(getBackground().black);
-    	jLSeleccion.setForeground(getForeground().white);
-    	
-    	
+    	getBackground();
+        jPanelConsulta.setBackground(Color.black);
+    	jLSeleccion.setBackground(Color.black);
+    	jLSeleccion.setForeground(Color.white);
     }
+
     public void notDarkMode(){
-    	jPanelConsulta.setBackground(getBackground().LIGHT_GRAY);
-    	jLSeleccion.setForeground(getForeground().black);
-    	jLSeleccion.setBackground(getBackground().LIGHT_GRAY);
+    	jPanelConsulta.setBackground(Color.LIGHT_GRAY);
+    	jLSeleccion.setForeground(Color.black);
+    	jLSeleccion.setBackground(Color.LIGHT_GRAY);
     }
+
 }

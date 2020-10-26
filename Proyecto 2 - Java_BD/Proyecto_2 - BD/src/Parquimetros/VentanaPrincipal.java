@@ -7,6 +7,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import javax.swing.GroupLayout;
@@ -30,6 +33,10 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
+import com.mysql.cj.xdevapi.Result;
+
+import java.sql.Statement;
+
 import quick.dbtable.DBTable;
 import java.awt.Color;
 
@@ -37,7 +44,6 @@ import java.awt.Color;
 public class VentanaPrincipal extends javax.swing.JFrame {
     
     //constantes
-    
     public static final int WIDTH = 800;
     public static final int HEIGTH = 600;
 
@@ -74,7 +80,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.ventInspector = new VentanaInspector(this, tabla);
         this.ventInspector.setVisible(false);
         this.jDesktopPane1.add(this.ventInspector);
-        
     }
 
     // metodos
@@ -82,11 +87,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void initGUI() {
         try {
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
-        
-
             this.setTitle("Parquimetros");
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
+            this.setSize(WIDTH, HEIGTH);
+            
             jDesktopPane1 = new JDesktopPane();
             this.getContentPane().add(jDesktopPane1, BorderLayout.CENTER);
             jDesktopPane1.setPreferredSize(new java.awt.Dimension(WIDTH, HEIGTH));
@@ -110,7 +114,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 }
             });
 
-            this.setSize(WIDTH, HEIGTH);
             pack();
         }
         catch (Exception e) {
@@ -184,7 +187,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     	ventInspector.darkMode();
     }
     
-    
     private void notDarkMode(){
     	jPanelLogin.setBackground(getBackground().LIGHT_GRAY);
     	jLuser.setForeground(getForeground().black);
@@ -195,14 +197,23 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void conectarBD(String usuario, String password){
         try{
-            String driver = "com.mysql.cj.jdbc.Driver";
+
+            //Connection conexionDB;
+            
         	String servidor = "localhost:3306";
         	String baseDatos = "parquimetros"; 
             String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
-                                 
+            /*
+            conexionDB = DriverManager.getConnection(uriConexion, "admin", "admin");
+            Statement stmt = conexionDB.createStatement();
+            String consulta = "SELECT legajo, password FROM Inspectores";
+            ResultSet rs = stmt.executeQuery(consulta);
+            validar(usuario, password, rs);
+            */
+            String driver = "com.mysql.cj.jdbc.Driver";
             tabla.connectDatabase(driver, uriConexion, usuario, password);
             
-            cambiarVentana(usuario);
+            cambiarVentana(usuario, password);
             
         }
         catch(SQLException ex){
@@ -217,19 +228,20 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     }
 
-    private void cambiarVentana(String usuario){
-    	
-    	
-    		
+    private void cambiarVentana(String usuario, String password){
+
 	        jPanelLogin.setVisible(false);
 	        jTFUser.setText("");
 	        jPPassword.setText("");
 	        try{
 	            if(usuario.equals("admin")) {
 	            	ventAdmin.setMaximum(true);
-	                ventAdmin.setVisible(true);
+                    ventAdmin.setVisible(true);
+                    //ventInspector.setVisible(true);
+                    //ventInspector.setMaximum(true);
 	            } else {
-	            	ventInspector.setVisible(true);
+                    ventInspector.setVisible(true);
+                    ventInspector.setMaximum(true);
 	            }
 	        }
 	        catch(PropertyVetoException e){

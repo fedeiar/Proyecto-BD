@@ -40,7 +40,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 
 @SuppressWarnings("serial")
-public class VentanaInspector extends javax.swing.JInternalFrame {
+public class VentanaInspector extends VentanaUsuario {
 	
  	
 
@@ -53,8 +53,6 @@ public class VentanaInspector extends javax.swing.JInternalFrame {
     private JSeparator jSeparator1;
     private JMenu jMenuGeneral;
     private JPanel jPanelInspector;
-    private DBTable tabla;
-    private VentanaPrincipal ventPrincipal;
     private JTextField jTxPantente;
     private JTextField textField;
     private JLabel jLPatente, jLUbicacion;
@@ -62,32 +60,19 @@ public class VentanaInspector extends javax.swing.JInternalFrame {
 
 	
 	public VentanaInspector(VentanaPrincipal vp, DBTable t) {
-		super();
-        ventPrincipal = vp;
-        tabla = t;
-        initGUI();
+		super(vp,t);
 	}
     
     
-   
     // metodos
 
-	private void initGUI(){
+	protected void initGUI(){
         try{
-        	
-            
-            this.setPreferredSize(new Dimension(VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH));
-            this.setBounds(0, 0, VentanaPrincipal.WIDTH, VentanaPrincipal.HEIGTH);
-            this.setVisible(true);
+        	super.initGUI();
             this.setTitle("Consultas Admin");
-            //this.setClosable(true);
-            this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-            //this.setMaximizable(true);
-            this.getContentPane().setLayout(null);
 
             //arma los paneles
             ArmarPanelInspector();	
-
         }
         catch(Exception e){
             e.printStackTrace();
@@ -102,15 +87,13 @@ public class VentanaInspector extends javax.swing.JInternalFrame {
         jPanelInspector.setBounds(0, 0, 786, 571);
         getContentPane().add(jPanelInspector);
         jPanelInspector.setLayout(null);
-		
         
 		jTxPantente = new JTextField();
 		jTxPantente.setBounds(107, 13, 96, 20);
 		jPanelInspector.add(jTxPantente);
 		jTxPantente.setColumns(10);
 		
-		
-		jLPatente = new JLabel("PANTENE");
+		jLPatente = new JLabel("PATENTE");
 		jLPatente.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		jLPatente.setBounds(41, 13, 56, 20);
 		jPanelInspector.add(jLPatente);
@@ -174,14 +157,21 @@ public class VentanaInspector extends javax.swing.JInternalFrame {
 		tabla_ubicaciones_1.setBounds(10, 373, 766, 104);
 		jPanelInspector.add(tabla_ubicaciones_1);
     }
+
+    protected void thisComponentHidden(ComponentEvent evt){
+        super.thisComponentHidden(evt);
+    }
+    
+    protected void thisComponentShown(ComponentEvent evt){
+
+    }
     
     public void darkMode(){
     	jPanelInspector.setBackground(getBackground().black);
-    	
     	jLPatente.setForeground(getForeground().white);
     	jLUbicacion.setForeground(getForeground().white);
-    	
     }
+
     public void notDarkMode(){
     	jPanelInspector.setBackground(getBackground().LIGHT_GRAY);
     	jLPatente.setForeground(getForeground().black);
