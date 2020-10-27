@@ -24,7 +24,6 @@ public abstract class VentanaUsuario extends javax.swing.JInternalFrame{
 
     public VentanaUsuario(VentanaPrincipal vp, DBTable t){
         super();
-        
         ventPrincipal = vp;
         tabla = t;
         initGUI();

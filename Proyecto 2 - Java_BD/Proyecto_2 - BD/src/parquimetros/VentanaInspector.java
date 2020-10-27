@@ -55,16 +55,15 @@ public class VentanaInspector extends VentanaUsuario {
     public static final int HEIGTH = VentanaPrincipal.HEIGTH;
 
     private JPanel jPanelInspector;
-    private JTextField jTxPatente;
-    private JLabel jLPatente, jLSeleccioneUnParquimetro;
-    private JTable table;
+    private JTextField jTxPatente, jTFUsuarioActual;
+    private JLabel jLPatente, jLSeleccioneUnParquimetro, jLUsuarioActual;
+    private JTable jTtablaPatentes;
     private JScrollPane jSPScroll;
     private JButton jBCargarPatentes, jBDeletePatente, jBAgregar;
     
     private DBTable tabla_parquimetros, tabla_ubicaciones_1;
 
     private String legajo;
-    private ArrayList <String> listaPatentes;
     
     //constructor
 	public VentanaInspector(VentanaPrincipal vp, DBTable t) {
@@ -77,7 +76,7 @@ public class VentanaInspector extends VentanaUsuario {
         try{
         	super.initGUI();
             this.setTitle("Consultas Inspector");
-            listaPatentes = new ArrayList<String>();
+
             //arma los paneles
             ArmarPanelInspector();	
         }
@@ -97,7 +96,19 @@ public class VentanaInspector extends VentanaUsuario {
     	jPanelInspector = new JPanel();
         jPanelInspector.setBackground(Color.LIGHT_GRAY);
         getContentPane().add(jPanelInspector);
-		jPanelInspector.setLayout(null);
+        jPanelInspector.setLayout(null);
+        
+        jTFUsuarioActual = new JTextField();
+		jTFUsuarioActual.setEnabled(false);
+		jTFUsuarioActual.setEditable(false);
+		jTFUsuarioActual.setBounds(647, 19, 37, 19);
+        jTFUsuarioActual.setColumns(10);
+        jPanelInspector.add(jTFUsuarioActual);
+		
+		jLUsuarioActual = new JLabel("Usuario actual:");
+		jLUsuarioActual.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		jLUsuarioActual.setBounds(551, 14, 86, 27);
+		jPanelInspector.add(jLUsuarioActual);
         
 		jTxPatente = new JTextField();
 		jTxPatente.setBounds(82, 41, 97, 28);
@@ -109,7 +120,7 @@ public class VentanaInspector extends VentanaUsuario {
 		jLPatente.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		jPanelInspector.add(jLPatente);
 		
-		jBCargarPatentes = new JButton("CARGAR PATENTES");
+		jBCargarPatentes = new JButton("MOSTRAR MULTAS");
         jBCargarPatentes.setBounds(83, 105, 188, 27);
         jBCargarPatentes.setFont(new Font("Tahoma", Font.PLAIN, 12));
         jPanelInspector.add(jBCargarPatentes);
@@ -125,9 +136,9 @@ public class VentanaInspector extends VentanaUsuario {
         jPanelInspector.add(jBDeletePatente);
 		jBDeletePatente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int numRow = table.getModel().getRowCount();
+				int numRow = jTtablaPatentes.getModel().getRowCount();
 				if (numRow>0)
-				((DefaultTableModel) table.getModel()).removeRow(numRow-1);	
+				((DefaultTableModel) jTtablaPatentes.getModel()).removeRow(numRow-1);	
 			}
 		});
         
@@ -145,9 +156,9 @@ public class VentanaInspector extends VentanaUsuario {
 
 		tabla_ubicaciones_1 = new DBTable();
 		tabla_ubicaciones_1.setBounds(10, 373, 769, 104);
-		tabla_ubicaciones_1.setSortEnabled(true);
+        tabla_ubicaciones_1.setSortEnabled(true);
+        tabla_ubicaciones_1.setControlPanelVisible(false);
 		tabla_ubicaciones_1.setEditable(false);
-		tabla_ubicaciones_1.setControlPanelVisible(false);
 		jPanelInspector.add(tabla_ubicaciones_1);
 		
 		jBAgregar = new JButton("Agregar");
@@ -162,24 +173,22 @@ public class VentanaInspector extends VentanaUsuario {
 		jSPScroll.setBounds(281, 14, 220, 118);
 		jPanelInspector.add(jSPScroll);
 		
-		table = new JTable();
-		jSPScroll.setViewportView(table);
-		table.setModel(new DefaultTableModel(
-			new String[][] {
-				
-			},
-			new String[] {
-				"PATENTES"
-			}
+		jTtablaPatentes = new JTable();
+		jSPScroll.setViewportView(jTtablaPatentes);
+		jTtablaPatentes.setModel(new DefaultTableModel(
+			new String[][] { },
+			new String[] { "PATENTES" }
         ));
+		
+		
 		
 		jBAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String patente = jTxPatente.getText();
-				int numCols = table.getModel().getColumnCount();
+				int numCols = jTtablaPatentes.getModel().getColumnCount();
 				String [] fila = new String [numCols];
-				fila[0]=patente;
-				((DefaultTableModel) table.getModel()).addRow(fila);
+				fila[0] = patente;
+				((DefaultTableModel) jTtablaPatentes.getModel()).addRow(fila);
 			}
 		});
     }
@@ -217,6 +226,7 @@ public class VentanaInspector extends VentanaUsuario {
     
     protected void thisComponentShown(ComponentEvent evt){
         this.conectarDBTable(tabla_parquimetros, "SELECT * from Parquimetros");
+        jTFUsuarioActual.setText(legajo);
     }
 
     public void darkMode(){

@@ -1,1 +1,1 @@
-- Ventana administrador, problemas ocn SetSelectSql() de SHOW TABLES y de DESCRIBE
+- admin: hay que contemplar creates, usar stmt.
