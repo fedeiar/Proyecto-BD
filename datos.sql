@@ -11,7 +11,6 @@ INSERT INTO conductores VALUES (32171214, "Alejo", "Ferreras", "Terrada 1200" ,"
 INSERT INTO conductores VALUES (31171215, "Belen", "Gauto", "Trelew 140" ,"2123694562",42007);
 
 
-
 INSERT INTO automoviles VALUES ("ABC123","Chevrolet","Onix Premier","Rojo",39171207);
 INSERT INTO automoviles VALUES ("DEF456","Citroen","C5 Aircross","Blanco perla",38171208);
 INSERT INTO automoviles VALUES ("GHI789","Citroen","DS3 Crossback E-Tense","",37171209);
@@ -97,51 +96,18 @@ INSERT INTO parquimetros VALUES (8, 1, "Vieytes", 250);
 INSERT INTO parquimetros VALUES (9, 1, "Vieytes", 400);
 
 
-INSERT INTO asociado_con VALUES (1,125,"Terrada",233,"Do","T");
-INSERT INTO asociado_con VALUES (2,125,"Terrada",234,"Do","T");
-INSERT INTO asociado_con VALUES (3,126,"San Juan",2340,"Mi","M");
-INSERT INTO asociado_con VALUES (4,126,"Alem",123,"Sa","M");
-INSERT INTO asociado_con VALUES (5,127,"Alem",124,"Do","T");
-
-
-# quien controla que el asociado_con 323 sea un miercoles en ambas fechas?
-INSERT INTO multa VALUES (10,"2020/03/1","14:44","ABC123",1);
-INSERT INTO multa VALUES (11,"2020/03/29","13:54","DEF456",2);
-INSERT INTO multa VALUES (12,"2020/04/22","14:35","GHI789",3);
-INSERT INTO multa VALUES (13,"2020/05/2","15:04","GHI789",4);
-INSERT INTO multa VALUES (14,"2020/05/3","13:34","DEF456",5);
-
-
-INSERT INTO accede VALUES (124,1,"2020/01/29","17:34:00");
-INSERT INTO accede VALUES (124,1,"2020/02/29","17:23:00");
-INSERT INTO accede VALUES (124,1,"2020/03/29","17:31:00");
-INSERT INTO accede VALUES (124,1,"2020/04/29","17:50:00");
-INSERT INTO accede VALUES (124,1,"2020/05/29","16:30:00");
-INSERT INTO accede VALUES (125,2,"2020/01/29","16:10:00");
-INSERT INTO accede VALUES (125,2,"2020/02/29","19:42:00");
-INSERT INTO accede VALUES (125,2,"2020/03/29","16:30:00");
-INSERT INTO accede VALUES (125,2,"2020/04/29","19:32:00");
-INSERT INTO accede VALUES (125,2,"2020/05/29","16:30:00");
-INSERT INTO accede VALUES (126,3,"2020/01/29","16:12:00");
-INSERT INTO accede VALUES (126,4,"2020/01/29","16:05:00");
-INSERT INTO accede VALUES (126,3,"2020/02/29","16:25:00");
-INSERT INTO accede VALUES (126,4,"2020/02/29","16:45:00");
-INSERT INTO accede VALUES (126,3,"2020/03/29","16:02:00");
-INSERT INTO accede VALUES (126,4,"2020/03/29","16:05:00");
-INSERT INTO accede VALUES (126,3,"2020/04/29","16:05:00");
-INSERT INTO accede VALUES (126,4,"2020/04/29","16:25:00");
-INSERT INTO accede VALUES (126,3,"2020/05/29","16:15:00");
-INSERT INTO accede VALUES (126,4,"2020/05/29","16:35:00");
-INSERT INTO accede VALUES (127,5,"2020/01/29","18:02:00");
-INSERT INTO accede VALUES (127,6,"2020/01/29","18:05:00");
-INSERT INTO accede VALUES (127,5,"2020/02/29","18:07:00");
-INSERT INTO accede VALUES (127,6,"2020/02/29","18:25:00");
-INSERT INTO accede VALUES (127,5,"2020/03/29","18:15:00");
-INSERT INTO accede VALUES (127,6,"2020/03/29","18:35:00");
-INSERT INTO accede VALUES (127,5,"2020/04/29","18:35:00");
-INSERT INTO accede VALUES (127,6,"2020/04/29","16:15:00");
-INSERT INTO accede VALUES (127,5,"2020/05/29","18:35:00");
-INSERT INTO accede VALUES (127,6,"2020/05/29","18:35:00");
+INSERT INTO asociado_con VALUES (1,124,"Vieytes",200,"Lu","T");
+INSERT INTO asociado_con VALUES (2,124,"Vieytes",200,"Ma","T");
+INSERT INTO asociado_con VALUES (3,124,"Vieytes",200,"Mi","T");
+INSERT INTO asociado_con VALUES (4,124,"Vieytes",200,"Ju","T");
+INSERT INTO asociado_con VALUES (5,124,"Vieytes",200,"Vi","T");
+INSERT INTO asociado_con VALUES (6,124,"Vieytes",200,"Sa","T");
+INSERT INTO asociado_con VALUES (7,124,"Vieytes",200,"Do","T");
+INSERT INTO asociado_con VALUES (8,125,"Terrada",233,"Ma","T");
+INSERT INTO asociado_con VALUES (9,125,"Terrada",234,"Ju","T");
+INSERT INTO asociado_con VALUES (10,126,"San Juan",2340,"Mi","M");
+INSERT INTO asociado_con VALUES (11,126,"Alem",123,"Sa","M");
+INSERT INTO asociado_con VALUES (12,127,"Alem",124,"Do","T");
 
 
 INSERT INTO estacionamientos VALUES (1,1,"2020/05/24","13:00:00","2020/05/24","16:30:00");

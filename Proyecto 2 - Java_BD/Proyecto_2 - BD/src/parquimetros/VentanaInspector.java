@@ -9,7 +9,9 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import javax.swing.GroupLayout;
@@ -41,6 +43,9 @@ import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import jdk.nashorn.api.tree.GotoTree;
+
 import java.awt.Button;
 import javax.swing.JScrollBar;
 import javax.swing.ScrollPaneConstants;
@@ -126,7 +131,10 @@ public class VentanaInspector extends VentanaUsuario {
         jPanelInspector.add(jBCargarPatentes);
 		jBCargarPatentes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-
+                //boolean valido = validarInspector();
+                //if(valido){
+                    //generarMultas();
+                //}
 			}
 		});
 		
@@ -165,7 +173,17 @@ public class VentanaInspector extends VentanaUsuario {
 		jBAgregar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		jBAgregar.setBounds(185, 41, 86, 27);
 		jPanelInspector.add(jBAgregar);
-		
+		jBAgregar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				String patente = jTxPatente.getText();
+				int numCols = jTtablaPatentes.getModel().getColumnCount();
+				String [] fila = new String [numCols];
+				fila[0] = patente;
+                ((DefaultTableModel) jTtablaPatentes.getModel()).addRow(fila);
+                //verificarPatente();
+			}
+        });
+        
 		jSPScroll = new JScrollPane();
 		jSPScroll.setEnabled(false);
 		jSPScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -179,23 +197,41 @@ public class VentanaInspector extends VentanaUsuario {
 			new String[][] { },
 			new String[] { "PATENTES" }
         ));
-		
-		
-		
-		jBAgregar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				String patente = jTxPatente.getText();
-				int numCols = jTtablaPatentes.getModel().getColumnCount();
-				String [] fila = new String [numCols];
-				fila[0] = patente;
-				((DefaultTableModel) jTtablaPatentes.getModel()).addRow(fila);
-			}
-		});
     }
     
+    private boolean validarInspector(){
+        boolean valido = false;
+        try{
+            String calle = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("calle").getModelIndex() - 1).toString();
+            String altura = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("altura").getModelIndex() - 1).toString();
+            String dia = Fecha.getDiaActual();
+            char turno = Fecha.getTurno();
+            Statement stmt = tabla.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Asociado_con"+ 
+                                             "WHERE legajo = "+ this.legajo +" AND calle = '"+ calle +"' AND altura = "+ altura +" AND "+
+                                             "dia ='"+ dia +"' AND turno = '"+ turno +"' ");
+            if(rs.next()){ //si el inspector tiene asociada la ubicación, tendríamos una sola tupla. Sino 0.
+                valido = true;
+                java.sql.Date fecha = Fecha.getFechaActualSQL();
+                java.sql.Time hora = Fecha.getHoraActualSQL();
+                stmt.execute("INSERT INTO Accede(legajo, id_parq, fecha, hora) " + 
+                             "VALUES ("+legajo+", ) ");
+            }
+            else{
+                JOptionPane.showMessageDialog(this," ", "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        catch(SQLException ex){
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+
+        return valido;
+    }
+
     private void conectarDBTable(DBTable table, String consulta){
         try{
-            System.out.println(consulta);
             table.connectDatabase(super.tabla.getDatabaseDriver(), super.tabla.getJdbcUrl(), super.tabla.getUser(), super.tabla.getPassword());
             table.setSelectSql(consulta);
             table.createColumnModelFromQuery();

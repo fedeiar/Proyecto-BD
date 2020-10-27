@@ -234,6 +234,6 @@ CREATE VIEW estacionados AS
     GRANT SELECT, INSERT ON parquimetros.Multa TO 'inspector'@'%';
     GRANT SELECT ON parquimetros.Estacionados TO 'inspector'@'%';
     GRANT SELECT, INSERT ON parquimetros.Accede to 'inspector'@'%';
-    GRANT SELECT ON parquimetros.asociado_con to 'inspector'@'%';
-    GRANT SELECT ON parquimetros.parquimetros to 'inspector'@'%';
-    GRANT SELECT ON parquimetros.automoviles to 'inspector'@'%';
+    GRANT SELECT ON parquimetros.Asociado_con to 'inspector'@'%';
+    GRANT SELECT ON parquimetros.Parquimetros to 'inspector'@'%';
+    GRANT SELECT ON parquimetros.Automoviles to 'inspector'@'%';

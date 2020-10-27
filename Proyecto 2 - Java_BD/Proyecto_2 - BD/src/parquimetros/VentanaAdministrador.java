@@ -141,17 +141,12 @@ public class VentanaAdministrador extends VentanaUsuario{
 
     private void refrescarTabla(){
         try {
-
     	    tabla.setSelectSql(this.jTAconsulta.getText().trim());
             tabla.createColumnModelFromQuery();
 
-    	    for (int i = 0; i < tabla.getColumnCount(); i++){
-    	    	
-    	    	
+    	    for (int i = 0; i < tabla.getColumnCount(); i++){	
                 if (tabla.getColumn(i).getType()==Types.TIME){
                     tabla.getColumn(i).setType(Types.CHAR);  
-        	    	
-
                 }
 
                 if (tabla.getColumn(i).getType()==Types.DATE) {
