@@ -232,6 +232,14 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
 
     private void cambiarVentana(String usuario, String password) throws SQLException, ClassNotFoundException{
+        jTFUser.setText("");
+        jPPassword.setText("");
+        
+        String servidor = "localhost:3306";
+        String baseDatos = "parquimetros"; 
+        String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
+        String driver = "com.mysql.cj.jdbc.Driver";
+        tabla.connectDatabase(driver, uriConexion, usuario, password);
 
         try{
             if(usuario.equals("admin")) {
@@ -242,15 +250,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 ventInspector.setVisible(true);
                 ventInspector.setMaximum(true);
             }
-            String servidor = "localhost:3306";
-        	String baseDatos = "parquimetros"; 
-            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
-            String driver = "com.mysql.cj.jdbc.Driver";
-            tabla.connectDatabase(driver, uriConexion, usuario, password);
-
             jPanelLogin.setVisible(false);
-            jTFUser.setText("");
-            jPPassword.setText("");
+            
         }
         catch(PropertyVetoException e){
             e.printStackTrace();

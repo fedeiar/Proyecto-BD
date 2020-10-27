@@ -56,14 +56,16 @@ public class VentanaInspector extends VentanaUsuario {
 
     private JPanel jPanelInspector;
     private JTextField jTxPatente;
-    private JTextField textField;
-    private JLabel jLPatente, jLUbicacion;
-    
-    private String legajo;
-    private ArrayList <String> listaPantentes;
+    private JLabel jLPatente, jLSeleccioneUnParquimetro;
     private JTable table;
-    private JTable table_1;
-    private JScrollPane scrollPane;
+    private JScrollPane jSPScroll;
+    private JButton jBCargarPatentes, jBDeletePatente, jBAgregar;
+    
+    private DBTable tabla_parquimetros, tabla_ubicaciones_1;
+
+    private String legajo;
+    private ArrayList <String> listaPatentes;
+    
     //constructor
 	public VentanaInspector(VentanaPrincipal vp, DBTable t) {
 		super(vp,t);
@@ -74,8 +76,8 @@ public class VentanaInspector extends VentanaUsuario {
 	protected void initGUI(){
         try{
         	super.initGUI();
-            this.setTitle("Consultas Admin");
-            listaPantentes = new ArrayList<String>();
+            this.setTitle("Consultas Inspector");
+            listaPatentes = new ArrayList<String>();
             //arma los paneles
             ArmarPanelInspector();	
         }
@@ -102,95 +104,75 @@ public class VentanaInspector extends VentanaUsuario {
 		jPanelInspector.add(jTxPatente);
 		jTxPatente.setColumns(10);
 		
-		jLPatente = new JLabel("Ingrese pantente");
+		jLPatente = new JLabel("Ingrese patente");
 		jLPatente.setBounds(83, 14, 102, 27);
 		jLPatente.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		jPanelInspector.add(jLPatente);
 		
-		JButton btnNewButton = new JButton("CARGAR PANTENTES");
-		btnNewButton.setBounds(83, 105, 188, 27);
-		btnNewButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+		jBCargarPatentes = new JButton("CARGAR PATENTES");
+        jBCargarPatentes.setBounds(83, 105, 188, 27);
+        jBCargarPatentes.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        jPanelInspector.add(jBCargarPatentes);
+		jBCargarPatentes.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent evt) {
+
 			}
 		});
 		
-		btnNewButton.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		jPanelInspector.add(btnNewButton);
-		
-		JButton jBDeletePatente = new JButton("Eliminar ultima patente");
-		jBDeletePatente.setBounds(83, 73, 188, 27);
+		jBDeletePatente = new JButton("Eliminar ultima patente");
+        jBDeletePatente.setBounds(83, 73, 188, 27);
+        jBDeletePatente.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        jPanelInspector.add(jBDeletePatente);
 		jBDeletePatente.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				
 				int numRow = table.getModel().getRowCount();
 				if (numRow>0)
-				((DefaultTableModel) table.getModel()).removeRow(numRow-1);
-				
-				
+				((DefaultTableModel) table.getModel()).removeRow(numRow-1);	
 			}
 		});
-		jBDeletePatente.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		jPanelInspector.add(jBDeletePatente);
-		
-		JButton btnNewButton_3 = new JButton("INGRESAR");
-		btnNewButton_3.setBounds(620, 57, 89, 23);
-		btnNewButton_3.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		jPanelInspector.add(btnNewButton_3);
-		
-		textField = new JTextField();
-		textField.setBounds(540, 33, 169, 20);
-		jPanelInspector.add(textField);
-		textField.setColumns(10);
-		
-		jLUbicacion = new JLabel("Ingrese ubicacion");
-		jLUbicacion.setBounds(540, 17, 168, 15);
-		jLUbicacion.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		jPanelInspector.add(jLUbicacion);
-		
-		DBTable tabla_ubicaciones = new DBTable();
-		tabla_ubicaciones.setBounds(10, 237, 769, 93);
-		jPanelInspector.add(tabla_ubicaciones);
-		tabla_ubicaciones.setSortEnabled(true);
-		tabla_ubicaciones.setEditable(false);
-		tabla_ubicaciones.setControlPanelVisible(false);
-		
-		DBTable tabla_ubicaciones_1 = new DBTable();
+        
+        jLSeleccioneUnParquimetro = new JLabel("Seleccione un parquimetro");
+		jLSeleccioneUnParquimetro.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		jLSeleccioneUnParquimetro.setBounds(10, 203, 188, 27);
+        jPanelInspector.add(jLSeleccioneUnParquimetro);
+        
+		tabla_parquimetros = new DBTable();
+		tabla_parquimetros.setBounds(10, 237, 769, 93);
+		tabla_parquimetros.setSortEnabled(true);
+        tabla_parquimetros.setControlPanelVisible(false);
+        tabla_parquimetros.setEditable(false);
+        jPanelInspector.add(tabla_parquimetros);
+
+		tabla_ubicaciones_1 = new DBTable();
 		tabla_ubicaciones_1.setBounds(10, 373, 769, 104);
 		tabla_ubicaciones_1.setSortEnabled(true);
 		tabla_ubicaciones_1.setEditable(false);
 		tabla_ubicaciones_1.setControlPanelVisible(false);
 		jPanelInspector.add(tabla_ubicaciones_1);
 		
-		
-		
-		JButton jBAgregar = new JButton("Agregar");
+		jBAgregar = new JButton("Agregar");
 		jBAgregar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		jBAgregar.setBounds(185, 41, 86, 27);
 		jPanelInspector.add(jBAgregar);
 		
-		scrollPane = new JScrollPane();
-		scrollPane.setEnabled(false);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		scrollPane.setBounds(281, 14, 220, 118);
-		jPanelInspector.add(scrollPane);
+		jSPScroll = new JScrollPane();
+		jSPScroll.setEnabled(false);
+		jSPScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		jSPScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		jSPScroll.setBounds(281, 14, 220, 118);
+		jPanelInspector.add(jSPScroll);
 		
 		table = new JTable();
-		scrollPane.setViewportView(table);
+		jSPScroll.setViewportView(table);
 		table.setModel(new DefaultTableModel(
 			new String[][] {
 				
-				
 			},
 			new String[] {
-				"PANTENTES"
+				"PATENTES"
 			}
-		));
+        ));
 		
-		JLabel lblSeleccioneUnParquimetro = new JLabel("Seleccione un parquimetro");
-		lblSeleccioneUnParquimetro.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		lblSeleccioneUnParquimetro.setBounds(10, 203, 188, 27);
-		jPanelInspector.add(lblSeleccioneUnParquimetro);
 		jBAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				String patente = jTxPatente.getText();
@@ -198,32 +180,52 @@ public class VentanaInspector extends VentanaUsuario {
 				String [] fila = new String [numCols];
 				fila[0]=patente;
 				((DefaultTableModel) table.getModel()).addRow(fila);
-				
-
-				 
 			}
 		});
     }
     
-    
+    private void conectarDBTable(DBTable table, String consulta){
+        try{
+            System.out.println(consulta);
+            table.connectDatabase(super.tabla.getDatabaseDriver(), super.tabla.getJdbcUrl(), super.tabla.getUser(), super.tabla.getPassword());
+            table.setSelectSql(consulta);
+            table.createColumnModelFromQuery();
+            table.refresh();
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+        catch(ClassNotFoundException ex){
+            ex.printStackTrace();
+        }
+    }
 
     protected void thisComponentHidden(ComponentEvent evt){
         super.thisComponentHidden(evt);
+        try {
+            tabla_parquimetros.close();
+        } 
+        catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+		}
     }
     
     protected void thisComponentShown(ComponentEvent evt){
-
+        this.conectarDBTable(tabla_parquimetros, "SELECT * from Parquimetros");
     }
 
     public void darkMode(){
-    	jPanelInspector.setBackground(getBackground().black);
-    	jLPatente.setForeground(getForeground().white);
-    	jLUbicacion.setForeground(getForeground().white);
+    	jPanelInspector.setBackground(Color.BLACK);
+    	jLPatente.setForeground(Color.WHITE);
     }
 
     public void notDarkMode(){
-    	jPanelInspector.setBackground(getBackground().LIGHT_GRAY);
-    	jLPatente.setForeground(getForeground().black);
-    	jLUbicacion.setForeground(getForeground().black);
+    	jPanelInspector.setBackground(Color.LIGHT_GRAY);
+    	jLPatente.setForeground(Color.BLACK);
     }
 }

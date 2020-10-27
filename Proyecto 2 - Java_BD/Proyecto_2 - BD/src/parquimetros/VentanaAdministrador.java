@@ -125,12 +125,11 @@ public class VentanaAdministrador extends VentanaUsuario{
         //crea la tabla que contendrá los nombres de todas las tablas.
         tabla_tablasPresentes = new DBTable();
         tabla_tablasPresentes.setBounds(532, 22, 221, 182);
-        jPanelConsulta.add(tabla_tablasPresentes);
-        
         tabla_tablasPresentes.setSortEnabled(true);
         tabla_tablasPresentes.setControlPanelVisible(false);
         tabla_tablasPresentes.setEditable(false);
-        
+        jPanelConsulta.add(tabla_tablasPresentes);
+
         jLSeleccion = new JTextPane();
         jLSeleccion.setFont(new Font("Tahoma", Font.PLAIN, 13));
         jLSeleccion.setBackground(Color.LIGHT_GRAY);
@@ -173,7 +172,15 @@ public class VentanaAdministrador extends VentanaUsuario{
 
     protected void thisComponentHidden(ComponentEvent evt){
         super.thisComponentHidden(evt);
-        jPanelConsulta.remove(tabla);
+        try {
+            tabla_tablasPresentes.close();
+            jPanelConsulta.remove(tabla);
+        } 
+        catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+		}
     }
 
     protected void thisComponentShown(ComponentEvent evt){
