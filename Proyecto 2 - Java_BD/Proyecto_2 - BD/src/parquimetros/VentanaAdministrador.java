@@ -79,10 +79,11 @@ public class VentanaAdministrador extends VentanaUsuario{
     }
 
     private void ArmaPanelConsulta(){
+        getContentPane().setLayout(null);
         
         jPanelConsulta = new JPanel();
         jPanelConsulta.setBackground(Color.LIGHT_GRAY);
-        jPanelConsulta.setBounds(0, 11, 790, 560);
+        jPanelConsulta.setBounds(0, 0, 790, 571);
         getContentPane().add(jPanelConsulta);
         jPanelConsulta.setLayout(null);
 

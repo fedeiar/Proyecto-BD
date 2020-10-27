@@ -24,6 +24,7 @@ public abstract class VentanaUsuario extends javax.swing.JInternalFrame{
 
     public VentanaUsuario(VentanaPrincipal vp, DBTable t){
         super();
+        getContentPane().setLayout(null);
         ventPrincipal = vp;
         tabla = t;
         initGUI();
@@ -36,7 +37,6 @@ public abstract class VentanaUsuario extends javax.swing.JInternalFrame{
         this.setClosable(true);
         this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
         this.setMaximizable(true);
-        this.getContentPane().setLayout(null);
 
         this.addComponentListener(new ComponentAdapter() {
             public void componentHidden(ComponentEvent evt) {

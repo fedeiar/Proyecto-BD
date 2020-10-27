@@ -87,6 +87,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void initGUI() {
         try {
+        	
             javax.swing.UIManager.setLookAndFeel(javax.swing.UIManager.getSystemLookAndFeelClassName());
             this.setTitle("Parquimetros");
             this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -126,7 +127,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
         jPanelLogin = new JPanel();
         jPanelLogin.setBackground(Color.LIGHT_GRAY);
-        jPanelLogin.setBounds(0, -11, 800, 611);
+        jPanelLogin.setBounds(0, -13, 800, 613);
         jDesktopPane1.add(jPanelLogin);
         jPanelLogin.setLayout(null);
        
@@ -153,7 +154,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanelLogin.add(jBingresar);
 
         jbtnNewButton = new JButton("Dark Mode");
-        jbtnNewButton.setBounds(10, 11, 89, 23);
+        jbtnNewButton.setBounds(10, 19, 89, 23);
         jbtnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
         		if (jPanelLogin.getBackground().equals(getBackground().black))
@@ -205,7 +206,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 String consulta = "SELECT legajo, password FROM Inspectores WHERE legajo = '" + usuario + "' AND password = md5('" + password + "') ";
                 ResultSet rs = stmt.executeQuery(consulta);
                 if (rs.next()){ // ya que es una sola fila, si hubo match es un sólo inspector valido, sino rs esta vacío y da false.
-                    System.out.println("ENTREEEE?");
+                    
                     ventInspector.setLegajo(usuario);
                     usuario = "inspector";
                     password = "inspector";
@@ -232,7 +233,6 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private void cambiarVentana(String usuario, String password) throws SQLException, ClassNotFoundException{
 
-        
         try{
             if(usuario.equals("admin")) {
                 ventAdmin.setMaximum(true);
