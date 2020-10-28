@@ -60,7 +60,7 @@ public class VentanaInspector extends VentanaUsuario {
 
     private JPanel jPanelInspector;
     private JTextField jTxPatente, jTFUsuarioActual;
-    private JLabel jLPatente, jLSeleccioneUnParquimetro, jLUsuarioActual;
+    private JLabel jLPatente, jLSeleccion, jLUsuarioActual;
     private JTable jTtablaPatentes;
     private JScrollPane jSPScroll;
     private JButton jBCargarPatentes, jBDeletePatente, jBAgregar;
@@ -106,13 +106,13 @@ public class VentanaInspector extends VentanaUsuario {
         jTFUsuarioActual = new JTextField();
 		jTFUsuarioActual.setEnabled(false);
 		jTFUsuarioActual.setEditable(false);
-		jTFUsuarioActual.setBounds(647, 19, 37, 19);
+		jTFUsuarioActual.setBounds(649, 18, 37, 19);
         jTFUsuarioActual.setColumns(10);
         jPanelInspector.add(jTFUsuarioActual);
 		
 		jLUsuarioActual = new JLabel("Usuario actual:");
 		jLUsuarioActual.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		jLUsuarioActual.setBounds(551, 14, 86, 27);
+		jLUsuarioActual.setBounds(551, 14, 111, 27);
 		jPanelInspector.add(jLUsuarioActual);
         
 		jTxPatente = new JTextField();
@@ -150,20 +150,20 @@ public class VentanaInspector extends VentanaUsuario {
 			}
 		});
         
-        jLSeleccioneUnParquimetro = new JLabel("Seleccione un parquimetro");
-		jLSeleccioneUnParquimetro.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		jLSeleccioneUnParquimetro.setBounds(10, 203, 188, 27);
-        jPanelInspector.add(jLSeleccioneUnParquimetro);
+        jLSeleccion = new JLabel("Seleccione un parquimetro");
+		jLSeleccion.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		jLSeleccion.setBounds(82, 185, 188, 27);
+        jPanelInspector.add(jLSeleccion);
         
 		tabla_parquimetros = new DBTable();
-		tabla_parquimetros.setBounds(10, 237, 769, 93);
+		tabla_parquimetros.setBounds(281, 185, 381, 118);
 		tabla_parquimetros.setSortEnabled(true);
         tabla_parquimetros.setControlPanelVisible(false);
         tabla_parquimetros.setEditable(false);
         jPanelInspector.add(tabla_parquimetros);
 
 		tabla_multas = new DBTable();
-		tabla_multas.setBounds(10, 373, 769, 104);
+		tabla_multas.setBounds(10, 331, 769, 198);
         tabla_multas.setSortEnabled(true);
         tabla_multas.setControlPanelVisible(false);
 		tabla_multas.setEditable(false);
@@ -188,7 +188,7 @@ public class VentanaInspector extends VentanaUsuario {
 		jSPScroll.setEnabled(false);
 		jSPScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		jSPScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		jSPScroll.setBounds(281, 14, 220, 118);
+		jSPScroll.setBounds(281, 14, 220, 129);
 		jPanelInspector.add(jSPScroll);
 
 		jTtablaPatentes = new JTable();
@@ -317,10 +317,14 @@ public class VentanaInspector extends VentanaUsuario {
     public void darkMode(){
     	jPanelInspector.setBackground(Color.BLACK);
     	jLPatente.setForeground(Color.WHITE);
+    	jLSeleccion.setForeground(Color.white);
+    	jLUsuarioActual.setForeground(Color.white);
     }
 
     public void notDarkMode(){
     	jPanelInspector.setBackground(Color.LIGHT_GRAY);
     	jLPatente.setForeground(Color.BLACK);
+    	jLSeleccion.setForeground(Color.black);
+    	jLUsuarioActual.setForeground(Color.black);
     }
 }
