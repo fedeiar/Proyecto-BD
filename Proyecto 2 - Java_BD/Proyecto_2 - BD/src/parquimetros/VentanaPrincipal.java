@@ -132,25 +132,25 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanelLogin.setLayout(null);
        
         jLuser = new JLabel("Usuario: ");
-        jLuser.setBounds(245, 33, 45, 14);
+        jLuser.setBounds(235, 23, 45, 14);
         jPanelLogin.add(jLuser);
 
         jTFUser = new JTextField();
-        jTFUser.setBounds(300, 30, 186, 20);
+        jTFUser.setBounds(290, 20, 186, 20);
         jTFUser.setColumns(20);
         jPanelLogin.add(jTFUser);
 
         jLpassword = new JLabel("Password: ");
-        jLpassword.setBounds(235, 64, 55, 14);
+        jLpassword.setBounds(225, 54, 55, 14);
         jPanelLogin.add(jLpassword);
 
         jPPassword = new JPasswordField();
-        jPPassword.setBounds(300, 61, 186, 20);
+        jPPassword.setBounds(290, 51, 186, 20);
         jPPassword.setColumns(20);
         jPanelLogin.add(jPPassword);
         
         jBingresar = new JButton("Ingresar");
-        jBingresar.setBounds(396, 91, 89, 23);
+        jBingresar.setBounds(387, 81, 89, 23);
         jPanelLogin.add(jBingresar);
 
         jbtnNewButton = new JButton("Dark Mode");
