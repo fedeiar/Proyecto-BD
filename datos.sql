@@ -84,16 +84,15 @@ INSERT INTO ubicaciones VALUES ("Vieytes", 200, 190.3);
 INSERT INTO ubicaciones VALUES ("Vieytes", 250, 1.93);
 INSERT INTO ubicaciones VALUES ("Vieytes", 400, 22.22);
 
-
-INSERT INTO parquimetros VALUES (1, 1, "San Juan", 2340);
-INSERT INTO parquimetros VALUES (2, 1, "Trelew", 345);
-INSERT INTO parquimetros VALUES (3, 1, "Terrada", 234);
-INSERT INTO parquimetros VALUES (4, 1, "Terrada", 235);
-INSERT INTO parquimetros VALUES (5, 1, "Alem", 128);
-INSERT INTO parquimetros VALUES (6, 1, "Alem", 134);
-INSERT INTO parquimetros VALUES (7, 1, "Vieytes", 200);
-INSERT INTO parquimetros VALUES (8, 1, "Vieytes", 250);
-INSERT INTO parquimetros VALUES (9, 1, "Vieytes", 400);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (1, 1, "Vieytes", 200);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (2, 1, "San Juan", 2340);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (3, 1, "Trelew", 345);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (4, 1, "Terrada", 234);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (5, 1, "Terrada", 235);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (6, 1, "Alem", 128);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (7, 1, "Alem", 134);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (8, 1, "Vieytes", 250);
+INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (9, 1, "Vieytes", 400);
 
 
 INSERT INTO asociado_con VALUES (1,124,"Vieytes",200,"Lu","t");
@@ -105,9 +104,15 @@ INSERT INTO asociado_con VALUES (6,124,"Vieytes",200,"Sa","t");
 INSERT INTO asociado_con VALUES (7,124,"Vieytes",200,"Do","t");
 INSERT INTO asociado_con VALUES (8,125,"Terrada",233,"Ma","t");
 INSERT INTO asociado_con VALUES (9,125,"Terrada",234,"Ju","t");
-INSERT INTO asociado_con VALUES (10,126,"San Juan",2340,"Mi","m");
-INSERT INTO asociado_con VALUES (11,126,"Alem",123,"Sa","m");
-INSERT INTO asociado_con VALUES (12,127,"Alem",124,"Do","t");
+INSERT INTO asociado_con VALUES (10,126,"San Juan",2340,"Lu","m");
+INSERT INTO asociado_con VALUES (11,126,"San Juan",2340,"Ma","m");
+INSERT INTO asociado_con VALUES (12,126,"San Juan",2340,"Mi","m");
+INSERT INTO asociado_con VALUES (13,126,"San Juan",2340,"Ju","m");
+INSERT INTO asociado_con VALUES (14,126,"San Juan",2340,"Vi","m");
+INSERT INTO asociado_con VALUES (15,126,"San Juan",2340,"Sa","m");
+INSERT INTO asociado_con VALUES (16,126,"San Juan",2340,"Do","m");
+INSERT INTO asociado_con VALUES (17,126,"Alem",123,"Sa","m");
+INSERT INTO asociado_con VALUES (18,127,"Alem",124,"Do","t");
 
 
 INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (1,1,"2020/05/24","13:00:00","2020/05/24","16:30:00");
