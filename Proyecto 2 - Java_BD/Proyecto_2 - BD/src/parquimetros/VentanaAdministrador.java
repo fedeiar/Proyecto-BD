@@ -124,7 +124,7 @@ public class VentanaAdministrador extends VentanaUsuario{
         
         //crea la tabla que contendrá los nombres de todas las tablas.
         tabla_tablasPresentes = new DBTable();
-        tabla_tablasPresentes.setBounds(532, 22, 221, 182);
+        tabla_tablasPresentes.setBounds(519, 22, 221, 182);
         tabla_tablasPresentes.setSortEnabled(true);
         tabla_tablasPresentes.setControlPanelVisible(false);
         tabla_tablasPresentes.setEditable(false);
@@ -135,7 +135,7 @@ public class VentanaAdministrador extends VentanaUsuario{
         jLSeleccion.setBackground(Color.LIGHT_GRAY);
         jLSeleccion.setEditable(false);
         jLSeleccion.setText("Seleccione una clase");
-        jLSeleccion.setBounds(532, 0, 237, 34);
+        jLSeleccion.setBounds(519, 0, 237, 34);
         jPanelConsulta.add(jLSeleccion);
     }
 
