@@ -131,10 +131,10 @@ public class VentanaInspector extends VentanaUsuario {
         jPanelInspector.add(jBCargarPatentes);
 		jBCargarPatentes.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
-                //boolean valido = validarInspector();
-                //if(valido){
+                boolean valido = validarInspector();
+                if(valido){
                     //generarMultas();
-                //}
+                }
 			}
 		});
 		
@@ -205,17 +205,15 @@ public class VentanaInspector extends VentanaUsuario {
             String calle = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("calle").getModelIndex() - 1).toString();
             String altura = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("altura").getModelIndex() - 1).toString();
             String dia = Fecha.getDiaActual();
-            char turno = Fecha.getTurno();
+            char turno = 't'; //Fecha.getTurno();
             Statement stmt = tabla.getConnection().createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Asociado_con"+ 
-                                             "WHERE legajo = "+ this.legajo +" AND calle = '"+ calle +"' AND altura = "+ altura +" AND "+
-                                             "dia ='"+ dia +"' AND turno = '"+ turno +"' ");
+            String consulta = "SELECT * FROM Asociado_con " + 
+                              "WHERE legajo = "+ this.legajo +" AND calle = '"+ calle +"' AND altura = "+ altura +" AND " +
+                              "dia = '"+ dia +"' AND turno = '"+ turno +"'";
+            ResultSet rs = stmt.executeQuery(consulta);
             if(rs.next()){ //si el inspector tiene asociada la ubicación, tendríamos una sola tupla. Sino 0.
                 valido = true;
-                java.sql.Date fecha = Fecha.getFechaActualSQL();
-                java.sql.Time hora = Fecha.getHoraActualSQL();
-                stmt.execute("INSERT INTO Accede(legajo, id_parq, fecha, hora) " + 
-                             "VALUES ("+legajo+", ) ");
+                registrarAccesoInspector(stmt);
             }
             else{
                 JOptionPane.showMessageDialog(this," ", "Error", JOptionPane.INFORMATION_MESSAGE);
@@ -228,6 +226,16 @@ public class VentanaInspector extends VentanaUsuario {
         }
 
         return valido;
+    }
+
+    private void registrarAccesoInspector(Statement stmt) throws SQLException{
+        String id_parq = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("id_parq").getModelIndex() - 1).toString();
+        java.sql.Date fecha = Fecha.getFechaActualSQL();
+        java.sql.Time hora = Fecha.getHoraActualSQL();
+        String consulta = "INSERT INTO Accede(legajo, id_parq, fecha, hora) " + 
+                          "VALUES("+legajo+", "+id_parq+", '"+fecha+"', '"+hora+"')" ;
+        System.out.println(consulta);
+        stmt.execute(consulta);
     }
 
     private void conectarDBTable(DBTable table, String consulta){

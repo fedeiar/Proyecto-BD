@@ -3,7 +3,7 @@ package parquimetros;
 import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
+import java.util.Calendar;
 
 public class Fecha {
     
@@ -11,7 +11,7 @@ public class Fecha {
     //metodos
     public static java.sql.Date getFechaActualSQL(){
         Date fecha = new Date();
-        java.sql.Date fechaSQL = java.sql.Date.valueOf((new SimpleDateFormat("yyyy-MM-dd")).format(fecha));;
+        java.sql.Date fechaSQL = java.sql.Date.valueOf((new SimpleDateFormat("yyyy-MM-dd")).format(fecha));
         return fechaSQL;
     }
 
@@ -22,24 +22,26 @@ public class Fecha {
     }
 
 	public static String getDiaActual() {
-        Date fecha = new Date();
+        Calendar cal = Calendar.getInstance();
+        int dia_del_mes_int = cal.get(Calendar.DAY_OF_WEEK);
 
-	    switch(new SimpleDateFormat("E").format(fecha)) {
-	        case("Monday"): {return "Lu";}
-	    	case("Tuesday"): {return "Ma";}
-	    	case("Wednesday"): {return "Mi";}
-	    	case("Thursday"): {return "Ju";}
-	    	case("Friday"): {return "Vi";}
-	    	case("Saturday"): {return "Sa";}
-	    	case("Sunday"): {return "Do";}
+	    switch(dia_del_mes_int) {
+	        case(1): {return "Do";}
+	    	case(2): {return "Lu";}
+	    	case(3): {return "Ma";}
+	    	case(4): {return "Mi";}
+	    	case(5): {return "Ju";}
+	    	case(6): {return "Vi";}
+	    	case(7): {return "Sa";}
 	    }
 	    return null;
 	}
 
 	public static char getTurno() {
         Date fecha = new Date();
-
-	    int hora = Integer.parseInt(new SimpleDateFormat("H").format(fecha));
+        int hora = Integer.parseInt(new SimpleDateFormat("H").format(fecha));
+        
+        System.out.println(hora);
 	    if(hora >= 8 && hora < 14) 
 	    	return 'm';
 	    else 

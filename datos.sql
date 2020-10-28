@@ -96,18 +96,18 @@ INSERT INTO parquimetros VALUES (8, 1, "Vieytes", 250);
 INSERT INTO parquimetros VALUES (9, 1, "Vieytes", 400);
 
 
-INSERT INTO asociado_con VALUES (1,124,"Vieytes",200,"Lu","T");
-INSERT INTO asociado_con VALUES (2,124,"Vieytes",200,"Ma","T");
-INSERT INTO asociado_con VALUES (3,124,"Vieytes",200,"Mi","T");
-INSERT INTO asociado_con VALUES (4,124,"Vieytes",200,"Ju","T");
-INSERT INTO asociado_con VALUES (5,124,"Vieytes",200,"Vi","T");
-INSERT INTO asociado_con VALUES (6,124,"Vieytes",200,"Sa","T");
-INSERT INTO asociado_con VALUES (7,124,"Vieytes",200,"Do","T");
-INSERT INTO asociado_con VALUES (8,125,"Terrada",233,"Ma","T");
-INSERT INTO asociado_con VALUES (9,125,"Terrada",234,"Ju","T");
-INSERT INTO asociado_con VALUES (10,126,"San Juan",2340,"Mi","M");
-INSERT INTO asociado_con VALUES (11,126,"Alem",123,"Sa","M");
-INSERT INTO asociado_con VALUES (12,127,"Alem",124,"Do","T");
+INSERT INTO asociado_con VALUES (1,124,"Vieytes",200,"Lu","t");
+INSERT INTO asociado_con VALUES (2,124,"Vieytes",200,"Ma","t");
+INSERT INTO asociado_con VALUES (3,124,"Vieytes",200,"Mi","t");
+INSERT INTO asociado_con VALUES (4,124,"Vieytes",200,"Ju","t");
+INSERT INTO asociado_con VALUES (5,124,"Vieytes",200,"Vi","t");
+INSERT INTO asociado_con VALUES (6,124,"Vieytes",200,"Sa","t");
+INSERT INTO asociado_con VALUES (7,124,"Vieytes",200,"Do","t");
+INSERT INTO asociado_con VALUES (8,125,"Terrada",233,"Ma","t");
+INSERT INTO asociado_con VALUES (9,125,"Terrada",234,"Ju","t");
+INSERT INTO asociado_con VALUES (10,126,"San Juan",2340,"Mi","m");
+INSERT INTO asociado_con VALUES (11,126,"Alem",123,"Sa","m");
+INSERT INTO asociado_con VALUES (12,127,"Alem",124,"Do","t");
 
 
 INSERT INTO estacionamientos VALUES (1,1,"2020/05/24","13:00:00","2020/05/24","16:30:00");
