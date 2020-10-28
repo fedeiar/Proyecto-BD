@@ -110,15 +110,15 @@ INSERT INTO asociado_con VALUES (11,126,"Alem",123,"Sa","m");
 INSERT INTO asociado_con VALUES (12,127,"Alem",124,"Do","t");
 
 
-INSERT INTO estacionamientos VALUES (1,1,"2020/05/24","13:00:00","2020/05/24","16:30:00");
-INSERT INTO estacionamientos VALUES (2,2,"2020/05/24","11:00:00","2020/05/24","14:55:00");
-INSERT INTO estacionamientos VALUES (3,3,"2020/05/24","13:00:00","2020/05/24","17:50:00");
-INSERT INTO estacionamientos VALUES (4,4,"2020/05/25","14:00:00","2020/05/25","16:30:00");
-INSERT INTO estacionamientos VALUES (5,5,"2020/05/25","11:40:00","2020/05/25","17:00:00");
-INSERT INTO estacionamientos VALUES (6,6,"2020/05/25","15:30:00",NULL,NULL);
-INSERT INTO estacionamientos VALUES (7,7,"2020/05/25","17:00:00",NULL,NULL);
-INSERT INTO estacionamientos VALUES (8,8,"2020/05/25","18:00:00",NULL,NULL);
-INSERT INTO estacionamientos VALUES (9,9,"2020/05/25","21:00:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (1,1,"2020/05/24","13:00:00","2020/05/24","16:30:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (2,2,"2020/05/24","11:00:00","2020/05/24","14:55:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (3,3,"2020/05/24","13:00:00","2020/05/24","17:50:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (4,4,"2020/05/25","14:00:00","2020/05/25","16:30:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (5,5,"2020/05/25","11:40:00","2020/05/25","17:00:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (6,6,"2020/05/25","15:30:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (7,7,"2020/05/25","17:00:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (8,8,"2020/05/25","18:00:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (9,9,"2020/05/25","21:00:00",NULL,NULL);
 
 
 

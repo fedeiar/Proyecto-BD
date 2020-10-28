@@ -20,6 +20,7 @@ import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -44,8 +45,6 @@ import java.awt.Dimension;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import jdk.nashorn.api.tree.GotoTree;
-
 import java.awt.Button;
 import javax.swing.JScrollBar;
 import javax.swing.ScrollPaneConstants;
@@ -65,11 +64,12 @@ public class VentanaInspector extends VentanaUsuario {
     private JTable jTtablaPatentes;
     private JScrollPane jSPScroll;
     private JButton jBCargarPatentes, jBDeletePatente, jBAgregar;
-    
-    private DBTable tabla_parquimetros, tabla_ubicaciones_1;
+
+    private DBTable tabla_parquimetros, tabla_multas;
 
     private String legajo;
-    
+    private String id_asociado_con;
+
     //constructor
 	public VentanaInspector(VentanaPrincipal vp, DBTable t) {
 		super(vp,t);
@@ -125,7 +125,7 @@ public class VentanaInspector extends VentanaUsuario {
 		jLPatente.setFont(new Font("Tahoma", Font.PLAIN, 13));
 		jPanelInspector.add(jLPatente);
 		
-		jBCargarPatentes = new JButton("MOSTRAR MULTAS");
+		jBCargarPatentes = new JButton("CARGAR MULTAS");
         jBCargarPatentes.setBounds(83, 105, 188, 27);
         jBCargarPatentes.setFont(new Font("Tahoma", Font.PLAIN, 12));
         jPanelInspector.add(jBCargarPatentes);
@@ -133,7 +133,7 @@ public class VentanaInspector extends VentanaUsuario {
 			public void actionPerformed(ActionEvent evt) {
                 boolean valido = validarInspector();
                 if(valido){
-                    //generarMultas();
+                    generarMultas();
                 }
 			}
 		});
@@ -162,13 +162,13 @@ public class VentanaInspector extends VentanaUsuario {
         tabla_parquimetros.setEditable(false);
         jPanelInspector.add(tabla_parquimetros);
 
-		tabla_ubicaciones_1 = new DBTable();
-		tabla_ubicaciones_1.setBounds(10, 373, 769, 104);
-        tabla_ubicaciones_1.setSortEnabled(true);
-        tabla_ubicaciones_1.setControlPanelVisible(false);
-		tabla_ubicaciones_1.setEditable(false);
-		jPanelInspector.add(tabla_ubicaciones_1);
-		
+		tabla_multas = new DBTable();
+		tabla_multas.setBounds(10, 373, 769, 104);
+        tabla_multas.setSortEnabled(true);
+        tabla_multas.setControlPanelVisible(false);
+		tabla_multas.setEditable(false);
+		jPanelInspector.add(tabla_multas);
+        
 		jBAgregar = new JButton("Agregar");
 		jBAgregar.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		jBAgregar.setBounds(185, 41, 86, 27);
@@ -190,13 +190,52 @@ public class VentanaInspector extends VentanaUsuario {
 		jSPScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		jSPScroll.setBounds(281, 14, 220, 118);
 		jPanelInspector.add(jSPScroll);
-		
+
 		jTtablaPatentes = new JTable();
 		jSPScroll.setViewportView(jTtablaPatentes);
 		jTtablaPatentes.setModel(new DefaultTableModel(
 			new String[][] { },
 			new String[] { "PATENTES" }
         ));
+    }
+
+    private void generarMultas(){
+        int filas = jTtablaPatentes.getModel().getRowCount();
+        String patente_anotada;
+        boolean estacionamiento_abierto = false;
+        try{
+            Statement stmt = tabla.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * from Estacionados");
+            
+            for(int i = 0; i < filas; i++){
+                patente_anotada = jTtablaPatentes.getModel().getValueAt(i, 0).toString();
+                while(rs.next() && !estacionamiento_abierto){
+                    String patente_estacionada = rs.getString("patente");
+                    if(patente_anotada.equals(patente_estacionada)){
+                        estacionamiento_abierto = true;
+                    }
+                }
+                rs.close();
+                rs = stmt.executeQuery("SELECT * from Estacionados");
+                if(!estacionamiento_abierto){
+                    registrarMulta(patente_anotada);
+                    //mostrarMultas
+                    ((DefaultTableModel) jTtablaPatentes.getModel()).setRowCount(0);
+                }
+            }
+        }
+        catch(SQLException ex){
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }
+
+    private void registrarMulta(String patente) throws SQLException{
+        Statement stmt = tabla.getConnection().createStatement();
+        String consulta = "INSERT INTO Multa(fecha, hora, patente, id_asociado_con) VALUES(CURDATE(), CURTIME(), '" +patente+ "', '" +id_asociado_con+ "')";
+        stmt.execute(consulta);
+        stmt.close();
     }
     
     private boolean validarInspector(){
@@ -212,12 +251,15 @@ public class VentanaInspector extends VentanaUsuario {
                               "dia = '"+ dia +"' AND turno = '"+ turno +"'";
             ResultSet rs = stmt.executeQuery(consulta);
             if(rs.next()){ //si el inspector tiene asociada la ubicación, tendríamos una sola tupla. Sino 0.
+                id_asociado_con = rs.getString("id_asociado_con").toString();
                 valido = true;
                 registrarAccesoInspector(stmt);
             }
             else{
                 JOptionPane.showMessageDialog(this," ", "Error", JOptionPane.INFORMATION_MESSAGE);
             }
+            stmt.close();
+            rs.close();
         }
         catch(SQLException ex){
             System.out.println("SQLException: " + ex.getMessage());
@@ -234,7 +276,6 @@ public class VentanaInspector extends VentanaUsuario {
         java.sql.Time hora = Fecha.getHoraActualSQL();
         String consulta = "INSERT INTO Accede(legajo, id_parq, fecha, hora) " + 
                           "VALUES("+legajo+", "+id_parq+", '"+fecha+"', '"+hora+"')" ;
-        System.out.println(consulta);
         stmt.execute(consulta);
     }
 
