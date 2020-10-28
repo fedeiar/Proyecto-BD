@@ -221,7 +221,7 @@ CREATE VIEW estacionados AS
 # El usuario venta podrá conectarse desde cualquiera computadora.
 
     GRANT SELECT,INSERT ON parquimetros.Tarjetas TO 'venta'@'%';
-    GRANT SELECT,INSERT ON parquimetros.tipos_tarjeta TO 'venta'@'%';
+    GRANT SELECT,INSERT ON parquimetros.tipos_tarjeta TO 'venta'@'%';   
 # El usuario venta solamente puede acceder a la tabla tarjeta con permiso para seleccionar e insertar
 
 #-------
@@ -237,3 +237,4 @@ CREATE VIEW estacionados AS
     GRANT SELECT ON parquimetros.Asociado_con to 'inspector'@'%';
     GRANT SELECT ON parquimetros.Parquimetros to 'inspector'@'%';
     GRANT SELECT ON parquimetros.Automoviles to 'inspector'@'%';
+    GRANT CREATE TEMPORARY TABLES ON parquimetros.* TO 'inspector'@'%';

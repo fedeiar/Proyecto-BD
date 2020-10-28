@@ -12,7 +12,10 @@ import java.beans.PropertyVetoException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.GroupLayout;
 import javax.swing.JButton;
@@ -72,7 +75,7 @@ public class VentanaInspector extends VentanaUsuario {
 
     //constructor
 	public VentanaInspector(VentanaPrincipal vp, DBTable t) {
-		super(vp,t);
+        super(vp,t);
 	}
         
     //metodos
@@ -204,7 +207,8 @@ public class VentanaInspector extends VentanaUsuario {
         String patente_anotada;
         boolean estacionamiento_abierto = false;
         try{
-            Statement stmt = tabla.getConnection().createStatement();
+            Statement stmt = tabla_multas.getConnection().createStatement();
+            stmt.execute("CREATE TEMPORARY TABLE Temp(fecha DATE, hora TIME, patente VARCHAR(6), id_asociado_con INT UNSIGNED)");
             ResultSet rs = stmt.executeQuery("SELECT * from Estacionados");
             
             for(int i = 0; i < filas; i++){
@@ -219,7 +223,7 @@ public class VentanaInspector extends VentanaUsuario {
                 rs = stmt.executeQuery("SELECT * from Estacionados");
                 if(!estacionamiento_abierto){
                     registrarMulta(patente_anotada);
-                    //mostrarMultas
+                    mostrarMultas();
                     ((DefaultTableModel) jTtablaPatentes.getModel()).setRowCount(0);
                 }
             }
@@ -232,9 +236,20 @@ public class VentanaInspector extends VentanaUsuario {
     }
 
     private void registrarMulta(String patente) throws SQLException{
-        Statement stmt = tabla.getConnection().createStatement();
-        String consulta = "INSERT INTO Multa(fecha, hora, patente, id_asociado_con) VALUES(CURDATE(), CURTIME(), '" +patente+ "', '" +id_asociado_con+ "')";
-        stmt.execute(consulta);
+        Statement stmt = tabla_multas.getConnection().createStatement();
+        java.sql.Date fecha = Fecha.getFechaActualSQL();
+        java.sql.Time hora = Fecha.getHoraActualSQL();
+        stmt.execute("INSERT INTO Multa(fecha, hora, patente, id_asociado_con) VALUES('"+fecha+"', '"+hora+"', '" +patente+ "', '" +id_asociado_con+ "')");
+        stmt.execute("INSERT INTO Temp(fecha, hora, patente, id_asociado_con) VALUES('"+fecha+"', '"+hora+"', '" +patente+ "', '" +id_asociado_con+ "')" );
+        stmt.close();
+    }
+
+    private void mostrarMultas() throws SQLException{
+        String consulta = "SELECT numero, fecha, hora, calle, altura, patente, legajo " +
+                          "FROM (Temp NATURAL JOIN Multa) NATURAL JOIN asociado_con";
+        this.refrescarTabla(tabla_multas, consulta);
+        Statement stmt = tabla_multas.getConnection().createStatement();
+        stmt.execute("DROP TABLE Temp");
         stmt.close();
     }
     
@@ -279,12 +294,9 @@ public class VentanaInspector extends VentanaUsuario {
         stmt.execute(consulta);
     }
 
-    private void conectarDBTable(DBTable table, String consulta){
+    private void conectarDBTable(DBTable table){
         try{
             table.connectDatabase(super.tabla.getDatabaseDriver(), super.tabla.getJdbcUrl(), super.tabla.getUser(), super.tabla.getPassword());
-            table.setSelectSql(consulta);
-            table.createColumnModelFromQuery();
-            table.refresh();
         }
         catch(SQLException ex){
             JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -297,10 +309,36 @@ public class VentanaInspector extends VentanaUsuario {
         }
     }
 
+    private void refrescarTabla(DBTable table, String consulta){
+        try {
+    	    table.setSelectSql(consulta);
+            table.createColumnModelFromQuery();
+
+    	    for (int i = 0; i < tabla.getColumnCount(); i++){	
+                if (table.getColumn(i).getType()==Types.TIME){
+                    table.getColumn(i).setType(Types.CHAR);  
+                }
+
+                if (table.getColumn(i).getType()==Types.DATE) {
+                    table.getColumn(i).setDateFormat("dd/MM/YYYY");
+                }
+            }
+            table.refresh();
+        }
+        catch (SQLException ex) {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage() + "\n", "Error al ejecutar la consulta.", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
     protected void thisComponentHidden(ComponentEvent evt){
         super.thisComponentHidden(evt);
         try {
             tabla_parquimetros.close();
+            tabla_multas.close();
         } 
         catch (SQLException ex) {
 			System.out.println("SQLException: " + ex.getMessage());
@@ -310,8 +348,11 @@ public class VentanaInspector extends VentanaUsuario {
     }
     
     protected void thisComponentShown(ComponentEvent evt){
-        this.conectarDBTable(tabla_parquimetros, "SELECT * from Parquimetros");
+        this.conectarDBTable(tabla_parquimetros);
+        this.refrescarTabla(tabla_parquimetros, "SELECT * from Parquimetros");
         jTFUsuarioActual.setText(legajo);
+
+        this.conectarDBTable(tabla_multas);
     }
 
     public void darkMode(){
