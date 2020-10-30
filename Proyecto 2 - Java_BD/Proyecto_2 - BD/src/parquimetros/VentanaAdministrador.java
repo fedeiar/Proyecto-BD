@@ -24,6 +24,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.Statement;
+
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JTextArea;
@@ -36,10 +41,6 @@ import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
-
-import com.mysql.cj.xdevapi.Statement;
-
-
 
 import java.awt.Font;
 import javax.swing.ScrollPaneConstants;
@@ -140,10 +141,26 @@ public class VentanaAdministrador extends VentanaUsuario{
     }
 
     private void refrescarTabla(){
-        try {
-    	    tabla.setSelectSql(this.jTAconsulta.getText().trim());
-            tabla.createColumnModelFromQuery();
-
+    	try {
+        	if ( this.jTAconsulta.getText().charAt(0) =='S' || this.jTAconsulta.getText().charAt(0) =='s'  )  {
+        		
+	    	    tabla.setSelectSql(this.jTAconsulta.getText().trim());
+	           
+            } 
+        	else {
+        		
+	    		String servidor = "localhost:3306";
+	    	    String baseDatos = "parquimetros"; 
+	            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
+	            Connection conexionDB = DriverManager.getConnection(uriConexion, "admin", "admin");
+	            Statement stmt = conexionDB.createStatement();
+        		stmt.execute(this.jTAconsulta.getText().trim());
+				stmt.close();
+          	
+            }
+        	
+        	tabla.createColumnModelFromQuery();
+    		
     	    for (int i = 0; i < tabla.getColumnCount(); i++){	
                 if (tabla.getColumn(i).getType()==Types.TIME){
                     tabla.getColumn(i).setType(Types.CHAR);  
@@ -152,9 +169,9 @@ public class VentanaAdministrador extends VentanaUsuario{
                 if (tabla.getColumn(i).getType()==Types.DATE) {
                     tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
                 }
-            }  
-    	    // actualizamos el contenido de la tabla.
-            tabla.refresh();
+    	    }
+	    // actualizamos el contenido de la tabla.
+    	 tabla.refresh();
         }
         catch (SQLException ex) {
             // en caso de error, se muestra la causa en la consola
