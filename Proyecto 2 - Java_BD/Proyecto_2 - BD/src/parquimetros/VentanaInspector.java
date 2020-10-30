@@ -62,10 +62,10 @@ public class VentanaInspector extends VentanaUsuario {
     public static final int HEIGTH = VentanaPrincipal.HEIGTH;
 
     private JPanel jPanelInspector;
-    private JTextField jTxPatente, jTFUsuarioActual;
-    private JLabel jLPatente, jLSeleccion, jLUsuarioActual;
-    private JTable jTtablaPatentes;
-    private JScrollPane jSPScroll;
+    private JTextField jTFPatente, jTFUsuarioActual;
+    private JLabel jLPatente, jLSeleccionParquimetro, jLUsuarioActual, jLPatentesIngresadasInvalidas;
+    private JTable jTtablaPatentes, jTtablaPatentesInvalidas;
+    private JScrollPane jSPPatentes, jSPPatentesInvalidas;
     private JButton jBCargarPatentes, jBDeletePatente, jBAgregar;
 
     private DBTable tabla_parquimetros, tabla_multas;
@@ -74,6 +74,7 @@ public class VentanaInspector extends VentanaUsuario {
     private String id_asociado_con;
 
     //constructor
+    
 	public VentanaInspector(VentanaPrincipal vp, DBTable t) {
         super(vp,t);
 	}
@@ -118,10 +119,10 @@ public class VentanaInspector extends VentanaUsuario {
 		jLUsuarioActual.setBounds(551, 14, 111, 27);
 		jPanelInspector.add(jLUsuarioActual);
         
-		jTxPatente = new JTextField();
-		jTxPatente.setBounds(82, 41, 97, 28);
-		jPanelInspector.add(jTxPatente);
-		jTxPatente.setColumns(10);
+		jTFPatente = new JTextField();
+		jTFPatente.setBounds(82, 41, 97, 28);
+		jPanelInspector.add(jTFPatente);
+		jTFPatente.setColumns(10);
 		
 		jLPatente = new JLabel("Ingrese patente");
 		jLPatente.setBounds(83, 14, 102, 27);
@@ -136,6 +137,7 @@ public class VentanaInspector extends VentanaUsuario {
 			public void actionPerformed(ActionEvent evt) {
                 boolean valido = validarInspector();
                 if(valido){
+                    ((DefaultTableModel) jTtablaPatentesInvalidas.getModel()).setRowCount(0); //vaciamos las patentes invalidas cuando cargamos de nuevo
                     generarMultas();
                 }
 			}
@@ -153,13 +155,13 @@ public class VentanaInspector extends VentanaUsuario {
 			}
 		});
         
-        jLSeleccion = new JLabel("Seleccione un parquimetro");
-		jLSeleccion.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		jLSeleccion.setBounds(82, 185, 188, 27);
-        jPanelInspector.add(jLSeleccion);
+        jLSeleccionParquimetro = new JLabel("Seleccione un parquimetro");
+		jLSeleccionParquimetro.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		jLSeleccionParquimetro.setBounds(388, 153, 158, 27);
+        jPanelInspector.add(jLSeleccionParquimetro);
         
 		tabla_parquimetros = new DBTable();
-		tabla_parquimetros.setBounds(281, 185, 381, 118);
+		tabla_parquimetros.setBounds(388, 185, 367, 129);
 		tabla_parquimetros.setSortEnabled(true);
         tabla_parquimetros.setControlPanelVisible(false);
         tabla_parquimetros.setEditable(false);
@@ -178,28 +180,59 @@ public class VentanaInspector extends VentanaUsuario {
 		jPanelInspector.add(jBAgregar);
 		jBAgregar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String patente = jTxPatente.getText();
-				int numCols = jTtablaPatentes.getModel().getColumnCount();
-				String [] fila = new String [numCols];
-				fila[0] = patente;
-                ((DefaultTableModel) jTtablaPatentes.getModel()).addRow(fila);
-                //verificarPatente();
+                String patente = jTFPatente.getText();
+                boolean duplicado = controlarDuplicados(jTtablaPatentes, patente);
+                if(!duplicado){
+                    String []fila = {patente};
+                    ((DefaultTableModel) jTtablaPatentes.getModel()).addRow(fila);
+                }
+
 			}
         });
         
-		jSPScroll = new JScrollPane();
-		jSPScroll.setEnabled(false);
-		jSPScroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-		jSPScroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-		jSPScroll.setBounds(281, 14, 220, 129);
-		jPanelInspector.add(jSPScroll);
+		jSPPatentes = new JScrollPane();
+		jSPPatentes.setEnabled(false);
+		jSPPatentes.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		jSPPatentes.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		jSPPatentes.setBounds(281, 14, 220, 129);
+		jPanelInspector.add(jSPPatentes);
 
 		jTtablaPatentes = new JTable();
-		jSPScroll.setViewportView(jTtablaPatentes);
+		jSPPatentes.setViewportView(jTtablaPatentes);
 		jTtablaPatentes.setModel(new DefaultTableModel(
 			new String[][] { },
 			new String[] { "PATENTES" }
         ));
+		
+		jLPatentesIngresadasInvalidas = new JLabel("Patentes Ingresadas Invalidas");
+		jLPatentesIngresadasInvalidas.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		jLPatentesIngresadasInvalidas.setBounds(10, 153, 174, 27);
+        jPanelInspector.add(jLPatentesIngresadasInvalidas);
+        
+        jSPPatentesInvalidas = new JScrollPane();
+		jSPPatentesInvalidas.setEnabled(false);
+		jSPPatentesInvalidas.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		jSPPatentesInvalidas.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+		jSPPatentesInvalidas.setBounds(10, 185, 220, 129);
+		jPanelInspector.add(jSPPatentesInvalidas);
+
+        jTtablaPatentesInvalidas = new JTable();
+		jSPPatentesInvalidas.setViewportView(jTtablaPatentesInvalidas);
+		jTtablaPatentesInvalidas.setModel(new DefaultTableModel(
+			new String[][] { },
+			new String[] { "PATENTES INVALIDAS" }
+        ));
+    }
+
+    private boolean controlarDuplicados(JTable table, String patente){
+        int filas = jTtablaPatentes.getModel().getRowCount();
+        String patente_en_tabla;
+        boolean duplicado = false;
+        for(int i = 0; i < filas && !duplicado; i++){
+            patente_en_tabla = table.getModel().getValueAt(i, 0).toString();
+            duplicado = patente.equals(patente_en_tabla);
+        }
+        return duplicado;
     }
 
     private void generarMultas(){
@@ -207,36 +240,60 @@ public class VentanaInspector extends VentanaUsuario {
         String patente_anotada;
         boolean estacionamiento_abierto = false;
         try{
-            Statement stmt = tabla_multas.getConnection().createStatement();
-            stmt.execute("CREATE TEMPORARY TABLE Temp(fecha DATE, hora TIME, patente VARCHAR(6), id_asociado_con INT UNSIGNED)");
-            ResultSet rs = stmt.executeQuery("SELECT * from Estacionados");
-            
+            Statement stmt_estacionados = tabla_multas.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            stmt_estacionados.execute("CREATE TEMPORARY TABLE Temp(fecha DATE, hora TIME, patente VARCHAR(6), id_asociado_con INT UNSIGNED)");
+            ResultSet rs_estacionados = stmt_estacionados.executeQuery("SELECT * FROM Estacionados");
+
+            Statement stmt_patentes = tabla_multas.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs_patentes = stmt_patentes.executeQuery("SELECT patente FROM automoviles");
+
+            boolean automovil_valido;
+
             for(int i = 0; i < filas; i++){
                 patente_anotada = jTtablaPatentes.getModel().getValueAt(i, 0).toString();
                 patente_anotada = patente_anotada.toUpperCase().trim();
-                while(rs.next() && !estacionamiento_abierto){
-                    String patente_estacionada = rs.getString("patente").toUpperCase().trim();
-                    System.out.println("Anotada: "+patente_anotada+" Estacionada: "+patente_estacionada);
-                    if(patente_anotada.equals(patente_estacionada)){
-                        estacionamiento_abierto = true;
+                automovil_valido = verificarPatente(rs_patentes, patente_anotada);
+                if(automovil_valido){
+                    while(rs_estacionados.next() && !estacionamiento_abierto){
+                        String patente_estacionada = rs_estacionados.getString("patente").toUpperCase().trim();
+                        if(patente_anotada.equals(patente_estacionada)){
+                            estacionamiento_abierto = true;
+                        }
                     }
+                    System.out.println("");
+                    rs_estacionados.beforeFirst();
+                    if(!estacionamiento_abierto){
+                        registrarMulta(patente_anotada);
+                    }
+                    estacionamiento_abierto = false;
                 }
-                System.out.println("");
-                rs.close();
-                rs = stmt.executeQuery("SELECT * from Estacionados");
-                if(!estacionamiento_abierto){
-                    registrarMulta(patente_anotada);
+                else{
+                    String []s = {patente_anotada};
+                    ((DefaultTableModel) jTtablaPatentesInvalidas.getModel()).addRow(s);
                 }
-                estacionamiento_abierto = false;
             }
             mostrarMultas();
             ((DefaultTableModel) jTtablaPatentes.getModel()).setRowCount(0); //vaciamos la tabla de patentes
+
+            stmt_estacionados.close();
+            rs_estacionados.close();
+            rs_patentes.close();
         }
         catch(SQLException ex){
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
         }
+    }
+
+    private boolean verificarPatente(ResultSet rs, String patente) throws SQLException{
+        boolean es_valida = false;
+        rs.beforeFirst();
+        while(rs.next() && !es_valida){
+            String patente_en_BD = rs.getString("patente");
+            es_valida = patente.equals(patente_en_BD);
+        }
+        return es_valida;
     }
 
     private void registrarMulta(String patente) throws SQLException{
@@ -362,14 +419,14 @@ public class VentanaInspector extends VentanaUsuario {
     public void darkMode(){
     	jPanelInspector.setBackground(Color.BLACK);
     	jLPatente.setForeground(Color.WHITE);
-    	jLSeleccion.setForeground(Color.white);
+    	jLSeleccionParquimetro.setForeground(Color.white);
     	jLUsuarioActual.setForeground(Color.white);
     }
 
     public void notDarkMode(){
     	jPanelInspector.setBackground(Color.LIGHT_GRAY);
     	jLPatente.setForeground(Color.BLACK);
-    	jLSeleccion.setForeground(Color.black);
+    	jLSeleccionParquimetro.setForeground(Color.black);
     	jLUsuarioActual.setForeground(Color.black);
     }
 }
