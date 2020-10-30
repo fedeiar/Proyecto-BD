@@ -1,49 +1,24 @@
 package parquimetros;
 
-import java.awt.Dimension;
-import java.awt.BorderLayout;
 
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
-import javax.swing.WindowConstants;
-
 import quick.dbtable.DBTable;
-
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
-
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.Statement;
-
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JTextArea;
-import java.awt.TextField;
-import java.awt.Button;
-import java.awt.GridLayout;
-import java.awt.CardLayout;
-import java.awt.FlowLayout;
-import javax.swing.BoxLayout;
 import javax.swing.JScrollPane;
 import javax.swing.BorderFactory;
 import javax.swing.border.BevelBorder;
-
 import java.awt.Font;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.JTextPane;
 import java.awt.Color;
 

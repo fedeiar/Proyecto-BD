@@ -1,22 +1,15 @@
 package parquimetros;
 
 import java.awt.BorderLayout;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyVetoException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import javax.swing.GroupLayout;
 import javax.swing.JButton;
-import javax.swing.JComponent;
 import javax.swing.JDesktopPane;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -24,20 +17,10 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
-import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
-import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle;
-import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
-
-import java.sql.ResultSetMetaData;
-import com.mysql.cj.xdevapi.Result;
-
 import java.sql.Statement;
-
 import quick.dbtable.DBTable;
 import java.awt.Color;
 
