@@ -142,39 +142,33 @@ public class VentanaAdministrador extends VentanaUsuario{
 
     private void refrescarTabla(){
     	try {
-        	if ( this.jTAconsulta.getText().charAt(0) =='S' || this.jTAconsulta.getText().charAt(0) =='s'  )  {
-        		
-	    	    tabla.setSelectSql(this.jTAconsulta.getText().trim());
-	           
-            } 
-        	else {
-        		
-	    		String servidor = "localhost:3306";
-	    	    String baseDatos = "parquimetros"; 
-	            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
-	            Connection conexionDB = DriverManager.getConnection(uriConexion, "admin", "admin");
-	            Statement stmt = conexionDB.createStatement();
-        		stmt.execute(this.jTAconsulta.getText().trim());
+            String consulta = this.jTAconsulta.getText().trim();
+            String[] consulta_split = consulta.split(" ", 2);
+            consulta_split[0] = consulta_split[0].trim().toUpperCase();
+
+        	if(consulta_split[0].equals("SELECT")){
+                tabla.setSelectSql(this.jTAconsulta.getText().trim());
+                tabla.createColumnModelFromQuery();
+    		
+                for (int i = 0; i < tabla.getColumnCount(); i++){	
+                    if (tabla.getColumn(i).getType()==Types.TIME){
+                        tabla.getColumn(i).setType(Types.CHAR);  
+                    }
+
+                    if (tabla.getColumn(i).getType()==Types.DATE) {
+                        tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
+                    }
+                }
+            }
+        	else{
+	            Statement stmt = tabla.getConnection().createStatement();
+        		stmt.execute(consulta);
 				stmt.close();
-          	
             }
         	
-        	tabla.createColumnModelFromQuery();
-    		
-    	    for (int i = 0; i < tabla.getColumnCount(); i++){	
-                if (tabla.getColumn(i).getType()==Types.TIME){
-                    tabla.getColumn(i).setType(Types.CHAR);  
-                }
-
-                if (tabla.getColumn(i).getType()==Types.DATE) {
-                    tabla.getColumn(i).setDateFormat("dd/MM/YYYY");
-                }
-    	    }
-	    // actualizamos el contenido de la tabla.
-    	 tabla.refresh();
+    	    tabla.refresh();
         }
         catch (SQLException ex) {
-            // en caso de error, se muestra la causa en la consola
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());

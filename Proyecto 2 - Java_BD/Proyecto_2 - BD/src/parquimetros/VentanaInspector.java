@@ -74,7 +74,7 @@ public class VentanaInspector extends VentanaUsuario {
     private String id_asociado_con;
 
     //constructor
-    
+
 	public VentanaInspector(VentanaPrincipal vp, DBTable t) {
         super(vp,t);
 	}
@@ -332,7 +332,7 @@ public class VentanaInspector extends VentanaUsuario {
                 registrarAccesoInspector(stmt);
             }
             else{
-                JOptionPane.showMessageDialog(this," ", "Error", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this,"Error: No está autorizado a labrar multas en la ubicación", "Error", JOptionPane.INFORMATION_MESSAGE);
             }
             stmt.close();
             rs.close();
