@@ -140,7 +140,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jbtnNewButton.setBounds(10, 19, 89, 23);
         jbtnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent arg0) {
-        		if (jPanelLogin.getBackground().equals(getBackground().black))
+        		if (jPanelLogin.getBackground().equals(Color.black))
         			notDarkMode();
         		else
             		darkMode();
@@ -163,17 +163,17 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     }
     
     private void darkMode(){
-    	jPanelLogin.setBackground(getBackground().black);
-    	jLuser.setForeground(getForeground().white);
-    	jLpassword.setForeground(getForeground().white);
+    	jPanelLogin.setBackground(Color.BLACK);
+    	jLuser.setForeground(Color.WHITE);
+    	jLpassword.setForeground(Color.WHITE);
     	ventAdmin.darkMode();
     	ventInspector.darkMode();
     }
     
     private void notDarkMode(){
-    	jPanelLogin.setBackground(getBackground().LIGHT_GRAY);
-    	jLuser.setForeground(getForeground().black);
-    	jLpassword.setForeground(getForeground().black);
+    	jPanelLogin.setBackground(Color.LIGHT_GRAY);
+    	jLuser.setForeground(Color.BLACK);
+    	jLpassword.setForeground(Color.BLACK);
     	ventAdmin.notDarkMode();	
     	ventInspector.notDarkMode();
     }
