@@ -12,6 +12,8 @@ INSERT INTO conductores VALUES (31171215, "Belen", "Gauto", "Trelew 140" ,"21236
 
 
 INSERT INTO automoviles VALUES ("ABC123","Chevrolet","Onix Premier","Rojo",39171207);
+INSERT INTO automoviles VALUES ("ABC124","Chevrolet","Onix Premier","Rojo",39171207);
+INSERT INTO automoviles VALUES ("ABC125","Chevrolet","Onix Premier","Rojo",39171207);
 INSERT INTO automoviles VALUES ("DEF456","Citroen","C5 Aircross","Blanco perla",38171208);
 INSERT INTO automoviles VALUES ("GHI789","Citroen","DS3 Crossback E-Tense","",37171209);
 INSERT INTO automoviles VALUES ("LMN098","Fiat","Toro Ranch","Negro",36171210);
@@ -27,14 +29,16 @@ INSERT INTO tipos_tarjeta VALUES ("DEBITO",0.10);
 
 
 INSERT INTO tarjetas VALUES (1,120.00,"DEBITO","ABC123");
-INSERT INTO tarjetas VALUES (2,123.00,"CREDITO","DEF456");
-INSERT INTO tarjetas VALUES (3,378.50,"CREDITO","GHI789");
-INSERT INTO tarjetas VALUES (4,467.60,"CREDITO","LMN098");
-INSERT INTO tarjetas VALUES (5,434.79,"DEBITO","OPQ765");
-INSERT INTO tarjetas VALUES (6,678.69,"DEBITO","RQY432");
-INSERT INTO tarjetas VALUES (7,456.09,"CREDITO","ZWH192");
-INSERT INTO tarjetas VALUES (8,345.37,"CREDITO","KPO765");
-INSERT INTO tarjetas VALUES (9,123.09,"DEBITO","NIS128");
+INSERT INTO tarjetas VALUES (2,300.00,"DEBITO","ABC124");
+INSERT INTO tarjetas VALUES (3,450.00,"DEBITO","ABC124");
+INSERT INTO tarjetas VALUES (4,123.00,"CREDITO","DEF456");
+INSERT INTO tarjetas VALUES (5,378.50,"CREDITO","GHI789");
+INSERT INTO tarjetas VALUES (6,467.60,"CREDITO","LMN098");
+INSERT INTO tarjetas VALUES (7,434.79,"DEBITO","OPQ765");
+INSERT INTO tarjetas VALUES (8,678.69,"DEBITO","RQY432");
+INSERT INTO tarjetas VALUES (9,456.09,"CREDITO","ZWH192");
+INSERT INTO tarjetas VALUES (10,345.37,"CREDITO","KPO765");
+INSERT INTO tarjetas VALUES (11,123.09,"DEBITO","NIS128");
 
 
 INSERT INTO inspectores VALUES (124,22171215,"Lisandro","Lopez",md5("lisandrito"));
@@ -95,35 +99,36 @@ INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (8, 1, "Vieytes", 2
 INSERT INTO parquimetros(id_parq,numero,calle,altura) VALUES (9, 1, "Vieytes", 400);
 
 
-INSERT INTO asociado_con VALUES (1,124,"Vieytes",200,"Lu","t");
-INSERT INTO asociado_con VALUES (2,124,"Vieytes",200,"Ma","t");
-INSERT INTO asociado_con VALUES (3,124,"Vieytes",200,"Mi","t");
-INSERT INTO asociado_con VALUES (4,124,"Vieytes",200,"Ju","t");
-INSERT INTO asociado_con VALUES (5,124,"Vieytes",200,"Vi","t");
-INSERT INTO asociado_con VALUES (6,124,"Vieytes",200,"Sa","t");
-INSERT INTO asociado_con VALUES (7,124,"Vieytes",200,"Do","t");
-INSERT INTO asociado_con VALUES (8,125,"Terrada",233,"Ma","t");
-INSERT INTO asociado_con VALUES (9,125,"Terrada",234,"Ju","t");
-INSERT INTO asociado_con VALUES (10,126,"San Juan",2340,"Lu","m");
-INSERT INTO asociado_con VALUES (11,126,"San Juan",2340,"Ma","m");
-INSERT INTO asociado_con VALUES (12,126,"San Juan",2340,"Mi","m");
-INSERT INTO asociado_con VALUES (13,126,"San Juan",2340,"Ju","m");
-INSERT INTO asociado_con VALUES (14,126,"San Juan",2340,"Vi","m");
-INSERT INTO asociado_con VALUES (15,126,"San Juan",2340,"Sa","m");
-INSERT INTO asociado_con VALUES (16,126,"San Juan",2340,"Do","m");
-INSERT INTO asociado_con VALUES (17,126,"Alem",123,"Sa","m");
-INSERT INTO asociado_con VALUES (18,127,"Alem",124,"Do","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (1,124,"Vieytes",200,"Lu","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (2,124,"Vieytes",200,"Ma","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (3,124,"Vieytes",200,"Mi","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (4,124,"Vieytes",200,"Ju","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (5,124,"Vieytes",200,"Vi","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (6,124,"Vieytes",200,"Sa","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (7,124,"Vieytes",200,"Do","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (8,125,"Terrada",233,"Ma","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (9,125,"Terrada",234,"Ju","t");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (10,126,"San Juan",2340,"Lu","m");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (11,126,"San Juan",2340,"Ma","m");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (12,126,"San Juan",2340,"Mi","m");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (13,126,"San Juan",2340,"Ju","m");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (14,126,"San Juan",2340,"Vi","m");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (15,126,"San Juan",2340,"Sa","m");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (16,126,"San Juan",2340,"Do","m");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (17,126,"Alem",123,"Sa","m");
+INSERT INTO asociado_con(id_asociado_con,legajo,calle,altura,dia,turno) VALUES (18,127,"Alem",124,"Do","t");
 
 
 INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (1,1,"2020/05/24","13:00:00","2020/05/24","16:30:00");
-INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (2,2,"2020/05/24","11:00:00","2020/05/24","14:55:00");
-INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (3,3,"2020/05/24","13:00:00","2020/05/24","17:50:00");
-INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (4,4,"2020/05/25","14:00:00","2020/05/25","16:30:00");
-INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (5,5,"2020/05/25","11:40:00","2020/05/25","17:00:00");
-INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (6,6,"2020/05/25","15:30:00",NULL,NULL);
-INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (7,7,"2020/05/25","17:00:00",NULL,NULL);
-INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (8,8,"2020/05/25","18:00:00",NULL,NULL);
-INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (9,9,"2020/05/25","21:00:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (2,1,"2020/05/28","15:00:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (3,2,"2020/05/24","11:00:00","2020/05/24","14:55:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (4,3,"2020/05/24","13:00:00","2020/05/24","17:50:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (5,4,"2020/05/25","14:00:00","2020/05/25","16:30:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (6,5,"2020/05/25","11:40:00","2020/05/25","17:00:00");
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (7,6,"2020/05/25","15:30:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (8,7,"2020/05/25","17:00:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (9,8,"2020/05/25","18:00:00",NULL,NULL);
+INSERT INTO estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (10,9,"2020/05/25","21:00:00",NULL,NULL);
 
 
 

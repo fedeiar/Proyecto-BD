@@ -213,20 +213,24 @@ public class VentanaInspector extends VentanaUsuario {
             
             for(int i = 0; i < filas; i++){
                 patente_anotada = jTtablaPatentes.getModel().getValueAt(i, 0).toString();
+                patente_anotada = patente_anotada.toUpperCase().trim();
                 while(rs.next() && !estacionamiento_abierto){
-                    String patente_estacionada = rs.getString("patente");
+                    String patente_estacionada = rs.getString("patente").toUpperCase().trim();
+                    System.out.println("Anotada: "+patente_anotada+" Estacionada: "+patente_estacionada);
                     if(patente_anotada.equals(patente_estacionada)){
                         estacionamiento_abierto = true;
                     }
                 }
+                System.out.println("");
                 rs.close();
                 rs = stmt.executeQuery("SELECT * from Estacionados");
                 if(!estacionamiento_abierto){
                     registrarMulta(patente_anotada);
-                    mostrarMultas();
-                    ((DefaultTableModel) jTtablaPatentes.getModel()).setRowCount(0);
                 }
+                estacionamiento_abierto = false;
             }
+            mostrarMultas();
+            ((DefaultTableModel) jTtablaPatentes.getModel()).setRowCount(0); //vaciamos la tabla de patentes
         }
         catch(SQLException ex){
             System.out.println("SQLException: " + ex.getMessage());
