@@ -41,7 +41,6 @@ public class Fecha {
         Date fecha = new Date();
         int hora = Integer.parseInt(new SimpleDateFormat("H").format(fecha));
         
-        System.out.println(hora);
 	    if(hora >= 8 && hora < 14) 
 	    	return 'm';
 	    else 

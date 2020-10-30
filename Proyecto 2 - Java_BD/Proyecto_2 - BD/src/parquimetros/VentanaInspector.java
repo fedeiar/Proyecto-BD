@@ -229,7 +229,6 @@ public class VentanaInspector extends VentanaUsuario {
                             estacionamiento_abierto = true;
                         }
                     }
-                    System.out.println("");
                     rs_estacionados.beforeFirst();
                     if(!estacionamiento_abierto){
                         registrarMulta(patente_anotada);
@@ -289,7 +288,7 @@ public class VentanaInspector extends VentanaUsuario {
             String calle = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("calle").getModelIndex() - 1).toString();
             String altura = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("altura").getModelIndex() - 1).toString();
             String dia = Fecha.getDiaActual();
-            char turno = 't'; //Fecha.getTurno();
+            char turno = Fecha.getTurno();
             Statement stmt = tabla.getConnection().createStatement();
             String consulta = "SELECT * FROM Asociado_con " + 
                               "WHERE legajo = "+ this.legajo +" AND calle = '"+ calle +"' AND altura = "+ altura +" AND " +
