@@ -207,7 +207,12 @@ public class VentanaInspector extends VentanaUsuario {
     private void generarMultas(){
         int filas = jTtablaPatentes.getModel().getRowCount();
         String patente_anotada;
-        boolean estacionamiento_abierto = false;
+        String calle_parquimetro = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("calle").getModelIndex() - 1).toString();
+        calle_parquimetro = calle_parquimetro.toUpperCase().trim();
+        String altura_parquimetro = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("altura").getModelIndex() - 1).toString();
+        altura_parquimetro = altura_parquimetro.toUpperCase().trim();
+        boolean pago_parquimetro = false;
+
         try{
             Statement stmt_estacionados = tabla_multas.getConnection().createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
             stmt_estacionados.execute("CREATE TEMPORARY TABLE Temp(fecha DATE, hora TIME, patente VARCHAR(6), id_asociado_con INT UNSIGNED)");
@@ -223,17 +228,19 @@ public class VentanaInspector extends VentanaUsuario {
                 patente_anotada = patente_anotada.toUpperCase().trim();
                 automovil_valido = verificarPatente(rs_patentes, patente_anotada);
                 if(automovil_valido){
-                    while(rs_estacionados.next() && !estacionamiento_abierto){
+                    while(rs_estacionados.next() && !pago_parquimetro){
                         String patente_estacionada = rs_estacionados.getString("patente").toUpperCase().trim();
-                        if(patente_anotada.equals(patente_estacionada)){
-                            estacionamiento_abierto = true;
+                        String calle_estacionada = rs_estacionados.getString("calle").toUpperCase().trim();
+                        String altura_estacionada = rs_estacionados.getString("altura").toUpperCase().trim();
+                        if(patente_anotada.equals(patente_estacionada) && calle_estacionada.equals(calle_parquimetro) && altura_estacionada.equals(altura_parquimetro)){
+                            pago_parquimetro = true;
                         }
                     }
                     rs_estacionados.beforeFirst();
-                    if(!estacionamiento_abierto){
+                    if(!pago_parquimetro){
                         registrarMulta(patente_anotada);
                     }
-                    estacionamiento_abierto = false;
+                    pago_parquimetro = false;
                 }
                 else{
                     String []s = {patente_anotada};
@@ -288,7 +295,7 @@ public class VentanaInspector extends VentanaUsuario {
             String calle = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("calle").getModelIndex() - 1).toString();
             String altura = this.tabla_parquimetros.getValueAt(this.tabla_parquimetros.getSelectedRow(), tabla_parquimetros.getColumnByHeaderName("altura").getModelIndex() - 1).toString();
             String dia = Fecha.getDiaActual();
-            char turno = Fecha.getTurno();
+            char turno = 't'; //Fecha.getTurno();
             Statement stmt = tabla.getConnection().createStatement();
             String consulta = "SELECT * FROM Asociado_con " + 
                               "WHERE legajo = "+ this.legajo +" AND calle = '"+ calle +"' AND altura = "+ altura +" AND " +
