@@ -7,6 +7,8 @@ CREATE DATABASE parquimetros;
 USE parquimetros;
 
 # ----------------------------------------------------------------------------
+# ============================================================================
+# ----------------------------------------------------------------------------
 # Creación de tablas para las Entidades
 
 CREATE TABLE conductores (
@@ -16,7 +18,7 @@ CREATE TABLE conductores (
     direccion VARCHAR(45) NOT NULL,
     telefono VARCHAR(45),
     registro INT UNSIGNED NOT NULL,
- 
+
     CONSTRAINT pk_conductores 
     PRIMARY KEY (dni)
 
@@ -29,7 +31,7 @@ CREATE TABLE automoviles (
     modelo VARCHAR(45) NOT NULL,
     color VARCHAR(45) NOT NULL,
     dni INT UNSIGNED NOT NULL,
- 
+
     CONSTRAINT pk_automoviles 
     PRIMARY KEY (patente),
 
@@ -192,6 +194,7 @@ CREATE TABLE estacionamientos(
 
 
 # ----------------------------------------------------------------------------
+# ============================================================================
 # ----------------------------------------------------------------------------
 # Creación de Vistas
 
@@ -201,6 +204,53 @@ CREATE VIEW estacionados AS
    WHERE e.fecha_sal IS NULL AND e.hora_sal IS NULL;
 
 # ----------------------------------------------------------------------------
+# ============================================================================
+# ----------------------------------------------------------------------------
+# Creación de stored procedures
+delimiter !
+
+CREATE PROCEDURE conectar(IN id_tarjeta INT, IN id_parq INT)
+BEGIN
+    IF EXISTS (SELECT * FROM Parquimetros WHERE Parquimetros.id_parq = id_parq) AND (SELECT * from Tarjetas WHERE Tarjetas.id_tarjeta = id_tarjeta) THEN
+
+        IF EXISTS (SELECT * FROM Estacionamientos e WHERE e.id_parq = id_parq AND e.id_tarjeta = id_tarjeta AND e.fecha_sal IS NULL) THEN
+            # Se quiere cerrar un estacionamiento
+            DECLARE f_ent DATE;
+            DECLARE h_ent TIME; 
+            SELECT fecha_ent INTO f_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
+            SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
+            SET tiempo = TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60;
+
+            UPDATE  (Ubicaciones u NATURAL JOIN Parquimetros p), (tarjetas t NATURAL JOIN tipos_tarjeta tt)
+                    SET t.saldo = t.saldo - (tiempo * u.tarifa * (1-tt.descuento))
+                    WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
+
+            UPDATE Estacionamientos e SET fecha_sal = CURDATE(), hora_sal = CURTIME() WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
+
+            SELECT 'cierre' AS Operacion, tiempo AS tiempo_transcurrido(min), t.saldo as Saldo_actual FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta; 
+        ELSE
+            # Se quiere abrir un estacionamiento
+            DECLARE saldo_disponible DECIMAL(5,2);
+            SELECT saldo INTO saldo_disponible FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;
+            IF (saldo_disponible > 0) THEN
+                
+
+            ELSE
+                INSERT INTO Estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (id_tarjeta, id_parq, CURDATE(), CURTIME());
+
+                SELECT 'apertura' AS Operacion,
+            END IF;
+    ELSE
+        SELECT 'error: id_parq o id_tarjeta inexistentes' AS Operacion;
+    END IF;
+
+END; !
+
+
+delimiter ; 
+
+# ----------------------------------------------------------------------------
+# ============================================================================
 # ----------------------------------------------------------------------------
 # Creación de usuarios y otorgamiento de privilegios
 
