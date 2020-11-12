@@ -275,7 +275,7 @@ delimiter ;
 # El usuario 'admin' tiene acceso total a todas las tablas de 
 # la B.D. parquimetros y puede crear nuevos usuarios y otorgar privilegios.
 
-#-------
+#-----------------------------------------------------------------------------
 
     CREATE USER 'venta'@'%' IDENTIFIED by 'venta';
 
@@ -285,7 +285,7 @@ delimiter ;
     GRANT SELECT,INSERT ON parquimetros.tipos_tarjeta TO 'venta'@'%';   
 # El usuario venta solamente puede acceder a la tabla tarjeta con permiso para seleccionar e insertar
 
-#-------
+#-----------------------------------------------------------------------------
 
     CREATE USER 'inspector'@'%' IDENTIFIED BY 'inspector';
 
@@ -294,8 +294,16 @@ delimiter ;
     GRANT SELECT ON parquimetros.Inspectores TO 'inspector'@'%';
     GRANT SELECT, INSERT ON parquimetros.Multa TO 'inspector'@'%';
     GRANT SELECT ON parquimetros.Estacionados TO 'inspector'@'%';
-    GRANT SELECT, INSERT ON parquimetros.Accede to 'inspector'@'%';
-    GRANT SELECT ON parquimetros.Asociado_con to 'inspector'@'%';
-    GRANT SELECT ON parquimetros.Parquimetros to 'inspector'@'%';
-    GRANT SELECT ON parquimetros.Automoviles to 'inspector'@'%';
+    GRANT SELECT, INSERT ON parquimetros.Accede TO 'inspector'@'%';
+    GRANT SELECT ON parquimetros.Asociado_con TO 'inspector'@'%';
+    GRANT SELECT ON parquimetros.Parquimetros TO 'inspector'@'%';
+    GRANT SELECT ON parquimetros.Automoviles TO 'inspector'@'%';
     GRANT CREATE TEMPORARY TABLES ON parquimetros.* TO 'inspector'@'%';
+
+-----------------------------------------------------------------------------
+
+    CREATE USER 'parquimetro'@'%' IDENTIFIED BY 'parq';
+
+    GRANT SELECT ON parquimetros.Parquimetros TO 'parquimetro'@'%';
+    GRANT SELECT, INSERT, UPDATE ON parquimetros.estacionamientos TO 'parquimetro'@'%';
+    GRANT EXECUTE on procedure parquimetros.conectar TO 'parquimetro'@'%';
