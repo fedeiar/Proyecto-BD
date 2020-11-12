@@ -1,0 +1,1 @@
+- como poner parentesis para los nombres de las columnas después del AS

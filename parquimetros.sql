@@ -211,39 +211,50 @@ delimiter !
 
 CREATE PROCEDURE conectar(IN id_tarjeta INT, IN id_parq INT)
 BEGIN
-    IF EXISTS (SELECT * FROM Parquimetros WHERE Parquimetros.id_parq = id_parq) AND (SELECT * from Tarjetas WHERE Tarjetas.id_tarjeta = id_tarjeta) THEN
+    DECLARE EXIT HANDLER FOR SQLEXCEPTION
+    BEGIN
+        SELECT 'SQLEXCEPTION!, transacción abortada' AS resultado;
+        ROLLBACK;
+    END;
 
-        IF EXISTS (SELECT * FROM Estacionamientos e WHERE e.id_parq = id_parq AND e.id_tarjeta = id_tarjeta AND e.fecha_sal IS NULL) THEN
-            # Se quiere cerrar un estacionamiento
-            DECLARE f_ent DATE;
-            DECLARE h_ent TIME; 
-            SELECT fecha_ent INTO f_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
-            SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
-            SET tiempo = TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60;
+    START TRANSACTION
 
-            UPDATE  (Ubicaciones u NATURAL JOIN Parquimetros p), (tarjetas t NATURAL JOIN tipos_tarjeta tt)
+        IF EXISTS (SELECT * FROM Parquimetros WHERE Parquimetros.id_parq = id_parq) AND (SELECT * from Tarjetas WHERE Tarjetas.id_tarjeta = id_tarjeta) THEN
+            IF EXISTS (SELECT * FROM Estacionamientos e WHERE e.id_parq = id_parq AND e.id_tarjeta = id_tarjeta AND e.fecha_sal IS NULL) THEN
+                # Se quiere cerrar un estacionamiento #
+
+                DECLARE f_ent DATE;
+                DECLARE h_ent TIME; 
+                SELECT fecha_ent INTO f_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
+                SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
+                SET tiempo = TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60;
+
+                UPDATE  (Ubicaciones u NATURAL JOIN Parquimetros p), (tarjetas t NATURAL JOIN tipos_tarjeta tt)
                     SET t.saldo = t.saldo - (tiempo * u.tarifa * (1-tt.descuento))
                     WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
 
-            UPDATE Estacionamientos e SET fecha_sal = CURDATE(), hora_sal = CURTIME() WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
+                UPDATE Estacionamientos e SET fecha_sal = CURDATE(), hora_sal = CURTIME() WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
 
-            SELECT 'cierre' AS Operacion, tiempo AS tiempo_transcurrido(min), t.saldo as Saldo_actual FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta; 
-        ELSE
-            # Se quiere abrir un estacionamiento
-            DECLARE saldo_disponible DECIMAL(5,2);
-            SELECT saldo INTO saldo_disponible FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;
-            IF (saldo_disponible > 0) THEN
-                
-
+                SELECT 'cierre' AS Operacion, tiempo AS tiempo_transcurrido(min), t.saldo as Saldo_actual FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta; 
             ELSE
-                INSERT INTO Estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (id_tarjeta, id_parq, CURDATE(), CURTIME());
+                # Se quiere abrir un estacionamiento #
 
-                SELECT 'apertura' AS Operacion,
-            END IF;
-    ELSE
-        SELECT 'error: id_parq o id_tarjeta inexistentes' AS Operacion;
-    END IF;
+                DECLARE saldo_disponible DECIMAL(5,2);
+                SELECT saldo INTO saldo_disponible FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;
+                IF (saldo_disponible > 0) THEN
+                    INSERT INTO Estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (id_tarjeta, id_parq, CURDATE(), CURTIME());
 
+                    SELECT 'apertura' AS Operacion,  'operacion realizada exitosamente' AS Estado, 130.00 / ((u.tarifa)*(1-tt.descuento)) AS tiempo_disponible
+                        FROM (Tarjetas t NATURAL JOIN tipos_tarjeta tt), (Ubicaciones u NATURAL JOIN Parquimetros p)
+                        WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
+                ELSE
+                    SELECT 'apertura' AS Operacion, 'saldo insuficiente' AS Estado;
+                END IF;
+        ELSE
+            SELECT 'error: id_parq o id_tarjeta inexistentes' AS Operacion;
+        END IF;
+
+    COMMIT;
 END; !
 
 
