@@ -193,6 +193,22 @@ CREATE TABLE estacionamientos(
 ) ENGINE=InnoDB;
 
 
+CREATE TABLE ventas (
+    id_tarjeta INT UNSIGNED NOT NULL,
+    tipo VARCHAR(25) NOT NULL,
+    saldo DECIMAL(5,2) NOT NULL,
+    fecha DATE NOT NULL,
+    HORA TIME NOT NULL,
+
+    CONSTRAINT pk_tarjetas
+    PRIMARY KEY (id_tarjeta),
+
+    CONSTRAINT fk_ventas_tarjeta
+    FOREIGN KEY (id_tarjeta, tipo) REFERENCES tarjetas(id_tarjeta, tipo)
+        ON DELETE RESTRICT ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+
 # ----------------------------------------------------------------------------
 # ============================================================================
 # ----------------------------------------------------------------------------
@@ -214,14 +230,13 @@ BEGIN
     DECLARE f_ent DATE;
     DECLARE h_ent TIME;
     DECLARE saldo_disponible DECIMAL(5,2);
-    DECLARE tiempo DECIMAL(7,3);
+    DECLARE tiempo INT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         SELECT 'SQLEXCEPTION!, transacción abortada' AS resultado;
         ROLLBACK;
     END;
     
-
     START TRANSACTION;
 
         IF EXISTS(SELECT * FROM Parquimetros WHERE Parquimetros.id_parq = id_parq) AND EXISTS(SELECT * from Tarjetas WHERE Tarjetas.id_tarjeta = id_tarjeta) THEN
@@ -230,7 +245,7 @@ BEGIN
 
                 SELECT fecha_ent INTO f_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
                 SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
-                SET tiempo = TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60;
+                SET tiempo = ROUND(TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60);
 
                 UPDATE  (Ubicaciones u NATURAL JOIN Parquimetros p), (tarjetas t NATURAL JOIN tipos_tarjeta tt)
                     SET t.saldo = t.saldo - (tiempo * u.tarifa * (1-tt.descuento))
@@ -238,14 +253,14 @@ BEGIN
 
                 UPDATE Estacionamientos e SET fecha_sal = CURDATE(), hora_sal = CURTIME() WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
 
-                SELECT 'cierre' AS Operacion, tiempo AS tiempo_transcurrido, t.saldo as Saldo_actual FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta; 
+                SELECT 'cierre' AS Operacion, tiempo AS 'tiempo_transcurrido(min)', t.saldo as Saldo_actual FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta; 
             ELSE
                 # Se quiere abrir un estacionamiento #
                 SELECT saldo INTO saldo_disponible FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;
                 IF (saldo_disponible > 0) THEN
                     INSERT INTO Estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (id_tarjeta, id_parq, CURDATE(), CURTIME());
 
-                    SELECT 'apertura' AS Operacion,  'operacion realizada exitosamente' AS Estado, 130.00 / ((u.tarifa)*(1-tt.descuento)) AS tiempo_disponible
+                    SELECT 'apertura' AS Operacion,  'operacion realizada exitosamente' AS Estado, 130.00 / ((u.tarifa)*(1-tt.descuento)) AS "tiempo_disponible(min)"
                         FROM (Tarjetas t NATURAL JOIN tipos_tarjeta tt), (Ubicaciones u NATURAL JOIN Parquimetros p)
                         WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
                 ELSE
@@ -258,6 +273,7 @@ BEGIN
 
     COMMIT;
 END; !
+
 
 
 delimiter ; 

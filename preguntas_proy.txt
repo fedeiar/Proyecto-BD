@@ -1,3 +1,1 @@
-- como poner parentesis para los nombres de las columnas después del AS
-- si o si los declare al principio?
-- con cuantos decimales declaramos al tiempo que vamos a mostrar en minutos?
+- la nueva tabla ventas que creamos no tiene llaves primarias o foraneas?
