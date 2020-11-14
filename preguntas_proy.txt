@@ -1,1 +1,2 @@
 - la nueva tabla ventas que creamos no tiene llaves primarias o foraneas?
+- cuales van como FK?
