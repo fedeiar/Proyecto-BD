@@ -195,16 +195,20 @@ CREATE TABLE estacionamientos(
 
 CREATE TABLE ventas (
     id_tarjeta INT UNSIGNED NOT NULL,
-    tipo VARCHAR(25) NOT NULL,
+    tipo_tarjeta VARCHAR(25) NOT NULL,
     saldo DECIMAL(5,2) NOT NULL,
     fecha DATE NOT NULL,
-    HORA TIME NOT NULL,
+    hora TIME NOT NULL,
 
     CONSTRAINT pk_tarjetas
     PRIMARY KEY (id_tarjeta),
 
     CONSTRAINT fk_ventas_tarjeta
-    FOREIGN KEY (id_tarjeta, tipo) REFERENCES tarjetas(id_tarjeta, tipo)
+    FOREIGN KEY (id_tarjeta) REFERENCES tarjetas(id_tarjeta)
+        ON DELETE RESTRICT ON UPDATE CASCADE,
+
+    CONSTRAINT fk_ventas_tipo_tarjeta
+    FOREIGN KEY (tipo_tarjeta) REFERENCES tipos_tarjeta(tipo)
         ON DELETE RESTRICT ON UPDATE CASCADE
 ) ENGINE=InnoDB;
 
@@ -274,7 +278,12 @@ BEGIN
     COMMIT;
 END; !
 
-
+CREATE TRIGGER tarjetas_insert
+AFTER INSERT ON Tarjetas
+FOR EACH ROW
+BEGIN  
+    INSERT INTO ventas(id_tarjeta, tipo_tarjeta, saldo, fecha, hora) VALUES (NEW.id_tarjeta, NEW.tipo, NEW.saldo, CURDATE(), CURTIME());
+END; !
 
 delimiter ; 
 
