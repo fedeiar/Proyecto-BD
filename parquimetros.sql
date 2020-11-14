@@ -227,6 +227,7 @@ CREATE VIEW estacionados AS
 # ============================================================================
 # ----------------------------------------------------------------------------
 # Creación de stored procedures
+
 delimiter !
 
 CREATE PROCEDURE conectar(IN id_tarjeta INT, IN id_parq INT)
