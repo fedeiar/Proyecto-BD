@@ -23,6 +23,7 @@ import javax.swing.WindowConstants;
 import java.sql.Statement;
 import quick.dbtable.DBTable;
 import java.awt.Color;
+import java.awt.Font;
 
 @SuppressWarnings("serial")
 public class VentanaPrincipal extends javax.swing.JFrame {
@@ -46,9 +47,9 @@ public class VentanaPrincipal extends javax.swing.JFrame {
 
     private JTextField jTFUser;
     private JPasswordField jPPassword;
-    private JLabel jLuser, jLpassword;
-    private JButton jBingresar;
-    private JButton jbtnNewButton;
+    private JLabel jLuser, jLpassword, jLConectar;
+    private JButton jBingresar, jBConectar;
+    private JButton jBNewButton;
     
     // constructor
     public VentanaPrincipal() {
@@ -133,21 +134,8 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanelLogin.add(jPPassword);
         
         jBingresar = new JButton("Ingresar");
-        jBingresar.setBounds(397, 91, 89, 23);
+        jBingresar.setBounds(348, 92, 89, 23);
         jPanelLogin.add(jBingresar);
-
-        jbtnNewButton = new JButton("Dark Mode");
-        jbtnNewButton.setBounds(10, 19, 89, 23);
-        jbtnNewButton.addActionListener(new ActionListener() {
-        	public void actionPerformed(ActionEvent arg0) {
-        		if (jPanelLogin.getBackground().equals(Color.black))
-        			notDarkMode();
-        		else
-            		darkMode();
-        	}
-        });
-        
-        jPanelLogin.add(jbtnNewButton);
         jBingresar.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ev) {
                 String user = jTFUser.getText();
@@ -157,6 +145,33 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
+        jLConectar = new JLabel("Conectar tarjeta a parquímetro");
+        jLConectar.setFont(new Font("Tahoma", Font.PLAIN, 18));
+        jLConectar.setBounds(266, 273, 250, 20);
+        jPanelLogin.add(jLConectar);
+        
+        jBConectar = new JButton("Conectar");
+        jBConectar.setFont(new Font("Tahoma", Font.PLAIN, 12));
+        jBConectar.setBounds(332, 303, 120, 29);
+        jPanelLogin.add(jBConectar);
+        jBConectar.addActionListener(new ActionListener(){
+            public void actionPerformed(ActionEvent e){
+
+            }
+        });
+
+        jBNewButton = new JButton("Dark Mode");
+        jBNewButton.setBounds(10, 19, 89, 23);
+        jPanelLogin.add(jBNewButton);
+        jBNewButton.addActionListener(new ActionListener() {
+        	public void actionPerformed(ActionEvent e) {
+        		if (jPanelLogin.getBackground().equals(Color.black))
+        			notDarkMode();
+        		else
+            		darkMode();
+        	}
+        });
+        
         //crea la tabla pero aún no la agrega a ningún frame
         tabla = new DBTable();
         tabla.setEditable(false);    
@@ -248,5 +263,4 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     private void menuItemSalirActionPerformed(ActionEvent evt) {
         this.dispose();
     }
-
 }
