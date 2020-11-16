@@ -35,6 +35,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     //atributos
     private VentanaAdministrador ventAdmin;
     private VentanaInspector ventInspector;
+    private VentanaParquimetro ventParquimetro;
     private JDesktopPane jDesktopPane1;
     private JPanel jPanelLogin;
 
@@ -65,6 +66,10 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         this.ventInspector = new VentanaInspector(this, tabla);
         this.ventInspector.setVisible(false);
         this.jDesktopPane1.add(this.ventInspector);
+
+        this.ventParquimetro = new VentanaParquimetro(this, tabla);
+        this.ventParquimetro.setVisible(false);
+        this.jDesktopPane1.add(this.ventParquimetro);
     }
 
     // metodos
@@ -145,7 +150,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             }
         });
 
-        jLConectar = new JLabel("Conectar tarjeta a parquímetro");
+        jLConectar = new JLabel("Conectar tarjeta a parquimetro");
         jLConectar.setFont(new Font("Tahoma", Font.PLAIN, 18));
         jLConectar.setBounds(266, 273, 250, 20);
         jPanelLogin.add(jLConectar);
@@ -193,6 +198,31 @@ public class VentanaPrincipal extends javax.swing.JFrame {
     	ventInspector.notDarkMode();
     }
 
+    private void conectarTarjeta(){
+        try{
+            String servidor = "localhost:3306";
+            String baseDatos = "parquimetros"; 
+            String uriConexion = "jdbc:mysql://" + servidor + "/" + baseDatos +"?serverTimezone=America/Argentina/Buenos_Aires";
+            String driver = "com.mysql.cj.jdbc.Driver";
+            String usuario = "parquimetro";
+            String password = "parq";
+            tabla.connectDatabase(driver, uriConexion, usuario, password);
+
+            jTFUser.setText("");
+            jPPassword.setText("");
+
+            ventParquimetro.setMaximum(true);
+            ventParquimetro.setVisible(true);
+            jPanelLogin.setVisible(false);
+        }
+        catch(SQLException ex){
+            JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+    }
+
     private void conectarBD(String usuario, String password){
         try{
             if(!usuario.equals("admin")){ // debería ser un inspector
@@ -203,12 +233,13 @@ public class VentanaPrincipal extends javax.swing.JFrame {
                 Statement stmt = conexionDB.createStatement();
                 String consulta = "SELECT legajo, password FROM Inspectores WHERE legajo = '" + usuario + "' AND password = md5('" + password + "') ";
                 ResultSet rs = stmt.executeQuery(consulta);
+
                 if (rs.next()){ // ya que es una sola fila, si hubo match es un sólo inspector valido, sino rs esta vacío y da false.
-                    
                     ventInspector.setLegajo(usuario);
                     usuario = "inspector";
                     password = "inspector";
                 }
+
                 rs.close();
                 stmt.close();
                 conexionDB.close();

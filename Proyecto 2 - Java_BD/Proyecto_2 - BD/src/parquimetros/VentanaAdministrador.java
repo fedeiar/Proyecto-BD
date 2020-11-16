@@ -40,18 +40,12 @@ public class VentanaAdministrador extends VentanaUsuario{
     }
 
     protected void initGUI(){
-        try{
-            super.initGUI();
-            this.setTitle("Consultas Admin");
-
-            //arma los paneles
-            ArmaPanelConsulta();
-						
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
         
+        super.initGUI();
+        this.setTitle("Consultas Admin");
+
+        //arma los paneles
+        ArmaPanelConsulta();
     }
 
     private void ArmaPanelConsulta(){

@@ -51,17 +51,12 @@ public class VentanaInspector extends VentanaUsuario {
     //metodos
 
 	protected void initGUI(){
-        try{
-        	super.initGUI();
-            this.setTitle("Consultas Inspector");
+     
+        super.initGUI();
+        this.setTitle("Consultas Inspector");
 
-            //arma los paneles
-            ArmarPanelInspector();	
-        }
-        catch(Exception e){
-            e.printStackTrace();
-        }
-        
+        //arma los paneles
+        ArmarPanelInspector();	
     }
 
     public void setLegajo(String l){
