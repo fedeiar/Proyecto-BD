@@ -1,2 +1,3 @@
 - la nueva tabla ventas que creamos no tiene llaves primarias o foraneas?
 - cuales van como FK?
+- El usuario parquimetro puede tener permisos para hacer SELECT sobre ubicaciones?

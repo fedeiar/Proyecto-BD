@@ -161,7 +161,7 @@ public class VentanaPrincipal extends javax.swing.JFrame {
         jPanelLogin.add(jBConectar);
         jBConectar.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent e){
-
+                conectarTarjeta();
             }
         });
 
@@ -220,6 +220,12 @@ public class VentanaPrincipal extends javax.swing.JFrame {
             System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
+        }
+        catch(ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        catch(PropertyVetoException e){
+            e.printStackTrace();
         }
     }
 

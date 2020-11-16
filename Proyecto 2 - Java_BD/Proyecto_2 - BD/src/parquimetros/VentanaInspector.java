@@ -20,7 +20,7 @@ import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ScrollPaneConstants;
-import java.awt.GridLayout;
+
 
 @SuppressWarnings("serial")
 public class VentanaInspector extends VentanaUsuario {
@@ -64,8 +64,6 @@ public class VentanaInspector extends VentanaUsuario {
     }
     
     private void ArmarPanelInspector() {
-    	getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
-
     	jPanelInspector = new JPanel();
         jPanelInspector.setBackground(Color.LIGHT_GRAY);
         getContentPane().add(jPanelInspector);
@@ -336,46 +334,6 @@ public class VentanaInspector extends VentanaUsuario {
                           "VALUES("+legajo+", "+id_parq+", '"+fecha+"', '"+hora+"')" ;
         stmt.execute(consulta);
     }
-
-    private void conectarDBTable(DBTable table){
-        try{
-            table.connectDatabase(super.tabla.getDatabaseDriver(), super.tabla.getJdbcUrl(), super.tabla.getUser(), super.tabla.getPassword());
-        }
-        catch(SQLException ex){
-            JOptionPane.showMessageDialog(this, "Error al conectarse a la base de datos. \n " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
-        catch(ClassNotFoundException ex){
-            ex.printStackTrace();
-        }
-    }
-
-    private void refrescarTabla(DBTable table, String consulta){
-        try {
-    	    table.setSelectSql(consulta);
-            table.createColumnModelFromQuery();
-
-    	    for (int i = 0; i < tabla.getColumnCount(); i++){	
-                if (table.getColumn(i).getType()==Types.TIME){
-                    table.getColumn(i).setType(Types.CHAR);  
-                }
-
-                if (table.getColumn(i).getType()==Types.DATE) {
-                    table.getColumn(i).setDateFormat("dd/MM/YYYY");
-                }
-            }
-            table.refresh();
-        }
-        catch (SQLException ex) {
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-            JOptionPane.showMessageDialog(SwingUtilities.getWindowAncestor(this), ex.getMessage() + "\n", "Error al ejecutar la consulta.", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
 
     protected void thisComponentHidden(ComponentEvent evt){
         super.thisComponentHidden(evt);

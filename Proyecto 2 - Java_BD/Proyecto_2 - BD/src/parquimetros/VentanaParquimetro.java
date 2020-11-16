@@ -23,9 +23,14 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.ScrollPaneConstants;
 import java.awt.GridLayout;
 
+@SuppressWarnings("serial")
 public class VentanaParquimetro extends VentanaUsuario{
     
     //atributos
+    JPanel jPanelparquimetro;
+    JLabel jLUbicaciones;
+
+    DBTable tabla_ubicaciones;
 
     //constructor
     public VentanaParquimetro(VentanaPrincipal vp, DBTable t){
@@ -36,9 +41,45 @@ public class VentanaParquimetro extends VentanaUsuario{
     protected void initGUI(){
         super.initGUI();
         this.setTitle("Ventana Parquimetro");
+
+        armarPanelParquimetro();
+    }
+
+    
+
+    private void armarPanelParquimetro(){
+        jPanelparquimetro = new JPanel();
+        jPanelparquimetro.setBackground(Color.LIGHT_GRAY);
+        getContentPane().add(jPanelparquimetro);
+        jPanelparquimetro.setLayout(null);
+
+        tabla_ubicaciones = new DBTable();
+        tabla_ubicaciones.setBounds(20, 53, 430, 182);
+        tabla_ubicaciones.setSortEnabled(true);
+        tabla_ubicaciones.setControlPanelVisible(false);
+        tabla_ubicaciones.setEditable(false);
+        jPanelparquimetro.add(tabla_ubicaciones);
+        
+        jLUbicaciones = new JLabel("Ubicaciones:");
+        jLUbicaciones.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        jLUbicaciones.setBounds(20, 31, 85, 17);
+        jPanelparquimetro.add(jLUbicaciones);
     }
 
     protected void thisComponentShown(ComponentEvent evt){
-        
+        super.conectarDBTable(tabla_ubicaciones);
+        super.refrescarTabla(tabla_ubicaciones, "SELECT * FROM Ubicaciones");
+    }
+
+    protected void thisComponentHidden(ComponentEvent evt){
+        super.thisComponentHidden(evt);
+        try {
+            tabla_ubicaciones.close();
+        } 
+        catch (SQLException ex) {
+			System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+		}
     }
 }
