@@ -30,9 +30,9 @@ public class VentanaParquimetro extends VentanaUsuario{
     
     //atributos
     JPanel jPanelparquimetro;
-    JLabel jLUbicaciones, jLParquimetros;
+    JLabel jLUbicaciones, jLParquimetros, jLTarjetas;
 
-    DBTable tabla_ubicaciones, tabla_parquimetros;
+    DBTable tabla_ubicaciones, tabla_parquimetros, tabla_tarjetas;
 
     //constructor
     public VentanaParquimetro(VentanaPrincipal vp, DBTable t){
@@ -61,7 +61,7 @@ public class VentanaParquimetro extends VentanaUsuario{
         jPanelparquimetro.add(jLUbicaciones);
 
         tabla_ubicaciones = new DBTable();
-        tabla_ubicaciones.setBounds(20, 53, 380, 182);
+        tabla_ubicaciones.setBounds(20, 53, 320, 182);
         tabla_ubicaciones.setSortEnabled(true);
         tabla_ubicaciones.setControlPanelVisible(false);
         tabla_ubicaciones.setEditable(false);
@@ -73,21 +73,38 @@ public class VentanaParquimetro extends VentanaUsuario{
         jPanelparquimetro.add(jLParquimetros);
 
         tabla_parquimetros = new DBTable();
-        tabla_parquimetros.setBounds(20, 330, 380, 182);
+        tabla_parquimetros.setBounds(20, 330, 350, 182);
         tabla_parquimetros.setSortEnabled(true);
         tabla_parquimetros.setControlPanelVisible(false);
         tabla_parquimetros.setEditable(false);
         jPanelparquimetro.add(tabla_parquimetros);
+
+        tabla_tarjetas = new DBTable();
+        tabla_tarjetas.setBounds(410, 53, 350, 182);
+        tabla_tarjetas.setSortEnabled(true);
+        tabla_tarjetas.setControlPanelVisible(false);
+        tabla_tarjetas.setEditable(false);
+        jPanelparquimetro.add(tabla_tarjetas);
+
+        jLTarjetas = new JLabel("Tarjetas:");
+        jLTarjetas.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        jLTarjetas.setBounds(410, 31, 85, 17);
+        jPanelparquimetro.add(jLTarjetas);
     }
 
     protected void thisComponentShown(ComponentEvent evt){
         super.conectarDBTable(tabla_ubicaciones);
         super.refrescarTabla(tabla_ubicaciones, "SELECT * FROM Ubicaciones");
+        establecerAnchoColumnas(tabla_ubicaciones, 90);
         tabla_ubicaciones.addMouseListener(new MouseAdapter(){
             public void mouseClicked(MouseEvent e){
                 mostrarParquimetros();
             }
         });
+
+        super.conectarDBTable(tabla_tarjetas);
+        super.refrescarTabla(tabla_tarjetas, "SELECT * FROM Tarjetas");
+        establecerAnchoColumnas(tabla_tarjetas, 80);
 
         super.conectarDBTable(tabla_parquimetros);
     }
@@ -97,7 +114,8 @@ public class VentanaParquimetro extends VentanaUsuario{
         try {
             tabla_ubicaciones.close();
             tabla_parquimetros.close();
-        } 
+            tabla_tarjetas.close();
+        }
         catch (SQLException ex) {
 			System.out.println("SQLException: " + ex.getMessage());
             System.out.println("SQLState: " + ex.getSQLState());
@@ -113,5 +131,12 @@ public class VentanaParquimetro extends VentanaUsuario{
         String altura = tabla_ubicaciones.getValueAt(row, col_altura).toString();
 
         super.refrescarTabla(tabla_parquimetros, "SELECT * FROM Parquimetros WHERE calle = '"+calle+"' AND altura = "+altura+"");
+        establecerAnchoColumnas(tabla_parquimetros, 80);
+    }
+
+    private void establecerAnchoColumnas(DBTable table, int width){
+        for(int i = 0; i < table.getColumnCount(); i++){
+            table.getColumn(i).setPreferredWidth(width);
+        }
     }
 }

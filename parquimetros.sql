@@ -237,10 +237,10 @@ BEGIN
     DECLARE tiempo INT;
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        SELECT 'SQLEXCEPTION!, transacción abortada' AS resultado;
+        SELECT 'SQLEXCEPTION!, transaccion abortada' AS resultado;
         ROLLBACK;
     END;
-    
+
     START TRANSACTION;
 
         IF EXISTS(SELECT * FROM Parquimetros WHERE Parquimetros.id_parq = id_parq) AND EXISTS(SELECT * from Tarjetas WHERE Tarjetas.id_tarjeta = id_tarjeta) THEN
@@ -260,13 +260,15 @@ BEGIN
                 SELECT 'cierre' AS Operacion, tiempo AS 'tiempo_transcurrido(min)', t.saldo as Saldo_actual FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta; 
             ELSE
                 # Se quiere abrir un estacionamiento #
+                
                 SELECT saldo INTO saldo_disponible FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;
                 IF (saldo_disponible > 0) THEN
-                    INSERT INTO Estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) VALUES (id_tarjeta, id_parq, CURDATE(), CURTIME());
-
+                    INSERT INTO Estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) 
+                    VALUES (id_tarjeta, id_parq, CURDATE(), CURTIME(), NULL, NULL);
+                
                     SELECT 'apertura' AS Operacion,  'operacion realizada exitosamente' AS Estado, 130.00 / ((u.tarifa)*(1-tt.descuento)) AS "tiempo_disponible(min)"
-                        FROM (Tarjetas t NATURAL JOIN tipos_tarjeta tt), (Ubicaciones u NATURAL JOIN Parquimetros p)
-                        WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
+                    FROM (Tarjetas t NATURAL JOIN tipos_tarjeta tt), (Ubicaciones u NATURAL JOIN Parquimetros p)
+                    WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
                 ELSE
                     SELECT 'apertura' AS Operacion, 'saldo insuficiente' AS Estado;
                 END IF;
@@ -334,5 +336,6 @@ delimiter ;
     GRANT SELECT ON parquimetros.Parquimetros TO 'parquimetro'@'%';
     GRANT SELECT, INSERT, UPDATE ON parquimetros.estacionamientos TO 'parquimetro'@'%';
     GRANT SELECT ON parquimetros.Ubicaciones TO 'parquimetro'@'%';
+    GRANT SELECT ON parquimetros.Tarjetas TO 'parquimetro'@'%';
     GRANT EXECUTE on procedure parquimetros.conectar TO 'parquimetro'@'%';
     

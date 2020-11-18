@@ -74,7 +74,6 @@ public abstract class VentanaUsuario extends javax.swing.JInternalFrame{
                 if (table.getColumn(i).getType()==Types.DATE) {
                     table.getColumn(i).setDateFormat("dd/MM/YYYY");
                 }
-                System.out.println(i);
             }
             table.refresh();
         }
