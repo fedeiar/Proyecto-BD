@@ -227,7 +227,6 @@ CREATE VIEW estacionados AS
 # ============================================================================
 # ----------------------------------------------------------------------------
 # Creación de stored procedures
-
 delimiter !
 
 CREATE PROCEDURE conectar(IN id_tarjeta INT, IN id_parq INT)
@@ -334,4 +333,6 @@ delimiter ;
 
     GRANT SELECT ON parquimetros.Parquimetros TO 'parquimetro'@'%';
     GRANT SELECT, INSERT, UPDATE ON parquimetros.estacionamientos TO 'parquimetro'@'%';
+    GRANT SELECT ON parquimetros.Ubicaciones TO 'parquimetro'@'%';
     GRANT EXECUTE on procedure parquimetros.conectar TO 'parquimetro'@'%';
+    
