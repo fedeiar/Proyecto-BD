@@ -22,6 +22,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.ScrollPaneConstants;
 import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 @SuppressWarnings("serial")
 public class VentanaParquimetro extends VentanaUsuario{
@@ -69,6 +71,11 @@ public class VentanaParquimetro extends VentanaUsuario{
     protected void thisComponentShown(ComponentEvent evt){
         super.conectarDBTable(tabla_ubicaciones);
         super.refrescarTabla(tabla_ubicaciones, "SELECT * FROM Ubicaciones");
+        tabla_ubicaciones.addMouseListener(new MouseAdapter(){
+            public void mouseClicked(MouseEvent e){
+
+            }
+        });
     }
 
     protected void thisComponentHidden(ComponentEvent evt){
