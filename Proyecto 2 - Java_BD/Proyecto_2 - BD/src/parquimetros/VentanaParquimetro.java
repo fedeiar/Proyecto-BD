@@ -20,6 +20,9 @@ import java.awt.Font;
 import java.awt.Color;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+
+import java.sql.ResultSetMetaData;
+
 import javax.swing.ScrollPaneConstants;
 import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
@@ -31,6 +34,7 @@ public class VentanaParquimetro extends VentanaUsuario{
     //atributos
     JPanel jPanelparquimetro;
     JLabel jLUbicaciones, jLParquimetros, jLTarjetas;
+    JButton jBConectar;
 
     DBTable tabla_ubicaciones, tabla_parquimetros, tabla_tarjetas;
 
@@ -69,11 +73,11 @@ public class VentanaParquimetro extends VentanaUsuario{
         
         jLParquimetros = new JLabel("Parquimetros:");
         jLParquimetros.setFont(new Font("Tahoma", Font.PLAIN, 14));
-        jLParquimetros.setBounds(20, 308, 95, 17);
+        jLParquimetros.setBounds(20, 279, 95, 17);
         jPanelparquimetro.add(jLParquimetros);
 
         tabla_parquimetros = new DBTable();
-        tabla_parquimetros.setBounds(20, 330, 350, 182);
+        tabla_parquimetros.setBounds(20, 306, 350, 182);
         tabla_parquimetros.setSortEnabled(true);
         tabla_parquimetros.setControlPanelVisible(false);
         tabla_parquimetros.setEditable(false);
@@ -90,6 +94,16 @@ public class VentanaParquimetro extends VentanaUsuario{
         jLTarjetas.setFont(new Font("Tahoma", Font.PLAIN, 14));
         jLTarjetas.setBounds(410, 31, 85, 17);
         jPanelparquimetro.add(jLTarjetas);
+        
+        jBConectar = new JButton("Conectar Tarjeta");
+        jBConectar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+        jBConectar.setBounds(516, 272, 155, 31);
+        jPanelparquimetro.add(jBConectar);
+        jBConectar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+                conectarTarjeta();
+			}
+        });
     }
 
     protected void thisComponentShown(ComponentEvent evt){
@@ -121,6 +135,37 @@ public class VentanaParquimetro extends VentanaUsuario{
             System.out.println("SQLState: " + ex.getSQLState());
             System.out.println("VendorError: " + ex.getErrorCode());
 		}
+    }
+
+    private void conectarTarjeta(){
+        try{
+            int row_tarjeta = tabla_tarjetas.getSelectedRow();
+            int row_parq = tabla_parquimetros.getSelectedRow();
+            int col_tarjeta = tabla_tarjetas.getColumnByHeaderName("id_tarjeta").getModelIndex() - 1;
+            int col_parq = tabla_parquimetros.getColumnByHeaderName("id_parq").getModelIndex() - 1;
+            String id_tarjeta = tabla_tarjetas.getValueAt(row_tarjeta, col_tarjeta).toString();
+            String id_parq = tabla_parquimetros.getValueAt(row_parq, col_parq).toString();
+
+            Statement stmt = tabla.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("CALL conectar("+id_tarjeta+","+id_parq+")");
+            ResultSetMetaData rsmd = rs.getMetaData();
+            if(rs.next()){ // ya que contiene solo 1 fila
+                String mensaje = "";
+                int cantCol = rsmd.getColumnCount();
+                String nombreCol;
+                for(int i = 1; i <= cantCol; i++){ // la primer columna es la 1
+                    nombreCol = rsmd.getColumnLabel(i); 
+                    mensaje += nombreCol +": "+rs.getString(i)+" - ";
+                }
+                JOptionPane.showMessageDialog(this, mensaje, "Informacion de la Operacion", JOptionPane.INFORMATION_MESSAGE);
+            }
+        }
+        catch (SQLException ex) {
+            System.out.println("SQLException: " + ex.getMessage());
+            System.out.println("SQLState: " + ex.getSQLState());
+            System.out.println("VendorError: " + ex.getErrorCode());
+        }
+        
     }
 
     private void mostrarParquimetros(){

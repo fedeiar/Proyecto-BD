@@ -251,7 +251,7 @@ BEGIN
                 SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
                 SET tiempo = ROUND(TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60);
 
-                UPDATE  (Ubicaciones u NATURAL JOIN Parquimetros p), (tarjetas t NATURAL JOIN tipos_tarjeta tt)
+                UPDATE (Ubicaciones u NATURAL JOIN Parquimetros p), (tarjetas t NATURAL JOIN tipos_tarjeta tt)
                     SET t.saldo = t.saldo - (tiempo * u.tarifa * (1-tt.descuento))
                     WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
 
