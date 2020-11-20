@@ -235,6 +235,10 @@ BEGIN
     DECLARE h_ent TIME;
     DECLARE saldo_disponible DECIMAL(5,2);
     DECLARE tiempo INT;
+    DECLARE tarifa DECIMAL(5,2);
+    DECLARE descuento DECIMAL(3,2);
+    DECLARE nuevo_saldo DECIMAL(5,2);
+
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
         SELECT 'SQLEXCEPTION!, transaccion abortada' AS resultado;
@@ -250,10 +254,11 @@ BEGIN
                 SELECT fecha_ent INTO f_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
                 SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
                 SET tiempo = ROUND(TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60);
-
-                UPDATE (Ubicaciones u NATURAL JOIN Parquimetros p), (tarjetas t NATURAL JOIN tipos_tarjeta tt)
-                    SET t.saldo = t.saldo - (tiempo * u.tarifa * (1-tt.descuento))
-                    WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
+                SELECT u.tarifa INTO tarifa FROM (Ubicaciones u NATURAL JOIN Parquimetros p) WHERE p.id_parq = id_parq;
+                SELECT tt.descuento INTO descuento FROM (Tarjetas t NATURAL JOIN Tipos_tarjeta tt) WHERE t.id_tarjeta = id_tarjeta;
+                SELECT GREATEST(-999.99, t.saldo - (tiempo * tarifa * (1-descuento))) INTO nuevo_saldo FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;
+                
+                UPDATE tarjetas t SET t.saldo = nuevo_saldo WHERE t.id_tarjeta = id_tarjeta;
 
                 UPDATE Estacionamientos e SET fecha_sal = CURDATE(), hora_sal = CURTIME() WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
 

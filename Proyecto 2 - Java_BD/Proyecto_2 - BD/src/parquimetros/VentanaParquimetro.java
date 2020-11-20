@@ -99,6 +99,7 @@ public class VentanaParquimetro extends VentanaUsuario{
         jBConectar.setFont(new Font("Tahoma", Font.PLAIN, 14));
         jBConectar.setBounds(516, 272, 155, 31);
         jPanelparquimetro.add(jBConectar);
+        jBConectar.setEnabled(false);
         jBConectar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
                 conectarTarjeta();
@@ -158,6 +159,8 @@ public class VentanaParquimetro extends VentanaUsuario{
                     mensaje += nombreCol +": "+rs.getString(i)+" - ";
                 }
                 JOptionPane.showMessageDialog(this, mensaje, "Informacion de la Operacion", JOptionPane.INFORMATION_MESSAGE);
+                super.refrescarTabla(tabla_tarjetas, tabla_tarjetas.getSelectSql());
+                establecerAnchoColumnas(tabla_tarjetas, 80);
             }
         }
         catch (SQLException ex) {
@@ -177,6 +180,7 @@ public class VentanaParquimetro extends VentanaUsuario{
 
         super.refrescarTabla(tabla_parquimetros, "SELECT * FROM Parquimetros WHERE calle = '"+calle+"' AND altura = "+altura+"");
         establecerAnchoColumnas(tabla_parquimetros, 80);
+        jBConectar.setEnabled(true);
     }
 
     private void establecerAnchoColumnas(DBTable table, int width){
