@@ -1,1 +1,1 @@
-- el saldo queda out of range con valores mayores (o menores) a 999.99, como lo solucionamos?
+si una tarjeta cerró un id_parq, después no puedo volver a estacionar en el mismo lugar con la misma tarjeta.

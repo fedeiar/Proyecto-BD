@@ -241,7 +241,7 @@ BEGIN
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        SELECT 'SQLEXCEPTION!, transaccion abortada' AS resultado;
+        SELECT 'SQL EXCEPTION!, transaccion abortada' AS resultado;
         ROLLBACK;
     END;
 
@@ -251,27 +251,27 @@ BEGIN
             IF EXISTS (SELECT * FROM Estacionamientos e WHERE e.id_parq = id_parq AND e.id_tarjeta = id_tarjeta AND e.fecha_sal IS NULL) THEN
                 # Se quiere cerrar un estacionamiento #
 
-                SELECT fecha_ent INTO f_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
-                SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
+                SELECT fecha_ent INTO f_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq AND e.fecha_sal IS NULL;
+                SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq AND e.fecha_sal IS NULL;
                 SET tiempo = ROUND(TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60);
                 SELECT u.tarifa INTO tarifa FROM (Ubicaciones u NATURAL JOIN Parquimetros p) WHERE p.id_parq = id_parq;
                 SELECT tt.descuento INTO descuento FROM (Tarjetas t NATURAL JOIN Tipos_tarjeta tt) WHERE t.id_tarjeta = id_tarjeta;
                 SELECT GREATEST(-999.99, t.saldo - (tiempo * tarifa * (1-descuento))) INTO nuevo_saldo FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;
                 
                 UPDATE tarjetas t SET t.saldo = nuevo_saldo WHERE t.id_tarjeta = id_tarjeta;
-
+                
                 UPDATE Estacionamientos e SET fecha_sal = CURDATE(), hora_sal = CURTIME() WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq;
 
-                SELECT 'cierre' AS Operacion, tiempo AS 'tiempo_transcurrido(min)', t.saldo as Saldo_actual FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta; 
+                SELECT 'cierre' AS Operacion, tiempo AS 'Tiempo Transcurrido(min)', t.saldo as Saldo_actual FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta; 
             ELSE
                 # Se quiere abrir un estacionamiento #
-                
+
                 SELECT saldo INTO saldo_disponible FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;
                 IF (saldo_disponible > 0) THEN
                     INSERT INTO Estacionamientos(id_tarjeta,id_parq,fecha_ent,hora_ent,fecha_sal,hora_sal) 
                     VALUES (id_tarjeta, id_parq, CURDATE(), CURTIME(), NULL, NULL);
                 
-                    SELECT 'apertura' AS Operacion,  'operacion realizada exitosamente' AS Estado, 130.00 / ((u.tarifa)*(1-tt.descuento)) AS "tiempo_disponible(min)"
+                    SELECT 'apertura' AS Operacion,  'operacion realizada exitosamente' AS Estado, 130.00 / ((u.tarifa)*(1-tt.descuento)) AS "Tiempo Disponible(min)"
                     FROM (Tarjetas t NATURAL JOIN tipos_tarjeta tt), (Ubicaciones u NATURAL JOIN Parquimetros p)
                     WHERE t.id_tarjeta = id_tarjeta AND p.id_parq = id_parq;
                 ELSE
