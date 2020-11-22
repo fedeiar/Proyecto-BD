@@ -238,10 +238,14 @@ BEGIN
     DECLARE tarifa DECIMAL(5,2);
     DECLARE descuento DECIMAL(3,2);
     DECLARE nuevo_saldo DECIMAL(5,2);
+    DECLARE cod_sql  CHAR(5) DEFAULT '00000';
+    DECLARE cod_mysql INT DEFAULT 0;
+    DECLARE msj_error TEXT; 
 
     DECLARE EXIT HANDLER FOR SQLEXCEPTION
     BEGIN
-        SELECT 'SQL EXCEPTION!, transaccion abortada' AS resultado;
+        GET DIAGNOSTICS CONDITION 1 cod_mysql = MYSQL_ERRNO, cod_sql = RETURNED_SQLSTATE, msj_error = MESSAGE_TEXT;
+        SELECT 'SQL EXCEPTION!, transaccion abortada' AS Resultado, cod_mysql, cod_sql,  msj_error;
         ROLLBACK;
     END;
 
@@ -253,7 +257,9 @@ BEGIN
 
                 SELECT fecha_ent INTO f_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq AND e.fecha_sal IS NULL;
                 SELECT hora_ent INTO h_ent FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.id_parq = id_parq AND e.fecha_sal IS NULL;
-                SET tiempo = ROUND(TIME_TO_SEC(TIMEDIFF(now(), CONCAT(f_ent,' ',h_ent))) / 60);
+                select 'antes';
+                SET tiempo = TIMESTAMPDIFF(MINUTE, CONCAT(f_ent,' ',h_ent), NOW());
+                select 'despues';
                 SELECT u.tarifa INTO tarifa FROM (Ubicaciones u NATURAL JOIN Parquimetros p) WHERE p.id_parq = id_parq;
                 SELECT tt.descuento INTO descuento FROM (Tarjetas t NATURAL JOIN Tipos_tarjeta tt) WHERE t.id_tarjeta = id_tarjeta;
                 SELECT GREATEST(-999.99, t.saldo - (tiempo * tarifa * (1-descuento))) INTO nuevo_saldo FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta;

@@ -1,1 +1,1 @@
-si una tarjeta cerró un id_parq, después no puedo volver a estacionar en el mismo lugar con la misma tarjeta.
+- no funciona cerrar un parquimetro después de 35 dias.
