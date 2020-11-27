@@ -156,7 +156,7 @@ public class VentanaParquimetro extends VentanaUsuario{
                 String nombreCol;
                 for(int i = 1; i <= cantCol; i++){ // la primer columna es la 1
                     nombreCol = rsmd.getColumnLabel(i); 
-                    mensaje += " - "+ nombreCol +": "+ rs.getString(i) +" - ";
+                    mensaje += nombreCol +": "+ rs.getString(i) +"\n";
                 }
                 JOptionPane.showMessageDialog(this, mensaje, "Informacion de la Operacion", JOptionPane.INFORMATION_MESSAGE);
                 super.refrescarTabla(tabla_tarjetas, tabla_tarjetas.getSelectSql());
