@@ -1,1 +1,0 @@
-- no funciona cerrar un parquimetro después de 35 dias.
