@@ -7,24 +7,15 @@ import java.awt.event.ComponentEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Types;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
-import quick.dbtable.DBTable;
 import java.awt.Font;
 import java.awt.Color;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
 
 import java.sql.ResultSetMetaData;
 
-import javax.swing.ScrollPaneConstants;
-import java.awt.GridLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 

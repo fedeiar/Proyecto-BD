@@ -12,7 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import quick.dbtable.DBTable;
 import java.awt.Font;
 import java.awt.Color;
