@@ -1,0 +1,25 @@
+Comisión Iarlori - Lopez Bidart
+-------------------------------
+Correcciones Proyecto 2: Ok
+  
+Store Procedure:
+- Controlar parametros de entrada: Ok
+
+- Codigo dentro de START TRANSACTION-COMMIT: Ok
+
+- Uso de bloqueo exclusivo para saldo tarjeta y estacionamiento correspondiente:
+	- No se utilizo SELECT FOR UPDATE para estos dos.
+
+- No usar bloqueos exclusivos innecesarios: Ok
+
+- Captura de excepciones y rollback: Ok
+
+- Funcionamiento: 
+	- No funciona correctamemte el cierre de un estacionamiento cuando se hace el mismo en una ubicacion distinta a la apertura.
+	(se vuelve a computar una apertura en lugar de un cierre)
+
+Aplicacion:
+- Para probar con nustros datos un cierre en un parquimetro distinto al de la apertura:
+	Seleccionar Alem al 400 - Parquimetro 401 - tarjeta 7
+	Deberia realizarse un cierre (la aplicacion muestra apertura).
+   
