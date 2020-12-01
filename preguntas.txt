@@ -1,0 +1,1 @@
+en donde deberían ir los select for update?
