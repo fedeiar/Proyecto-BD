@@ -252,7 +252,7 @@ BEGIN
     START TRANSACTION;
 
         IF EXISTS(SELECT * FROM Parquimetros WHERE Parquimetros.id_parq = id_parq) AND EXISTS(SELECT * from Tarjetas WHERE Tarjetas.id_tarjeta = id_tarjeta) THEN
-            IF EXISTS (SELECT * FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.fecha_sal IS NULL) THEN
+            IF EXISTS(SELECT * FROM Estacionamientos e WHERE e.id_tarjeta = id_tarjeta AND e.fecha_sal IS NULL) THEN
                 # Se quiere cerrar un estacionamiento #
 
                 SELECT fecha_ent INTO f_ent 
@@ -267,7 +267,7 @@ BEGIN
                 
                 SELECT tt.descuento INTO descuento FROM (Tarjetas t NATURAL JOIN Tipos_tarjeta tt) WHERE t.id_tarjeta = id_tarjeta FOR UPDATE;
 
-                SELECT GREATEST(-999.99, t.saldo - (tiempo * tarifa * (1-descuento))) INTO nuevo_saldo 
+                SELECT GREATEST(-999.99, t.saldo - (tiempo * tarifa * (1-descuento))) INTO nuevo_saldo
                     FROM Tarjetas t WHERE t.id_tarjeta = id_tarjeta FOR UPDATE;
 
                 
