@@ -1,0 +1,31 @@
+Comisión Iarlori - Lopez Bidart
+-------------------------------
+Correcciones Proyecto 2: Ok
+  
+Store Procedure:
+- Controlar parametros de entrada: Ok
+
+- Codigo dentro de START TRANSACTION-COMMIT: Ok
+
+- Uso de bloqueo exclusivo para saldo tarjeta y estacionamiento correspondiente: Ok
+
+- No usar bloqueos exclusivos innecesarios: Ok
+
+- Captura de excepciones y rollback: Ok
+
+- Funcionamiento: Ok
+	- Como observacion, se sigue utilizando la tarifa correspondiente a la ubicacion de cierre en lugar a la de apertura.
+	En la siguiente consulta se busca la tarifa correspondiente al parquimetro+ubicacion de cierre:
+	SELECT u.tarifa INTO tarifa FROM (Ubicaciones u NATURAL JOIN Parquimetros p) WHERE p.id_parq = id_parq;
+	Deberia ser algo similar a esto:
+	SELECT u.tarifa 
+	FROM Estacionamientos e 
+		NATURAL JOIN parquimetros p
+		NATURAL JOIN ubicaciones u
+	WHERE e.id_tarjeta = id_tarjeta 
+		AND e.fecha_sal IS NULL
+		AND e.hora_sal IS NULL;
+
+
+Aplicacion: Ok
+   
