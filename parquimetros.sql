@@ -263,7 +263,8 @@ BEGIN
 
                 SET tiempo = TIMESTAMPDIFF(MINUTE, CONCAT(f_ent,' ',h_ent), NOW());
 
-                SELECT u.tarifa INTO tarifa FROM (Ubicaciones u NATURAL JOIN Parquimetros p) WHERE p.id_parq = id_parq;
+                SELECT u.tarifa INTO tarifa FROM (Ubicaciones u NATURAL JOIN Parquimetros p) NATURAL JOIN Estacionamientos e 
+                    WHERE e.id_tarjeta = id_tarjeta AND e.fecha_sal IS NULL;
                 
                 SELECT tt.descuento INTO descuento FROM (Tarjetas t NATURAL JOIN Tipos_tarjeta tt) WHERE t.id_tarjeta = id_tarjeta FOR UPDATE;
 
